@@ -28,7 +28,7 @@
   // itself now - see minutes-version.js and TUNEBOOK_EDITOR_VERSION - and what belongs here
   // is only the identity of these shared utilities, so an app can report which vintage of
   // them it is carrying.
-  var SHARED_UTILS_VERSION = "1.1.0";
+  var SHARED_UTILS_VERSION = "1.2.0";
 
   // ---------------- CSV parsing ----------------
   // Reconciles the three prior copies' behavior: capture.html and setup.html stripped a
@@ -188,6 +188,13 @@
       if(!w) return;
       var rec = {
         fullTitle: buildFullTitle(e.titleProper || w.titleProper, e.subtitle),
+        // This Edition's own effective title proper - e.titleProper when the Edition
+        // overrides it, otherwise the owning Work's - with no subtitle folded in, unlike
+        // fullTitle. Kevin's own request: Minutes' book-naming prose (the opening "Song
+        // selections were from ___" sentence and its all-books variant) should read as
+        // "The Sacred Harp", not "The Sacred Harp: 2025 Edition" - fullTitle is still the
+        // right choice anywhere the subtitle actually disambiguates (dropdowns, warnings).
+        titleProper: e.titleProper || w.titleProper,
         // The owning Work's own title, independent of this Edition's own titleProper
         // override or subtitle - lets a sort distinguish "which Work does this row
         // belong to" from "what does this specific Edition's own full title read as",
@@ -264,6 +271,10 @@
         // them correctly once grouped. Same preferred-field-with-fallback derivation as
         // the Level 2/3 projection above, for one real rule, not two that could drift.
         workTitleProper: w && w.titleProper,
+        // Same titleProper/fullTitle split as buildTunebookIndexFromLibrary() above, kept
+        // here too so a known-but-unindexed Edition (findMasterListMatch's own fallback)
+        // gets the same subtitle-free name in Minutes' book-naming prose.
+        titleProper: e.titleProper || (w && w.titleProper),
         publicationYear: e.publicationYear || (/^\d{4}$/.test(e.editionIdentifierYear || "") ? e.editionIdentifierYear : (e.editionFirstPublicationDate || e.editionIdentifierYear)),
         commonName: e.commonName || (w && w.titleProper),
         workCode: (w && w.workCodeStatus === "unknown") ? null : ((w && w.workCode) || null),
@@ -282,6 +293,7 @@
       var w = library.works[workId];
       var rec = {
         fullTitle: buildFullTitle(w.titleProper, null),
+        titleProper: w.titleProper,
         workTitleProper: w.titleProper,
         commonName: w.titleProper,
         workCode: w.workCodeStatus === "unknown" ? null : (w.workCode || null),

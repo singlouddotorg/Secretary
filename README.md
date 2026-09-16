@@ -13,6 +13,7 @@ Minutes is one of four apps, each in its own repository:
 | **Minutes** (here) | Log a singing as it happens, then turn that log into publishable minutes. |
 | [**Tunebooks**](https://github.com/singlouddotorg/tunebooks) | Curate the shared tunebook data — editions, page indexes, Level 3 scholarly files. Most people recording a singing never need it. |
 | [**Simple Minutes**](https://github.com/singlouddotorg/simple-minutes) | A phone-sized logger: page numbers only, no names. Its files import straight into Minutes. |
+| [**Simple Compile**](https://github.com/singlouddotorg/simple-compile) | A one-page, no-editing version of Minutes: open a CSV, get readable minutes back. |
 | [**Tunebook Registry**](https://github.com/singlouddotorg/tunebook-registry) | The published tunebook data the others read. |
 
 Minutes covers the whole life of a singing in four stages — Setup, Capture (recording live),

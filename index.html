@@ -1592,13 +1592,13 @@
 
       <div id="minutesMakerOptions">
       <h3 style="font-family:var(--serif);font-size:15px;margin:20px 0 8px;">Minutes Maker: per-song &amp; summary options</h3>
-      <p class="panel-desc" style="margin:-4px 0 12px;">These only affect Minutes Maker — SHMHA Minutes Book Submission always follows its own fixed format regardless of these settings.</p>
+      <p class="panel-desc" style="margin:-4px 0 12px;">Song title, ALL CAPS, and the summary line also apply to the Simple List below; everything else here is Minutes-Maker-only. SHMHA Minutes Book Submission always follows its own fixed format regardless of any of these settings.</p>
       <div class="grid2">
         <div class="field">
           <label style="text-transform:none;font-weight:400;letter-spacing:0;">On every song call-out:</label>
-          <label style="display:block;font-weight:400;text-transform:none;letter-spacing:0;margin-top:4px;"><input type="checkbox" id="m_mmSongNumber"> Song number</label>
+          <div id="optSongNumber"><label style="display:block;font-weight:400;text-transform:none;letter-spacing:0;margin-top:4px;"><input type="checkbox" id="m_mmSongNumber"> Song number</label></div>
           <label style="display:block;font-weight:400;text-transform:none;letter-spacing:0;"><input type="checkbox" id="m_mmSongTitle"> Song title</label>
-          <label style="display:block;font-weight:400;text-transform:none;letter-spacing:0;"><input type="checkbox" id="m_mmAllSources"> Song source, even for the default book</label>
+          <div id="optAllSources"><label style="display:block;font-weight:400;text-transform:none;letter-spacing:0;"><input type="checkbox" id="m_mmAllSources"> Song source, even for the default book</label></div>
           <label style="display:block;font-weight:400;text-transform:none;letter-spacing:0;"><input type="checkbox" id="m_mmTitleCaps"> ALL CAPS for song titles</label>
         </div>
         <div class="field">
@@ -1608,11 +1608,37 @@
           <label style="display:block;font-weight:400;text-transform:none;letter-spacing:0;"><input type="checkbox" id="m_mmSongs"> Number of songs</label>
         </div>
       </div>
-      <label style="display:block;font-weight:400;text-transform:none;letter-spacing:0;margin-top:14px;"><input type="checkbox" id="m_mmSongIndex"> Include a song index at the end — grouped by tunebook, listing every page number used from it (or titles, for songs logged as "Other")</label>
-      <label style="display:block;font-weight:400;text-transform:none;letter-spacing:0;margin-top:14px;"><input type="checkbox" id="m_mmStateDefaultBook"> Name the default tunebook edition near the opening (e.g. "Song selections were from The Sacred Harp: 1991 Edition")</label>
-      <label style="display:block;font-weight:400;text-transform:none;letter-spacing:0;margin-top:14px;"><input type="checkbox" id="m_mmNoNames"> This singing's minutes don't name individual leaders (song attribution is dropped throughout, even where a name happens to be on file; the Memorial Lesson Leader, a separate Officer, is still named)</label>
+      <div id="optBookCodeStyle" class="field" style="margin-top:14px;max-width:460px;">
+        <label for="m_mmBookCodeStyle">Per-song book identifier style (also used by the opening "name every book" sentence)</label>
+        <select id="m_mmBookCodeStyle">
+          <option value="singloud">SingLoud work code — e.g. "(SHM)"</option>
+          <option value="shmha">SHMHA code — e.g. "(ShM)"</option>
+          <option value="titleProper">Book Title Proper — e.g. "(The Sacred Harp)"</option>
+        </select>
+      </div>
+      <div id="optSongIndex"><label style="display:block;font-weight:400;text-transform:none;letter-spacing:0;margin-top:14px;"><input type="checkbox" id="m_mmSongIndex"> Include a song index at the end — grouped by tunebook, listing every page number used from it (or titles, for songs logged as "Other")</label></div>
+      <div id="optStateDefaultBook"><label style="display:block;font-weight:400;text-transform:none;letter-spacing:0;margin-top:14px;"><input type="checkbox" id="m_mmStateDefaultBook"> Name the default tunebook edition near the opening (e.g. "Song selections were from The Sacred Harp: 1991 Edition")</label></div>
+      <label style="display:block;font-weight:400;text-transform:none;letter-spacing:0;margin-top:14px;"><input type="checkbox" id="m_mmSHEdition"> Show edition for The Sacred Harp (e.g. "The Sacred Harp: 2025 Edition," not just "The Sacred Harp") — both the 1991 and 2025 editions are still in common use, so naming Title Proper alone leaves this one book ambiguous; every other book is unaffected by this setting.</label>
+
+      <div id="simpleListOnlyOptions" style="display:none;margin-top:14px;">
+        <label style="text-transform:none;font-weight:400;letter-spacing:0;">Book identification per song (as many or as few as are useful — a single-book singing needs none of these):</label>
+        <label style="display:block;font-weight:400;text-transform:none;letter-spacing:0;margin-top:4px;"><input type="checkbox" id="m_slBookTitleProper"> Book Title Proper (not the full title)</label>
+        <label style="display:block;font-weight:400;text-transform:none;letter-spacing:0;"><input type="checkbox" id="m_slSingLoudCode"> SingLoud book code</label>
+        <label style="display:block;font-weight:400;text-transform:none;letter-spacing:0;"><input type="checkbox" id="m_slSHMHACode"> SHMHA book code (shown as &mdash; where none is on file)</label>
+        <label style="display:block;font-weight:400;text-transform:none;letter-spacing:0;margin-top:10px;"><input type="checkbox" id="m_slTunebookList"> List every tunebook used, once, beneath the singing's location</label>
+        <label style="display:block;font-weight:400;text-transform:none;letter-spacing:0;"><input type="checkbox" id="m_slShowOfficers"> Show the officer block (Chair, Secretary, etc. — whichever positions have a name on file)</label>
+      </div>
       </div>
 
+      <!-- Deliberately OUTSIDE minutesMakerOptions and never hidden by output type: this
+           flag isn't a Minutes Maker prose option, it's a fact about the singing itself
+           (no one present kept track of who led what), and every output type needs to know
+           it - Minutes Maker and SHMHA drop attribution from their narrative sentences, and
+           the Simple List drops its Name column entirely rather than printing "the leader"
+           on every line. -->
+      <label style="display:block;font-weight:400;text-transform:none;letter-spacing:0;margin-top:14px;"><input type="checkbox" id="m_mmNoNames"> This singing's minutes don't name individual leaders (song attribution is dropped throughout, even where a name happens to be on file; the Memorial Lesson Leader, a separate Officer, is still named)</label>
+
+      <div id="wordingPresentationSection">
       <h3 style="font-family:var(--serif);font-size:15px;margin:20px 0 8px;">Wording &amp; presentation</h3>
       <p class="panel-desc" style="margin:-4px 0 12px;">These apply to the narrative regardless of type — patterned on real published minutes rather than one flattened formula. To credit a specific title (e.g. "Elder"), type it directly into the Chaplain name itself (Roles tab, or a session override) rather than here.</p>
       <div class="grid2">
@@ -1655,6 +1681,7 @@
             <option value="dismissed_with">The class was dismissed with prayer by [name].</option>
           </select>
         </div>
+      </div>
       </div>
 
       <hr class="rule">
@@ -2648,6 +2675,36 @@
              // person touched the checkbox; once true, detection never speaks again for
              // this singing, and the value is written to the Master CSV either way.
              mmNoNamesSet:false,
+             // Which identifier a per-song book tag (and the opening "name every book"
+             // sentence) actually shows, in Minutes Maker's narrative only - the SingLoud
+             // work code Minutes has always used ("(SHM)"), the SHMHA code instead ("(ShM)"
+             // for a book whose two codes differ), or the book's own Title Proper spelled
+             // out in full ("(The Sacred Harp)"). One choice, not a checklist: unlike the
+             // Simple List's book-identifier columns below, this sits inside running prose,
+             // where showing more than one system at once reads as clutter, not data.
+             // SHMHA Minutes Book Submission's own fixed format is entirely separate and
+             // never reads this - its book codes are a protocol, not a style choice.
+             mmBookCodeStyle:"singloud",
+             // "Show edition for The Sacred Harp" - see titleProperName's own comment for
+             // the reasoning. Off by default so every existing export keeps reading exactly
+             // as it always has ("The Sacred Harp") until someone opts into naming the
+             // edition for this one, genuinely dual-edition book.
+             mmSHEdition:false,
+             // Simple List's own book-identifier columns (Kevin's own design: independent
+             // checkboxes, not one style choice, since a scan list can show as many
+             // identifiers side by side as are useful, unlike a sentence). Defaults
+             // preserve the list's original, pre-checkbox appearance: a single SingLoud
+             // code column and nothing else new.
+             slBookTitleProper:false, slSingLoudCode:true, slSHMHACode:false,
+             // Lists every real tunebook used, once, beneath the singing's location -
+             // primarily useful for a single-book singing, where it removes any need for a
+             // per-song book column at all (every page number is unambiguous once the one
+             // book in use is named up front).
+             slTunebookList:false,
+             // The officer block (Chair, Secretary, etc.) used to print unconditionally;
+             // defaulting this true keeps that same appearance for every singing that
+             // existed before this became a checkbox.
+             slShowOfficers:true,
              defaultBook:"", bookCodes:{}, dayLocations:{},
              seriesCode:"", eventId:"", previousEventId:"" },
       roles:{ chair:"", chairTitle:"Chair", vicechair:"", vicechairTitle:"Vice-chair",
@@ -2970,6 +3027,7 @@
   var SHORT_ABBR_RE = /^(rev|prof|capt|gen|col|maj|sgt|lt|rep|sen|gov|assoc|dept|corp|hon|esq|vs|etc|inc|co|ltd)$/i;
   var EZ_MINUTES_BOOK_CODES = {};
   var EZ_MINUTES_BOOK_NAMES = { "OTHER": "other sources" };
+  var EZ_MINUTES_BOOK_TITLEPROPER = { "OTHER": "other sources" };
   var REPORT_TAG_TO_ROLE = {
     "Treasurer's Report": ["treasurer", "Treasurer"],
     "Secretary's Report": ["secretary", "Secretary"],
@@ -2979,6 +3037,45 @@
 
   var state = loadState() || freshState();
   saveState();
+
+  // ---------------- bridges for the wrapper (minutes.html only) ----------------
+  // Registered here, immediately after state exists, rather than at the bottom of this
+  // IIFE where they conceptually belong (see the full comment down there, kept as the
+  // canonical explanation) - deliberately BEFORE hydrateFields() and every other
+  // initialization call below that renders from a saved state. handleFile, toCleanCSV, and
+  // the reset function are plain hoisted function declarations, so they're already
+  // complete and callable this early even though they're defined later in the file.
+  //
+  // Kevin's report, 2026-09-15: Compile's Song List and Export Preview came up completely
+  // empty after opening a real singing file - but only in his normal browser profile,
+  // never in a fresh Private tab. Root cause: a saved project already sitting in
+  // localStorage from a previous session can make one of the initialization renders below
+  // (hydrateFields() -> applyOutputType() -> renderPreview() -> buildNarrative(), for
+  // instance) throw on some legacy/unusual shape of that old data. When a plain, unguarded
+  // exception occurs during a script's own top-to-bottom execution, EVERY statement after
+  // it in that script - including the bottom-of-file line that used to expose
+  // window.__ezMinutesCompileHandleFile - never runs. The wrapper's ensureStageSynced()
+  // then silently no-ops forever afterward (it only checks typeof … === "function" before
+  // calling it, so a missing bridge produces no error at all) - a brand new, perfectly
+  // valid CSV opened through Setup would still never make it into Compile, no matter how
+  // many times it was tried, for the rest of that page load. A fresh Private tab has no
+  // such leftover state to trip over, so it always worked there. This exact failure mode -
+  // an initialization-time exception silently amputating the rest of this script's setup -
+  // is already documented once below (the ORDINAL_RE/SICK_NOTE_RE block) for a different
+  // trigger; registering the bridge before any of that rendering runs means a future
+  // instance of the same class of bug can degrade Compile's own display without also
+  // taking the wrapper's ability to load a file into Compile down with it.
+  window.__ezMinutesCompileHandleFile = handleFile;
+  window.__ezMinutesCompileGetMasterCSV = toCleanCSV;
+  window.__ezMinutesCompileReset = function(skipConfirm){
+    if(!skipConfirm && !confirm("Reset all fields, roles, lists, and the song list? This cannot be undone.")) return false;
+    state = freshState();
+    saveState();
+    hydrateFields();
+    renderSongs();
+    renderPreview();
+    return true;
+  };
 
   // ---------------- tabs ----------------
   var tabButtons = document.querySelectorAll(".tab-btn");
@@ -3000,6 +3097,7 @@
     ["m_name","meta","name"],
     ["m_ordinal","meta","ordinal"], ["m_eventtype","meta","eventType"],
     ["m_recurringdate","meta","recurringDate"], ["m_openingstyle","meta","openingStyle"],
+    ["m_mmBookCodeStyle","meta","mmBookCodeStyle"],
     ["m_presidingtitle","meta","presidingTitle"], ["m_prayerstyle","meta","prayerStyle"], ["m_closingprayerstyle","meta","closingPrayerStyle"],
     ["m_date","meta","date"], ["m_location","meta","location"],
     ["m_host","meta","host"], ["m_books","meta","books"],
@@ -3023,7 +3121,9 @@
     ["m_mmSongNumber","mmSongNumber"], ["m_mmSongTitle","mmSongTitle"], ["m_mmAllSources","mmAllSources"],
     ["m_mmSingers","mmSingers"], ["m_mmLeaders","mmLeaders"], ["m_mmSongs","mmSongs"],
     ["m_mmSongIndex","mmSongIndex"], ["m_mmTitleCaps","mmTitleCaps"], ["m_mmStateDefaultBook","mmStateDefaultBook"],
-    ["m_mmNoNames","mmNoNames"]
+    ["m_mmNoNames","mmNoNames"], ["m_mmSHEdition","mmSHEdition"],
+    ["m_slBookTitleProper","slBookTitleProper"], ["m_slSingLoudCode","slSingLoudCode"], ["m_slSHMHACode","slSHMHACode"],
+    ["m_slTunebookList","slTunebookList"], ["m_slShowOfficers","slShowOfficers"]
   ];
   function hydrateFields(){
     FIELD_MAP.forEach(function(m){
@@ -3086,7 +3186,16 @@
     el.addEventListener("input", updateEventIdDisplay);
     el.addEventListener("change", updateEventIdDisplay);
   });
-  hydrateFields();
+  // Guarded, not called bare: this renders straight from whatever was already sitting in
+  // localStorage, which - unlike a file someone just chose to import - was never
+  // validated on the way in. A legacy or otherwise unusual saved project can make this (or
+  // the renderPreview()/buildNarrative() pass it triggers via applyOutputType()) throw,
+  // and an unguarded throw here would kill every statement below it in this script's own
+  // top-to-bottom run, same as the ORDINAL_RE/SICK_NOTE_RE incident this codebase already
+  // tells that story about. The wrapper's own bridge functions are registered before this
+  // point specifically so they survive regardless, but Compile's own fields and preview
+  // should still come up as far as they can rather than stopping cold.
+  try{ hydrateFields(); }catch(e){ if(window.console) console.error("Compile: hydrateFields() failed on initial load (likely stale/legacy saved data) - continuing setup anyway.", e); }
   // Compile's own page footer isn't part of the merged wrapper (the wrapper has its own),
   // so this element legitimately may not exist here - guard rather than crash, which
   // previously killed the rest of Compile's setup including its import handlers.
@@ -3348,6 +3457,7 @@
       var b = EZ_MINUTES_TUNEBOOKS.books[abbr];
       if (b.workCode) EZ_MINUTES_BOOK_CODES[abbr] = b.workCode;
       EZ_MINUTES_BOOK_NAMES[abbr] = b.fullTitle;
+      EZ_MINUTES_BOOK_TITLEPROPER[abbr] = b.titleProper || b.fullTitle;
     });
   } else {
     console.error('Minutes: tunebook-library.js failed to load — book names and codes will be unavailable until it is restored next to this file.');
@@ -3367,6 +3477,30 @@
     // the moment Compile tries to print it.
     var known = findMasterListMatch(abbr);
     if (known && (known.fullTitle || known.commonName)) return known.commonName || known.fullTitle;
+    return abbr;
+  }
+
+  // Same lookup as fullBookName, but for the book-naming prose Kevin wants to read as
+  // "The Sacred Harp", not "The Sacred Harp: 2025 Edition" - Title Proper alone, subtitle
+  // dropped. Falls back through the same chain (known-but-unindexed Edition, then the bare
+  // abbr) so it never surfaces less identifying information than fullBookName would.
+  //
+  // mmSHEdition is the one deliberate exception, on Kevin's own report: with both the 1991
+  // and 2025 editions of The Sacred Harp still in common, active use, "The Sacred Harp"
+  // alone is genuinely ambiguous about which one a singing actually used - unlike every
+  // other book here, which only has one edition anyone still sings from. Checking "Show
+  // edition for The Sacred Harp" makes this one case read as fullBookName would ("The
+  // Sacred Harp: 2025 Edition") instead, for the two isSacredHarpDefault books ONLY -
+  // every other book keeps reading as plain Title Proper regardless of this setting.
+  // Applying the swap here, in the single shared lookup, means every caller (the opening
+  // "Song selections were from ___" sentence, the Title Proper per-song style, the "name
+  // every book" sentence's phrasing, and the Simple List's own Book Title Proper column)
+  // picks it up automatically rather than needing its own copy of this same check.
+  function titleProperName(abbr){
+    if(state.meta.mmSHEdition && isSacredHarpDefaultBook(abbr)) return fullBookName(abbr);
+    if (EZ_MINUTES_BOOK_TITLEPROPER[abbr]) return EZ_MINUTES_BOOK_TITLEPROPER[abbr];
+    var known = findMasterListMatch(abbr);
+    if (known && (known.titleProper || known.commonName || known.fullTitle)) return known.titleProper || known.commonName || known.fullTitle;
     return abbr;
   }
 
@@ -4255,8 +4389,8 @@
     metadataRows.forEach(function(m){
       if(!m.field) return;
       var parts = m.field.split(".");
-      var META_HYDRATE_KEYS = ["ordinal","eventType","outputType","recurringDate","openingStyle","presidingTitle","prayerStyle","closingPrayerStyle","host","present","defaultBook","books","suiteVersion"];
-      var META_BOOLEAN_KEYS = ["mmSongNumber","mmSongTitle","mmAllSources","mmSingers","mmLeaders","mmSongs","mmSongIndex","mmTitleCaps","mmStateDefaultBook","mmNoNames"];
+      var META_HYDRATE_KEYS = ["ordinal","eventType","outputType","recurringDate","openingStyle","presidingTitle","prayerStyle","closingPrayerStyle","host","present","defaultBook","books","suiteVersion","mmBookCodeStyle"];
+      var META_BOOLEAN_KEYS = ["mmSongNumber","mmSongTitle","mmAllSources","mmSingers","mmLeaders","mmSongs","mmSongIndex","mmTitleCaps","mmStateDefaultBook","mmNoNames","mmSHEdition","slBookTitleProper","slSingLoudCode","slSHMHACode","slTunebookList","slShowOfficers"];
       if(parts[0] === "meta" && META_BOOLEAN_KEYS.indexOf(parts[1]) !== -1){
         state.meta[parts[1]] = (m.value === "true"); metadataHydrated++;
         // A meta.mmNoNames row in the file - either value - is a decision already made
@@ -5401,7 +5535,12 @@
     var bookTag = "";
     // SHMHA's book-tagging rule is fixed and never touched by the "all sources" toggle
     // below, which only applies to Minutes Maker — see abbrFnFor("shmha") for that rule.
-    var forceAllSources = mode === "singloud" && state.meta.mmAllSources;
+    // mmStateDefaultBook === false also forces every song's own tag on: Kevin's own
+    // request — turning off "name the default tunebook edition" doesn't mean the reader
+    // gets no book identification at all, it means no single book gets treated as the
+    // unstated default, so every song (including whichever book happens to be used most)
+    // needs its own code, matching the "name all the books" opening sentence below.
+    var forceAllSources = mode === "singloud" && (state.meta.mmAllSources || state.meta.mmStateDefaultBook === false);
     if(row.book && normBookName(row.book) !== "other" && (forceAllSources || (effectiveDefault && normBookName(row.book) !== normBookName(effectiveDefault)))){
       var abbrResolved = abbrFn(row.book);
       if(abbrResolved) bookTag = " (" + abbrResolved + ")";
@@ -5891,6 +6030,45 @@
   // recess/lunch re-entry sentences, an inline memorial-lesson block, a closing-song
   // sentence) rather than a sectioned field dump. This is a strong first draft — real
   // minutes vary their phrasing more than a rules-based generator can, so expect to polish it.
+  // Minutes Maker's own per-song book identifier, in whichever single style
+  // meta.mmBookCodeStyle names - the SingLoud work code Minutes has always used, the SHMHA
+  // code instead, or the book's own Title Proper spelled out. Deliberately one style, not
+  // a checklist the way the Simple List's book columns are: this sits inside a running
+  // sentence, where more than one identifier at once reads as clutter. Used both for the
+  // per-song "(SHM)"-style tag (via abbrFnFor("singloud") below) and for the opening
+  // "name every book" sentence, so the two always agree with each other.
+  function styledBookIdentifier(abbr){
+    var style = state.meta.mmBookCodeStyle || "singloud";
+    if(style === "titleProper") return titleProperName(abbr);
+    if(style === "shmha"){
+      // Kevin's own report, 2026-09-16: choosing SHMHA-code style tagged The Sacred Harp
+      // itself as "(SHM?)" - a garbled, useless flag rather than real information, since
+      // SHMHA (see abbrFnFor("shmha") just below) never assigns the tradition's own
+      // baseline book a code of its own to translate to in the first place. This branch
+      // was the one place that carve-out had been left out - same rule, same reason,
+      // applied here too: an empty tag (pageDisplay only prints one when non-empty) reads
+      // as "no code shown," matching what a reader would actually infer for this book,
+      // rather than inventing a "?" that looks like a missing translation to fix.
+      if(isSacredHarpDefaultBook(abbr)) return "";
+      var code = state.meta.bookCodes[abbr];
+      // Kevin's own call, 2026-09-16: a book with no real SHMHA code isn't a typo to flag -
+      // it's just a book SHMHA has no code for. An em dash reads as "nothing to show here,"
+      // same placeholder the Simple List's own SHMHA column already uses for this exact
+      // case (see simpleListBookIdentifiers/simpleListSongLine below) - not a guessed code
+      // with a "?" tacked on, which looked like a mistake waiting to be fixed.
+      return shmhaCodeFor(code) || "—";
+    }
+    return state.meta.bookCodes[abbr] || abbr;
+  }
+  // The opening "name every book" sentence's own per-book phrase - "SHM for The Sacred
+  // Harp" when a code is being shown, or just "The Sacred Harp" alone when the style is
+  // Title Proper (styledBookIdentifier already returns the full title in that case, so
+  // repeating it after "for" would just say the same thing twice).
+  function styledBookIdentifierPhrase(abbr){
+    if((state.meta.mmBookCodeStyle || "singloud") === "titleProper") return titleProperName(abbr);
+    var code = styledBookIdentifier(abbr);
+    return (code ? code + " for " : "") + titleProperName(abbr);
+  }
   function abbrFnFor(mode){
     if(mode === "shmha"){
       return function(bookName){
@@ -5899,44 +6077,136 @@
         // codes exist to flag OTHER books appearing alongside the tradition's baseline
         // book, not to identify the baseline itself. Readers infer which edition from
         // context/date, the same way Minutes never assigns it a SingLoud-to-SHMHA
-        // translation in the first place.
+        // translation in the first place. This is SHMHA's own fixed submission format -
+        // entirely separate from mmBookCodeStyle, which only ever governs Minutes Maker.
         if(isSacredHarpDefaultBook(bookName)) return "";
         var code = state.meta.bookCodes[bookName];
         var shmha = code ? shmhaCodeFor(code) : "";
-        return shmha || (code || bookName) + "?"; // flag untranslated codes rather than guess
+        // Same call as styledBookIdentifier's "shmha" branch just above: an untranslated
+        // code isn't an error to flag with "?" - it's a book SHMHA has no code for, shown
+        // the same way the Simple List already shows it, an em dash.
+        return shmha || "—";
       };
     }
-    return function(bookName){ return state.meta.bookCodes[bookName] || bookName; };
+    return styledBookIdentifier;
+  }
+
+  // this book's identifier text(s) for the Simple List - whichever of Title Proper/
+  // SingLoud code/SHMHA code are checked, in that order. Falls back to Title Proper alone
+  // if none are checked, so turning on "List every tunebook used" always shows something
+  // even with all three per-song identifier boxes off. An "Other" (freeform) entry repeats
+  // "Other" in every checked slot rather than leaving some columns blank and others not -
+  // there's nothing more specific to say about it in any of the three systems.
+  function simpleListBookIdentifiers(abbr){
+    var meta = state.meta;
+    var isOtherBook = !abbr || abbr.toLowerCase() === "other";
+    var any = meta.slBookTitleProper || meta.slSingLoudCode || meta.slSHMHACode;
+    var bits = [];
+    if(!any || meta.slBookTitleProper) bits.push(isOtherBook ? "Other" : titleProperName(abbr));
+    if(any && meta.slSingLoudCode) bits.push(isOtherBook ? "Other" : (meta.bookCodes[abbr] || abbr));
+    if(any && meta.slSHMHACode){
+      if(isOtherBook) bits.push("Other");
+      else {
+        var code = meta.bookCodes[abbr];
+        bits.push((code && shmhaCodeFor(code)) || "\u2014");
+      }
+    }
+    return bits;
+  }
+
+  // One song's own line for the Simple List: leader name (unless this is a leaderless
+  // singing - the existing mmNoNames flag, unchanged, per Kevin's own call to leave that
+  // function as-is), page number (always shown when known - the one column this list can
+  // never be without, per Kevin's own framing: it should be possible to reduce this to a
+  // single column of page numbers), song title (only when Minutes Maker's own Song Title
+  // toggle is on - reused directly, not a separate Simple-List setting, since a person
+  // configures one output type at a time - or as a fallback when there's no page at all,
+  // e.g. an "Other" entry, so the line is never blank), then whichever book-identifier
+  // columns are checked.
+  function simpleListSongLine(s){
+    var meta = state.meta;
+    var bits = [];
+    if(!meta.mmNoNames) bits.push(effectiveLeader(s) || s.leader || "the leader");
+    var title = resolveTitle(s);
+    var titleDisplay = title ? ('"' + (meta.mmTitleCaps ? title.toUpperCase() : title) + '"') : "";
+    if(s.page){
+      bits.push(s.page);
+      if(meta.mmSongTitle !== false && titleDisplay) bits.push(titleDisplay);
+    } else {
+      bits.push(titleDisplay);
+    }
+    var isOtherBook = !s.book || s.book.toLowerCase() === "other";
+    if(meta.slBookTitleProper) bits.push(isOtherBook ? "Other" : titleProperName(s.book));
+    if(meta.slSingLoudCode) bits.push(isOtherBook ? "Other" : (meta.bookCodes[s.book] || s.book));
+    if(meta.slSHMHACode){
+      if(isOtherBook) bits.push("Other");
+      else {
+        var code = meta.bookCodes[s.book];
+        bits.push((code && shmhaCodeFor(code)) || "\u2014");
+      }
+    }
+    return bits;
   }
 
   // Simple List: events only, as terse as possible without dropping core data - meant for
   // checking names and details, not for publication. Deliberately independent of the
   // narrative-prose generator above (buildNarrative) rather than a stripped-down mode of it,
   // since this is a genuinely different kind of document: a scan list, not readable prose.
+  //
+  // Every column is independently optional except the page number (see
+  // simpleListSongLine). Song Title, ALL CAPS, and the summary line below reuse Minutes
+  // Maker's own mmSongTitle/mmTitleCaps/mmSingers/mmLeaders/mmSongs settings directly,
+  // rather than separate Simple-List copies - Kevin's own call: a person configures one
+  // output type, generates it, and reconfigures when they switch to the other, so there's
+  // nothing to protect by keeping the variables apart. Book Title Proper/SingLoud
+  // code/SHMHA code, the tunebook list, and the officer block are this list's own settings,
+  // since Minutes Maker has no equivalent for any of them.
   function buildSimpleList(){
+    var meta = state.meta;
     var lines = [];
-    lines.push(state.meta.name || "Minutes");
+    lines.push(meta.name || "Minutes");
     var dateRange = headerDateRange();
     if(dateRange) lines.push(dateRange);
-    if(state.meta.location) lines.push(state.meta.location);
-    lines.push("");
-
-    var officerList = [
-      [state.roles.chairTitle || "Chair", state.roles.chair],
-      [state.roles.vicechairTitle || "Vice-chair", state.roles.vicechair],
-      [state.roles.secretaryTitle || "Secretary", state.roles.secretary],
-      ["Treasurer", state.roles.treasurer],
-      ["Arranger(s)", state.roles.committee],
-      ["Chaplain", state.roles.chaplain],
-      ["Memorial Lesson Leader", state.roles.memorial]
-    ];
-    var anyOfficer = false;
-    officerList.forEach(function(o){
-      if(o[1] && o[1].trim()){ lines.push(o[0] + "\u2014" + o[1].trim()); anyOfficer = true; }
-    });
-    if(anyOfficer) lines.push("");
+    if(meta.location) lines.push(meta.location);
 
     var allRows = state.songs.filter(function(s){ return s.type !== "metadata"; }).sort(function(a,b){ return a.order - b.order; });
+
+    // One line per real tunebook used, in first-appearance order, right beneath the
+    // location per Kevin's own placement - "Other" left out, since it's self-identifying
+    // by title already and has no book to name here.
+    if(meta.slTunebookList){
+      var tunebookOrder = [];
+      var tunebookSeen = {};
+      allRows.forEach(function(s){
+        if(s.type !== "song" || !s.book || s.book.toLowerCase() === "other") return;
+        if(!tunebookSeen[s.book]){ tunebookSeen[s.book] = true; tunebookOrder.push(s.book); }
+      });
+      tunebookOrder.forEach(function(abbr){
+        lines.push(simpleListBookIdentifiers(abbr).join(" \u2014 "));
+      });
+    }
+
+    lines.push("");
+
+    // The officer block used to print unconditionally; slShowOfficers defaults true so
+    // every singing that existed before this became a checkbox keeps the same appearance.
+    if(meta.slShowOfficers !== false){
+      var officerList = [
+        [state.roles.chairTitle || "Chair", state.roles.chair],
+        [state.roles.vicechairTitle || "Vice-chair", state.roles.vicechair],
+        [state.roles.secretaryTitle || "Secretary", state.roles.secretary],
+        ["Treasurer", state.roles.treasurer],
+        ["Arranger(s)", state.roles.committee],
+        ["Chaplain", state.roles.chaplain],
+        ["Memorial Lesson Leader", state.roles.memorial]
+      ];
+      var anyOfficer = false;
+      officerList.forEach(function(o){
+        if(o[1] && o[1].trim()){ lines.push(o[0] + "\u2014" + o[1].trim()); anyOfficer = true; }
+      });
+      if(anyOfficer) lines.push("");
+    }
+
     allRows.forEach(function(s){
       if(s.type === "session"){
         lines.push("");
@@ -5946,20 +6216,16 @@
       }
       if(s.type === "marker"){
         var m = s.markerType || "";
-        if(s.leader) m += "\u2014" + s.leader;
+        // Same fact about this singing as every song line below - a leaderless record
+        // doesn't get an individual name on a marker row either.
+        if(s.leader && !meta.mmNoNames) m += "\u2014" + s.leader;
         lines.push(m);
         lines.push("");
         return;
       }
-      // Every song lead, one line: Name / Song No. / Source, tab-separated - always shown,
-      // even for the default book, since this list's whole purpose is checking data, not
-      // readable style. Tabs (not a visible delimiter) so the file also pastes cleanly into
-      // a spreadsheet if that's how someone wants to check it.
-      var leadName = effectiveLeader(s) || s.leader || "the leader";
-      var leadPage = s.page || (s.title ? ('"' + s.title + '"') : "");
-      var isOtherBook = !s.book || s.book.toLowerCase() === "other";
-      var leadSource = isOtherBook ? "Other" : (state.meta.bookCodes[s.book] || s.book);
-      lines.push(leadName + "\t" + leadPage + "\t" + leadSource);
+      // Tab-separated, not a visible delimiter, so the file also pastes cleanly into a
+      // spreadsheet if that's how someone wants to check it.
+      lines.push(simpleListSongLine(s).join("\t"));
     });
 
     return lines.join("\n").replace(/\n{3,}/g, "\n\n").trim() + "\n";
@@ -6129,8 +6395,8 @@
                 // context for the document as a whole. Listed in order of first appearance
                 // (matching the default book's own "established first" position) rather than
                 // alphabetically, and every one is named - a bare per-song code like "ShH"
-                // means nothing to a reader unless its full title is spelled out somewhere,
-                // and this sentence is the only place that happens. "Other"-tagged songs are
+                // means nothing to a reader unless its title is spelled out somewhere, and
+                // this sentence is the only place that happens. "Other"-tagged songs are
                 // left out of this list deliberately: they're self-identifying by title
                 // already and have no code to decode, unlike a different recognized edition.
                 var otherBooksInOrder = [];
@@ -6145,18 +6411,41 @@
                   }
                 });
                 var hasOtherSources = otherBooksInOrder.length > 0 || hasOtherUntaggedSources;
-                var defaultBookSentence = "Song selections were from " + fullBookName(effectiveDefault);
+                var defaultBookSentence = "Song selections were from " + titleProperName(effectiveDefault);
+                // "marked SHM for The Sacred Harp" makes sense when a code is actually being
+                // shown per song; when the style is Title Proper alone, there's no code to
+                // "mark" anything with, so the verb changes to match what the reader will
+                // actually see next to each song (see styledBookIdentifier/mmBookCodeStyle).
+                var namingVerb = (state.meta.mmBookCodeStyle === "titleProper") ? "come from" : "are marked";
                 if(hasOtherSources){
                   defaultBookSentence += " unless otherwise noted";
                   if(otherBooksInOrder.length){
-                    var otherBookPhrases = otherBooksInOrder.map(function(abbr){
-                      var code = bookCode(abbr);
-                      return (code ? code + " for " : "") + fullBookName(abbr);
-                    });
-                    defaultBookSentence += "; other selections are marked " + joinAnd(otherBookPhrases);
+                    var otherBookPhrases = otherBooksInOrder.map(styledBookIdentifierPhrase);
+                    defaultBookSentence += "; other selections " + namingVerb + " " + joinAnd(otherBookPhrases);
                   }
                 }
                 s.push(defaultBookSentence + ".");
+              } else if(meta.mmStateDefaultBook === false){
+                // Kevin's own follow-up: unchecking "name the default tunebook edition"
+                // doesn't mean saying nothing about sources - no book gets the special
+                // "unless otherwise noted" default treatment, so instead every book
+                // actually used gets named up front with its own book identifier, matching
+                // the per-song tag every one of them now carries too (see forceAllSources
+                // in pageDisplay, and mmBookCodeStyle for which identifier that tag shows).
+                // Listed in first-appearance order, "Other"-tagged songs left out for the
+                // same reason as above - self-identifying by title, with no code to decode.
+                var allBooksInOrder = [];
+                var seenAllBooks = {};
+                allSongs.forEach(function(sg){
+                  if(!sg.book) return;
+                  if(sg.book.toLowerCase() === "other") return;
+                  if(!seenAllBooks[sg.book]){ seenAllBooks[sg.book] = true; allBooksInOrder.push(sg.book); }
+                });
+                if(allBooksInOrder.length){
+                  var allBookPhrases = allBooksInOrder.map(styledBookIdentifierPhrase);
+                  var allNamingVerb = (state.meta.mmBookCodeStyle === "titleProper") ? "come from" : "are marked";
+                  s.push("Song selections " + allNamingVerb + " " + joinAnd(allBookPhrases) + ".");
+                }
               }
             } else {
               var dayLoc = meta.dayLocations && meta.dayLocations[group.sessionId];
@@ -6498,6 +6787,13 @@
     if(state.meta.mmSongIndex) metaRow("meta.mmSongIndex", "true");
     if(state.meta.mmTitleCaps) metaRow("meta.mmTitleCaps", "true");
     if(state.meta.mmStateDefaultBook === false) metaRow("meta.mmStateDefaultBook", "false");
+    if(state.meta.mmBookCodeStyle && state.meta.mmBookCodeStyle !== "singloud") metaRow("meta.mmBookCodeStyle", state.meta.mmBookCodeStyle);
+    if(state.meta.slBookTitleProper) metaRow("meta.slBookTitleProper", "true");
+    if(state.meta.slSingLoudCode === false) metaRow("meta.slSingLoudCode", "false");
+    if(state.meta.slSHMHACode) metaRow("meta.slSHMHACode", "true");
+    if(state.meta.slTunebookList) metaRow("meta.slTunebookList", "true");
+    if(state.meta.slShowOfficers === false) metaRow("meta.slShowOfficers", "false");
+    if(state.meta.mmSHEdition) metaRow("meta.mmSHEdition", "true");
     // v152 review's finding 3, and the sharpest of them in practice: this setting materially
     // changes published output, so under the suite's own "one authoritative Master CSV per
     // singing" rule it has to live in that file like every other Minutes Maker boolean
@@ -6587,8 +6883,17 @@
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
     setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
   }
+  // Kevin's report, 2026-09-15: a singing opened from Simple Minutes arrives with a
+  // date-coded filename (Simple Minutes' own downloadCsv() names it
+  // slugify(eventName)+"-"+eventDate+".csv" - see baltimore-second-monday-2026-09-14.csv),
+  // but every export Minutes itself produces dropped the date entirely, using only the
+  // event name - a regression relative to the file Minutes started from, and a real loss
+  // for anyone keeping multiple dated exports of a recurring singing side by side. Matches
+  // Simple Minutes' own convention: slug, then the ISO date if one is known.
   function safeName(){
-    return (state.meta.name || "minutes").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"") || "minutes";
+    var base = (state.meta.name || "minutes").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"") || "minutes";
+    var iso = bestGuessISODate(state.meta.date);
+    return iso ? base + "-" + iso : base;
   }
 
   // ---------------- SHMHA Minutes Book text sanitizing ----------------
@@ -6668,7 +6973,21 @@
     document.getElementById("traditionalFormats").style.display = isMinutesMaker ? "grid" : "none";
     document.getElementById("shmhaFormats").style.display = isSHMHA ? "grid" : "none";
     document.getElementById("simpleListFormats").style.display = isSimpleList ? "grid" : "none";
-    document.getElementById("minutesMakerOptions").style.display = isMinutesMaker ? "block" : "none";
+    // This whole options block is shared by Minutes Maker and the Simple List now (Song
+    // Title, ALL CAPS, and the summary line apply to both) - only SHMHA, with its own
+    // fixed format, gets none of it. The individual controls inside are then further
+    // narrowed below to whichever of the two active output types they actually apply to.
+    document.getElementById("minutesMakerOptions").style.display = (isMinutesMaker || isSimpleList) ? "block" : "none";
+    ["optSongNumber","optAllSources","optBookCodeStyle","optSongIndex","optStateDefaultBook"].forEach(function(id){
+      var el = document.getElementById(id);
+      if(el) el.style.display = isMinutesMaker ? "" : "none";
+    });
+    var slOnlyEl = document.getElementById("simpleListOnlyOptions");
+    if(slOnlyEl) slOnlyEl.style.display = isSimpleList ? "block" : "none";
+    // Wording & presentation (opening style, prayer phrasing, recurring date...) only means
+    // anything for a narrative export - the Simple List is deliberately not prose (see
+    // buildSimpleList's own comment), so none of these settings do anything to it.
+    document.getElementById("wordingPresentationSection").style.display = isSimpleList ? "none" : "block";
     document.getElementById("formatsNote").textContent = isSHMHA
       ? "Available for the SHMHA Minutes Book submission."
       : (isSimpleList ? "Available for the Simple List." : "Available for Minutes Maker.");
@@ -6689,28 +7008,26 @@
   });
 
   // ---------------- init ----------------
-  renderSongs();
-  if(typeof applyOutputType === "function") applyOutputType(state.meta.outputType || "traditional");
+  // Both guarded for the same reason as the hydrateFields() call above: still rendering
+  // straight from whatever was already saved, still capable of throwing on a legacy/
+  // unusual value in it (confirmed live: a saved meta.ordinal that isn't a string throws
+  // here too, via the same buildOpeningSentences() call renderPreview() makes). Nothing
+  // downstream in this script depends on either succeeding, so there's nothing left to
+  // protect by this point except not leaving a real error in the console for no reason.
+  try{ renderSongs(); }catch(e){ if(window.console) console.error("Compile: renderSongs() failed on initial load (likely stale/legacy saved data).", e); }
+  try{ if(typeof applyOutputType === "function") applyOutputType(state.meta.outputType || "traditional"); }catch(e){ if(window.console) console.error("Compile: applyOutputType() failed on initial load (likely stale/legacy saved data).", e); }
 
-  // ---------------- bridges for the wrapper (minutes.html only) ----------------
-  // Compile has no idea the wrapper exists - these are what it exposes outward, added
-  // here rather than restructuring any of the logic above. handleFile already does its
-  // own real validation and its own "replace unsaved work?" confirm when there's
-  // something to lose, so the wrapper gets that same protection for free just by calling
-  // the real thing instead of a hand-rolled copy of it. GetMasterCSV is the other
-  // direction: lets the wrapper pull Compile's current state back out before navigating
-  // away, using the exact same function its own Download Master CSV button calls.
-  window.__ezMinutesCompileHandleFile = handleFile;
-  window.__ezMinutesCompileGetMasterCSV = toCleanCSV;
-  window.__ezMinutesCompileReset = function(skipConfirm){
-    if(!skipConfirm && !confirm("Reset all fields, roles, lists, and the song list? This cannot be undone.")) return false;
-    state = freshState();
-    saveState();
-    hydrateFields();
-    renderSongs();
-    renderPreview();
-    return true;
-  };
+  // Compile has no idea the wrapper exists - window.__ezMinutesCompileHandleFile,
+  // __ezMinutesCompileGetMasterCSV, and __ezMinutesCompileReset are what it exposes
+  // outward. handleFile already does its own real validation and its own "replace unsaved
+  // work?" confirm when there's something to lose, so the wrapper gets that same
+  // protection for free just by calling the real thing instead of a hand-rolled copy of
+  // it. GetMasterCSV is the other direction: lets the wrapper pull Compile's current state
+  // back out before navigating away, using the exact same function its own Download
+  // Master CSV button calls. These are now registered right after state exists, near the
+  // top of this IIFE, not here - see that comment for why (an initialization-time
+  // exception during hydrateFields()/renderPreview() must not be able to prevent the
+  // wrapper's bridge from ever being wired up).
 })();
 
 </script>

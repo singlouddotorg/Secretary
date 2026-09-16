@@ -121,7 +121,10 @@ function stubDownload(win) {
   win.document.createElement = function (tag) {
     const el = origCreateElement(tag);
     if (tag === 'a') {
-      el.click = function () {};
+      // download() sets el.download = filename BEFORE calling el.click() - capturing it
+      // here (rather than never, as this used to) lets a test assert on the exported
+      // filename itself, not just the Blob content.
+      el.click = function () { ref.filename = el.download; };
     }
     return el;
   };

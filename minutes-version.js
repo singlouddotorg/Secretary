@@ -16,7 +16,7 @@
 // whole promise is that you double-click a file and it works.
 (function(global){
   "use strict";
-  var MINUTES_VERSION = "1.0.0-beta.104";
+  var MINUTES_VERSION = "1.0.0-beta.108";
   var api = { VERSION: MINUTES_VERSION, SCHEMA_VERSION: "5" };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else global.EZMinutesVersion = api;
