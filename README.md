@@ -6,22 +6,25 @@ Built for the Sacred Harp / shape-note singing community, but usable for any eve
 
 ## Part of the Sing Loud Suite
 
-Minutes is one of four apps, each in its own repository:
+Minutes is one of five apps, each in its own repository. Minutes and Tunebooks are the two
+full-featured, editing-capable apps in the suite — functioning and robust in daily use, but
+not yet called "release ready" the way the other three are, simply because there's much more
+surface area to a full editor than to a single-purpose tool.
 
-| App | What it does |
-|---|---|
-| **Minutes** (here) | Log a singing as it happens, then turn that log into publishable minutes. |
-| [**Tunebooks**](https://github.com/singlouddotorg/tunebooks) | Curate the shared tunebook data — editions, page indexes, Level 3 scholarly files. Most people recording a singing never need it. |
-| [**Simple Minutes**](https://github.com/singlouddotorg/simple-minutes) | A phone-sized logger: page numbers only, no names. Its files import straight into Minutes. |
-| [**Simple Compile**](https://github.com/singlouddotorg/simple-compile) | A one-page, no-editing version of Minutes: open a CSV, get readable minutes back. |
-| [**Tunebook Registry**](https://github.com/singlouddotorg/tunebook-registry) | The published tunebook data the others read. |
+| App | What it does | Status |
+|---|---|---|
+| **Minutes** (here) | Log a singing as it happens, then turn that log into publishable minutes. | Beta |
+| [**Tunebooks**](https://github.com/singlouddotorg/tunebooks) | Curate the shared tunebook data — editions, page indexes, Level 3 scholarly files. Most people recording a singing never need it. | Beta |
+| [**Simple Minutes**](https://github.com/singlouddotorg/simple-minutes) | A phone-sized logger: page numbers only, no names. Its files import straight into Minutes. | 1.0 release |
+| [**Simple Compile**](https://github.com/singlouddotorg/simple-compile) | A one-page, no-editing version of Minutes: open a CSV, get readable minutes back. | 1.0 release |
+| [**Tunebook Registry**](https://github.com/singlouddotorg/tunebook-registry) | The published tunebook data the others read. | 1.0 release |
 
 Minutes covers the whole life of a singing in four stages — Setup, Capture (recording live),
 Compile (review and enrichment), and Export — shown as numbered steps down the left, with
 the same singing carrying automatically from one stage to the next.
 
 | File | What it's for |
-|---|---|
+|---|---|---|
 | `index.html` | **The app.** Open this file directly — there's no separate start page. |
 | `instructions.html` | Full instructions, quick start, and troubleshooting. |
 | `minutes-version.js` | This app's version number, read by both pages above so they can't disagree. |
@@ -71,7 +74,7 @@ See `instructions.html` for the full walkthrough.
 Every export (manual download, clipboard copy, or automatic backup) uses these 32 columns, in this order:
 
 | Column | Notes |
-|---|---|
+|---|---|---|
 | `Schema Version` | A version marker for the CSV shape itself (currently `5`), so the app can flag a mismatch clearly instead of failing silently. |
 | `Order of entry` | Sequential position in the log. |
 | `Record Type` | `song`, `marker`, `session`, or `metadata`. A row with any other Record Type is preserved exactly and flagged for review rather than reinterpreted as a song — a forward-compatibility safeguard for record kinds a future version of the suite might introduce. |

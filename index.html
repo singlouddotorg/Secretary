@@ -3163,6 +3163,16 @@
       // explicit in the Master CSV even if the record later gains a name or two.
       if(m[1] === "mmNoNames") state.meta.mmNoNamesSet = true;
       saveState();
+      // A leaderless singing has nothing to submit to SHMHA (their Minutes Book format
+      // exists to credit leaders by name) and nothing for the Wording & Presentation
+      // section to say (those settings are about how the narrative frames who did what,
+      // which doesn't apply once no one is named) - Kevin's own call, 2026-09-16. Re-running
+      // applyOutputType recomputes both, and bumps off of SHMHA to Minutes Maker if that was
+      // the active type when this got checked, since it's no longer a choice on screen.
+      if(m[1] === "mmNoNames"){
+        if(el.checked && state.meta.outputType === "shmha") state.meta.outputType = "traditional";
+        applyOutputType(state.meta.outputType || "traditional");
+      }
       renderPreview();
     });
   });
@@ -6962,6 +6972,12 @@
   });
 
   function applyOutputType(type){
+    // A leaderless singing (mmNoNames) has nothing to submit to SHMHA - their Minutes Book
+    // format exists specifically to credit leaders by name - so that choice isn't offered
+    // at all while it's checked, rather than being offered and then producing a submission
+    // with every leader blank. Kevin's own call, 2026-09-16.
+    var noNames = !!state.meta.mmNoNames;
+    if(noNames && type === "shmha") type = "traditional";
     state.meta.outputType = type;
     saveState();
     var isSHMHA = type === "shmha";
@@ -6969,6 +6985,7 @@
     var isMinutesMaker = !isSHMHA && !isSimpleList;
     document.getElementById("outputTypeTraditional").classList.toggle("active", isMinutesMaker);
     document.getElementById("outputTypeSHMHA").classList.toggle("active", isSHMHA);
+    document.getElementById("outputTypeSHMHA").style.display = noNames ? "none" : "";
     document.getElementById("outputTypeSimpleList").classList.toggle("active", isSimpleList);
     document.getElementById("traditionalFormats").style.display = isMinutesMaker ? "grid" : "none";
     document.getElementById("shmhaFormats").style.display = isSHMHA ? "grid" : "none";
@@ -6986,8 +7003,10 @@
     if(slOnlyEl) slOnlyEl.style.display = isSimpleList ? "block" : "none";
     // Wording & presentation (opening style, prayer phrasing, recurring date...) only means
     // anything for a narrative export - the Simple List is deliberately not prose (see
-    // buildSimpleList's own comment), so none of these settings do anything to it.
-    document.getElementById("wordingPresentationSection").style.display = isSimpleList ? "none" : "block";
+    // buildSimpleList's own comment), so none of these settings do anything to it - and none
+    // of them mean anything for a leaderless singing either, since they're all about framing
+    // who did what.
+    document.getElementById("wordingPresentationSection").style.display = (isSimpleList || noNames) ? "none" : "block";
     document.getElementById("formatsNote").textContent = isSHMHA
       ? "Available for the SHMHA Minutes Book submission."
       : (isSimpleList ? "Available for the Simple List." : "Available for Minutes Maker.");
