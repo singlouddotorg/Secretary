@@ -673,6 +673,30 @@
     background:none; border:none; color:var(--faint); cursor:pointer;
     font-size:11px; padding:0; text-decoration:underline; font-family:'Inter',sans-serif;
   }
+  /* Structured Name(+Location) row entry for the sick/deceased/out-of-town/visitors/
+     thanked/donors lists (Kevin's own call, 2026-09-17, from MEMORIALS-TAB-PROPOSAL.md) -
+     sits visually in place of the plain textarea it still writes into behind the scenes. */
+  .namelist-widget{ display:flex; flex-direction:column; gap:6px; }
+  .namelist-row{ display:flex; gap:6px; align-items:center; }
+  .namelist-row .nl-name{ flex:1 1 auto; min-width:0; }
+  .namelist-row .nl-loc{ flex:0 1 40%; min-width:0; }
+  .namelist-row input{
+    padding:6px 8px; border:1px solid var(--line); border-radius:4px;
+    font-size:13px; background:#fff; color:var(--ink);
+  }
+  .namelist-row .nl-remove{
+    flex-shrink:0; width:22px; height:22px; line-height:1; border:1px solid var(--line);
+    border-radius:4px; background:#fff; color:var(--faint); cursor:pointer; font-size:14px;
+    padding:0;
+  }
+  .namelist-row .nl-remove:hover{ color:#b33; border-color:#b33; }
+  .namelist-add-btn{
+    align-self:flex-start; background:none; border:1px dashed var(--line); color:var(--faint);
+    cursor:pointer; font-size:11.5px; padding:5px 10px; border-radius:4px;
+    font-family:'Inter',sans-serif; margin-top:2px;
+  }
+  .namelist-add-btn:hover{ color:var(--ink); border-color:var(--ink-faint); }
+  .namelist-empty{ font-size:11.5px; color:var(--ink-faint); font-style:italic; margin:0 0 2px; }
   .book-group{display:flex; flex-direction:column; gap:6px;}
   .book-option{
     display:flex; align-items:center; gap:9px; padding:9px 10px;
@@ -950,7 +974,8 @@
     <div class="substage-list" id="compileSubnav">
       <button type="button" class="substage-btn" data-panel-target="details">Event Details</button>
       <button type="button" class="substage-btn" data-panel-target="roles">Roles</button>
-      <button type="button" class="substage-btn" data-panel-target="lists">Names &amp; Lists</button>
+      <button type="button" class="substage-btn" data-panel-target="recognitions">Recognitions</button>
+      <button type="button" class="substage-btn" data-panel-target="memorials">Memorials</button>
       <button type="button" class="substage-btn" data-panel-target="business">Business</button>
       <button type="button" class="substage-btn" data-panel-target="songs">Song List</button>
     </div>
@@ -1090,10 +1115,14 @@
                 <input id="roleChaplain" placeholder="Name">
               </div>
             </div>
-            <div class="field" style="margin-top:8px">
-              <label for="roleMemorialLesson">Memorial Lesson Leader</label>
-              <input id="roleMemorialLesson" placeholder="Name">
-            </div>
+            <!-- Kevin's own call, 2026-09-17: the Memorial Lesson Leader is no longer typed
+                 here. It's derived automatically from whichever song row(s) get tagged
+                 "Memorial" (or one of its Sick/Deceased variants), reading the same Leader
+                 field already used for that row's own attribution - typing the same name a
+                 second time here, in a field with no connection to that row data, was
+                 exactly the kind of duplicate entry that invites drift. See Capture's own
+                 "Officers:" summary line, which shows the derived name live once a Memorial
+                 row is tagged. -->
           </div>
 
           <div class="field" style="margin-bottom:10px">
@@ -1263,7 +1292,8 @@
           <div class="field" style="flex:1"><label for="newSessionArranger">Arranger(s)</label><input id="newSessionArranger"></div>
           <div class="field" style="flex:1"><label for="newSessionChaplain">Chaplain(s)</label><input id="newSessionChaplain"></div>
         </div>
-        <div class="field" style="margin:0;"><label for="newSessionMemorialLesson">Memorial Lesson Leader</label><input id="newSessionMemorialLesson"></div>
+        <!-- Memorial Lesson Leader isn't offered here - it's derived per session from
+             that session's own Memorial-tagged rows, not carried forward or overridden. -->
       </details>
       <div class="newday-banner-actions">
         <button type="button" id="newDayConfirmBtn">Confirm New Session</button>
@@ -1407,7 +1437,9 @@
         <div class="field"><label for="r_secretary">Secretary / recorder</label><input type="text" id="r_secretary"></div>
         <div class="field"><label for="r_secretarytitle">Secretary's title in the closing roster</label><input type="text" id="r_secretarytitle" placeholder="Secretary / Secretaries / Recording Secretary"></div>
         <div class="field"><label for="r_committee">Arranging committee</label><input type="text" id="r_committee" placeholder="Names, comma-separated"></div>
-        <div class="field"><label for="r_memorial">Memorial lesson leader</label><input type="text" id="r_memorial"></div>
+        <!-- Memorial lesson leader moved to the Memorials tab (#r_memorial_display there) —
+             it's about that one moment in the service, not a general officer role, so it
+             belongs grouped with the sick/deceased lists rather than here. -->
         <div class="field"><label for="r_chaplain">Chaplain / prayer leader</label><input type="text" id="r_chaplain"></div>
         <div class="field"><label for="r_pitcher">Keyers, if recorded</label><input type="text" id="r_pitcher" placeholder="Names, comma-separated"></div>
         <div class="field"><label for="r_treasurer">Treasurer</label><input type="text" id="r_treasurer"></div>
@@ -1416,19 +1448,28 @@
       <p class="panel-desc" style="margin-top:4px;">Only the Chair, Vice-chair, and Secretary reappear in the one-line roster at the end of the minutes — that's the convention in every sample singing reviewed. Everything else here is woven into the write-up instead.</p>
     </section>
 
-    <!-- ================= LISTS ================= -->
-    <section class="panel" data-panel="lists" role="tabpanel" id="panel-lists" aria-labelledby="tab-lists">
-      <h2 class="panel-title">Names &amp; Lists</h2>
-      <p class="panel-desc">One name (or item) per line. These become the "Sick and shut-in," "Memorial," and similar sections of the minutes.</p>
+    <!-- ================= RECOGNITIONS ================= -->
+    <section class="panel" data-panel="recognitions" role="tabpanel" id="panel-recognitions" aria-labelledby="tab-recognitions">
+      <h2 class="panel-title">Recognitions</h2>
+      <p class="panel-desc">Add one row per name. Ambient recognitions not tied to any one moment in the service — for the memorial lesson itself, see the Memorials tab.</p>
       <div class="grid2">
-        <div class="field"><label for="l_sick">Sick and shut-in</label><textarea id="l_sick"></textarea></div>
-        <div class="field"><label for="l_deceased">Deceased since last singing</label><textarea id="l_deceased"></textarea></div>
-        <div class="field"><label for="l_memdedic">Memorial dedications</label><textarea id="l_memdedic" placeholder="e.g. Song 344 dedicated to the memory of ..."></textarea></div>
-        <div class="field" style="grid-column:1 / -1;"><label for="l_memremarks">Memorial lesson remarks</label><textarea id="l_memremarks" placeholder="The full text of any remarks given during the memorial lesson — printed as-is, ahead of the sick/shut-in and deceased lists." style="min-height:100px;"></textarea></div>
         <div class="field"><label for="l_visitors">Visitors / first-time singers</label><textarea id="l_visitors"></textarea></div>
         <div class="field"><label for="l_outoftown">Singers from out of town</label><textarea id="l_outoftown"></textarea></div>
         <div class="field"><label for="l_thanked">People thanked</label><textarea id="l_thanked"></textarea></div>
         <div class="field"><label for="l_donors">Donors / contributors</label><textarea id="l_donors"></textarea></div>
+      </div>
+    </section>
+
+    <!-- ================= MEMORIALS ================= -->
+    <section class="panel" data-panel="memorials" role="tabpanel" id="panel-memorials" aria-labelledby="tab-memorials">
+      <h2 class="panel-title">Memorials</h2>
+      <p class="panel-desc">Everything about the memorial lesson itself. Add one row per name for the sick/shut-in and deceased lists below; dedications and remarks stay as free text.</p>
+      <div class="field"><label>Memorial lesson leader</label><div id="r_memorial_display" style="padding:8px 10px;font-size:13px;">(none tagged yet)</div><p class="panel-desc" style="margin-top:2px;">Derived from whichever song(s) are tagged Memorial on the Song List tab — not editable here.</p></div>
+      <div class="grid2">
+        <div class="field"><label for="l_sick">Sick and shut-in</label><textarea id="l_sick"></textarea></div>
+        <div class="field"><label for="l_deceased">Deceased since last singing</label><textarea id="l_deceased"></textarea></div>
+        <div class="field" style="grid-column:1 / -1;"><label for="l_memdedic">Memorial dedications</label><textarea id="l_memdedic" placeholder="e.g. Song 344 dedicated to the memory of ..."></textarea></div>
+        <div class="field" style="grid-column:1 / -1;"><label for="l_memremarks">Memorial lesson remarks</label><textarea id="l_memremarks" placeholder="The full text of any remarks given during the memorial lesson — printed as-is, ahead of the sick/shut-in and deceased lists." style="min-height:100px;"></textarea></div>
       </div>
     </section>
 
@@ -1586,13 +1627,13 @@
       <h3 style="font-family:var(--serif);font-size:15px;margin:18px 0 8px;">Type of output</h3>
       <div class="pill-row">
         <button class="small preview-toggle active" id="outputTypeTraditional">Minutes Maker</button>
-        <button class="small preview-toggle" id="outputTypeSHMHA">SHMHA Minutes Book Submission</button>
         <button class="small preview-toggle" id="outputTypeSimpleList">Simple List</button>
+        <button class="small preview-toggle" id="outputTypeSHMHA">SHMHA Minutes Book</button>
       </div>
 
       <div id="minutesMakerOptions">
       <h3 style="font-family:var(--serif);font-size:15px;margin:20px 0 8px;">Minutes Maker: per-song &amp; summary options</h3>
-      <p class="panel-desc" style="margin:-4px 0 12px;">Song title, ALL CAPS, and the summary line also apply to the Simple List below; everything else here is Minutes-Maker-only. SHMHA Minutes Book Submission always follows its own fixed format regardless of any of these settings.</p>
+      <p class="panel-desc" style="margin:-4px 0 12px;">Song title, ALL CAPS, and the summary line also apply to the Simple List below; everything else here is Minutes-Maker-only. SHMHA Minutes Book always follows its own fixed format regardless of any of these settings.</p>
       <div class="grid2">
         <div class="field">
           <label style="text-transform:none;font-weight:400;letter-spacing:0;">On every song call-out:</label>
@@ -1600,6 +1641,7 @@
           <label style="display:block;font-weight:400;text-transform:none;letter-spacing:0;"><input type="checkbox" id="m_mmSongTitle"> Song title</label>
           <div id="optAllSources"><label style="display:block;font-weight:400;text-transform:none;letter-spacing:0;"><input type="checkbox" id="m_mmAllSources"> Song source, even for the default book</label></div>
           <label style="display:block;font-weight:400;text-transform:none;letter-spacing:0;"><input type="checkbox" id="m_mmTitleCaps"> ALL CAPS for song titles</label>
+          <label style="display:block;font-weight:400;text-transform:none;letter-spacing:0;"><input type="checkbox" id="m_mmShowTimeCalled"> Show time called</label>
         </div>
         <div class="field">
           <label style="text-transform:none;font-weight:400;letter-spacing:0;">Summary line at the end (omitted entirely if none checked):</label>
@@ -1636,7 +1678,7 @@
            it - Minutes Maker and SHMHA drop attribution from their narrative sentences, and
            the Simple List drops its Name column entirely rather than printing "the leader"
            on every line. -->
-      <label style="display:block;font-weight:400;text-transform:none;letter-spacing:0;margin-top:14px;"><input type="checkbox" id="m_mmNoNames"> This singing's minutes don't name individual leaders (song attribution is dropped throughout, even where a name happens to be on file; the Memorial Lesson Leader, a separate Officer, is still named)</label>
+      <label style="display:block;font-weight:400;text-transform:none;letter-spacing:0;margin-top:14px;"><input type="checkbox" id="m_mmNoNames"> This singing's minutes don't name individual leaders (song attribution is dropped throughout, even where a name happens to be on file — including the Memorial Lesson Leader(s), now that it's derived from those same tagged rows rather than a separate Officer field)</label>
 
       <div id="wordingPresentationSection">
       <h3 style="font-family:var(--serif);font-size:15px;margin:20px 0 8px;">Wording &amp; presentation</h3>
@@ -2054,13 +2096,13 @@
       // Compile in the rail, left Export's own panel still marked active - so this
       // branch never ran at all, and Compile kept showing whatever Export had left
       // behind. The real question is narrower: is the CURRENTLY active panel one of
-      // Compile's own five real subnav pages (details/roles/lists/business/songs)? If
+      // Compile's own six real subnav pages (details/roles/recognitions/memorials/business/songs)? If
       // so, stay there - a real, useful "where was I within Compile" memory, worth
       // keeping. If the active panel is Export, SHMHA, Import, or nothing at all,
       // Compile means Compile - reset to Event Details, the same real page its own
       // subnav would land on first.
       var activePanel = document.querySelector('#compileHost .panel.active');
-      var ownSubpages = ["details", "roles", "lists", "business", "songs"];
+      var ownSubpages = ["details", "roles", "recognitions", "memorials", "business", "songs"];
       if(!activePanel || ownSubpages.indexOf(activePanel.getAttribute("data-panel")) === -1) showCompilePanel("details");
     }
     updatePagenav(name);
@@ -2259,6 +2301,37 @@
   // (see ensureFirstSessionExists/addSessionEntry in the embedded Capture code) - this is
   // what makes it possible to scope Date/Location to just the first session's own rows,
   // the ones Setup's own Date/Location fields actually represent, rather than every row.
+  // Raw-row-array counterpart to Compile's deriveMemorialLeader()/Capture's own
+  // deriveMemorialLeaderCapture() - same rule, applied to activeEvent.rows' 2D array
+  // shape (this wrapper bridge predates both of those and doesn't share their row
+  // objects). Every distinct name across the given session's own Memorial-tagged song
+  // rows, first-seen order, comma-joined.
+  function deriveMemorialLeaderFromRawRows(rows, colIdx, sessionId){
+    // Inlined rather than calling isMemorialTag()/splitNames(): both live in Compile's or
+    // Capture's own script scope, not this wrapper's, and scripts here don't share
+    // functions across their separate blocks.
+    function isMemorialTagLocal(tag){
+      return tag === "Memorial" || tag === "Memorial (Sick)" || tag === "Memorial (Deceased)";
+    }
+    function splitNamesLocal(s){
+      if(!s) return [];
+      return String(s).split(/,| and | & /i).map(function(n){ return n.trim(); }).filter(Boolean);
+    }
+    var recordTypeIdx = colIdx["Record Type"], sessionIdIdx = colIdx["Session ID"];
+    var tagIdx = colIdx["Tag"], leaderIdx = colIdx["Leader(s)"], canonicalIdx = colIdx["Canonical Leader(s)"];
+    var names = [];
+    for(var i = 1; i < rows.length; i++){
+      var row = rows[i];
+      if(recordTypeIdx !== undefined && row[recordTypeIdx] !== "song") continue;
+      if(sessionIdIdx !== undefined && sessionId && row[sessionIdIdx] !== sessionId) continue;
+      var tag = tagIdx !== undefined ? row[tagIdx] : "";
+      if(!isMemorialTagLocal(tag)) continue;
+      var val = (canonicalIdx !== undefined && row[canonicalIdx]) ? row[canonicalIdx] : ((leaderIdx !== undefined && row[leaderIdx]) || "");
+      splitNamesLocal(val).forEach(function(n){ if(n && names.indexOf(n) === -1) names.push(n); });
+    }
+    return names.join(", ");
+  }
+
   function pushSetupFieldsIntoRows(){
     if(!activeEvent || !activeEvent.rows || !activeEvent.rows.length) return;
     var header = activeEvent.rows[0];
@@ -2271,30 +2344,11 @@
       "Event": activeEvent.event, "Series Code": activeEvent.seriesCode,
       "Event ID": activeEvent.eventId, "Previous Event ID": activeEvent.previousEventId
     };
-    // v144 release review, finding 1B: Officers were wrongly in wholeSingingFields above,
-    // applied unconditionally to every row regardless of session - editing Chair while on
-    // Session 2 silently rewrote Session 1's own historical Chair too, confirmed live
-    // before fixing. Officers belong in the same bucket as Date/Location: real facts
-    // Setup's own fields represent for the first session specifically, not the whole
-    // singing. There's no per-session Officer editing UI yet (Start New Session's own
-    // transition banner only exposes Date/Location/label) - scoping to the first session,
-    // same as Date/Location already correctly do below, is the safe fix that matches what
-    // Setup's fields actually mean today without inventing a new editing surface this fix
-    // doesn't need.
-    var sessionScopedFields = {
-      "Date": activeEvent.date, "Location": activeEvent.location,
-      "Chair": (document.getElementById("roleChair") || {}).value || "",
-      "Vice-Chair": (document.getElementById("roleViceChair") || {}).value || "",
-      "Secretary": (document.getElementById("roleSecretary") || {}).value || "",
-      "Treasurer": (document.getElementById("roleTreasurer") || {}).value || "",
-      "Arranger(s)": (document.getElementById("roleArranger") || {}).value || "",
-      "Chaplain(s)": (document.getElementById("roleChaplain") || {}).value || "",
-      "Memorial Lesson Leader": (document.getElementById("roleMemorialLesson") || {}).value || ""
-    };
 
     // The first session's own Session ID - found by real earliest Order of entry among
     // rows that have one, not just assumed to be row 1, in case rows are ever out of
-    // physical file order.
+    // physical file order. Computed before sessionScopedFields below, since the derived
+    // Memorial Lesson Leader value needs it too.
     var firstSessionId = null;
     if(sessionIdIdx !== undefined && orderIdx !== undefined){
       var earliestOrder = null;
@@ -2309,6 +2363,29 @@
         }
       }
     }
+
+    // v144 release review, finding 1B: Officers were wrongly in wholeSingingFields above,
+    // applied unconditionally to every row regardless of session - editing Chair while on
+    // Session 2 silently rewrote Session 1's own historical Chair too, confirmed live
+    // before fixing. Officers belong in the same bucket as Date/Location: real facts
+    // Setup's own fields represent for the first session specifically, not the whole
+    // singing. There's no per-session Officer editing UI yet (Start New Session's own
+    // transition banner only exposes Date/Location/label) - scoping to the first session,
+    // same as Date/Location already correctly do below, is the safe fix that matches what
+    // Setup's fields actually mean today without inventing a new editing surface this fix
+    // doesn't need. Memorial Lesson Leader is the one exception even to that: Kevin's own
+    // call, 2026-09-17 - it's derived from the first session's own Memorial-tagged rows
+    // rather than read off a Setup field, since that field no longer exists.
+    var sessionScopedFields = {
+      "Date": activeEvent.date, "Location": activeEvent.location,
+      "Chair": (document.getElementById("roleChair") || {}).value || "",
+      "Vice-Chair": (document.getElementById("roleViceChair") || {}).value || "",
+      "Secretary": (document.getElementById("roleSecretary") || {}).value || "",
+      "Treasurer": (document.getElementById("roleTreasurer") || {}).value || "",
+      "Arranger(s)": (document.getElementById("roleArranger") || {}).value || "",
+      "Chaplain(s)": (document.getElementById("roleChaplain") || {}).value || "",
+      "Memorial Lesson Leader": deriveMemorialLeaderFromRawRows(activeEvent.rows, colIdx, firstSessionId)
+    };
 
     for(var r = 1; r < activeEvent.rows.length; r++){
       var row2 = activeEvent.rows[r];
@@ -2365,7 +2442,7 @@
   // as the loop just above. Without this, editing only an officer and switching stages
   // immediately after would still lose the edit, since nothing would have re-run
   // pushSetupFieldsIntoRows() at all.
-  ["roleChair","roleViceChair","roleSecretary","roleTreasurer","roleArranger","roleChaplain","roleMemorialLesson"].forEach(function(id){
+  ["roleChair","roleViceChair","roleSecretary","roleTreasurer","roleArranger","roleChaplain"].forEach(function(id){
     var el = document.getElementById(id);
     el.addEventListener("input", function(){
       if(!activeEvent) return;
@@ -2682,7 +2759,7 @@
              // out in full ("(The Sacred Harp)"). One choice, not a checklist: unlike the
              // Simple List's book-identifier columns below, this sits inside running prose,
              // where showing more than one system at once reads as clutter, not data.
-             // SHMHA Minutes Book Submission's own fixed format is entirely separate and
+             // SHMHA Minutes Book's own fixed format is entirely separate and
              // never reads this - its book codes are a protocol, not a style choice.
              mmBookCodeStyle:"singloud",
              // "Show edition for The Sacred Harp" - see titleProperName's own comment for
@@ -2705,6 +2782,14 @@
              // defaulting this true keeps that same appearance for every singing that
              // existed before this became a checkbox.
              slShowOfficers:true,
+             // "Show time called" (Kevin's own request, 2026-09-17): reads the time each
+             // song was actually logged in Capture (the existing Time entered column,
+             // already carried on every song row) and shows it on the call-out. Shared
+             // between Minutes Maker and the Simple List, same as Song Title/ALL CAPS
+             // above - most useful for the Simple List's own scan-list format, but no
+             // reason to withhold it from Minutes Maker's prose either. Off by default so
+             // every existing export keeps reading exactly as it always has.
+             mmShowTimeCalled:false,
              defaultBook:"", bookCodes:{}, dayLocations:{},
              seriesCode:"", eventId:"", previousEventId:"" },
       roles:{ chair:"", chairTitle:"Chair", vicechair:"", vicechairTitle:"Vice-chair",
@@ -3106,7 +3191,7 @@
     ["r_chair","roles","chair"], ["r_chairtitle","roles","chairTitle"],
     ["r_vicechair","roles","vicechair"], ["r_vicechairtitle","roles","vicechairTitle"],
     ["r_secretary","roles","secretary"], ["r_secretarytitle","roles","secretaryTitle"],
-    ["r_committee","roles","committee"], ["r_memorial","roles","memorial"], ["r_chaplain","roles","chaplain"],
+    ["r_committee","roles","committee"], ["r_chaplain","roles","chaplain"],
     ["r_pitcher","roles","pitcher"], ["r_treasurer","roles","treasurer"], ["r_localhost","roles","localhost"],
     ["l_sick","lists","sick"], ["l_deceased","lists","deceased"], ["l_memdedic","lists","memdedic"],
     ["l_memremarks","lists","memremarks"],
@@ -3121,10 +3206,141 @@
     ["m_mmSongNumber","mmSongNumber"], ["m_mmSongTitle","mmSongTitle"], ["m_mmAllSources","mmAllSources"],
     ["m_mmSingers","mmSingers"], ["m_mmLeaders","mmLeaders"], ["m_mmSongs","mmSongs"],
     ["m_mmSongIndex","mmSongIndex"], ["m_mmTitleCaps","mmTitleCaps"], ["m_mmStateDefaultBook","mmStateDefaultBook"],
-    ["m_mmNoNames","mmNoNames"], ["m_mmSHEdition","mmSHEdition"],
+    ["m_mmNoNames","mmNoNames"], ["m_mmSHEdition","mmSHEdition"], ["m_mmShowTimeCalled","mmShowTimeCalled"],
     ["m_slBookTitleProper","slBookTitleProper"], ["m_slSingLoudCode","slSingLoudCode"], ["m_slSHMHACode","slSHMHACode"],
     ["m_slTunebookList","slTunebookList"], ["m_slShowOfficers","slShowOfficers"]
   ];
+  // Structured Name(+Location) row entry for the sick/deceased/out-of-town/visitors/
+  // thanked/donors lists (Kevin's own call, 2026-09-17, from MEMORIALS-TAB-PROPOSAL.md 2b -
+  // replacing the plain one-name-per-line textarea, which was easy to get wrong: the
+  // em-dash "Name—State" convention had to be typed by hand, with nothing in the UI
+  // suggesting it was even a supported format). Deliberately NOT applied to memdedic
+  // (Memorial dedications) or memremarks (Memorial lesson remarks) - those are free-text
+  // sentences/paragraphs, not one bare name per line, so a Name+Location row makes no
+  // sense there.
+  //
+  // The underlying data is unchanged: state.lists.sick etc. are still the same
+  // newline-separated, em-dash-joined string FIELD_MAP already binds to its textarea -
+  // this widget is a view that sits on top of that same textarea, reading it to build its
+  // rows and writing back into it (then dispatching the textarea's own "input" event) so
+  // every existing consumer - hydrateFields, the FIELD_MAP change handler, saveState,
+  // CSV import auto-fill, the narrative builder's listLines()/joinNames() - keeps working
+  // completely unchanged. Location only applies where the "Name—State" convention already
+  // existed (sick/deceased/out-of-town); visitors/thanked/donors get Name-only rows.
+  var NAME_LIST_WIDGET_FIELDS = [
+    { id: "l_sick", location: true },
+    { id: "l_deceased", location: true },
+    { id: "l_outoftown", location: true },
+    { id: "l_visitors", location: false },
+    { id: "l_thanked", location: false },
+    { id: "l_donors", location: false }
+  ];
+  function parseNameListText(text){
+    return listLines(text).map(function(line){
+      var i = line.indexOf("—");
+      return i === -1 ? { name: line, location: "" } : { name: line.slice(0, i).trim(), location: line.slice(i + 1).trim() };
+    });
+  }
+  function serializeNameListRows(rows){
+    return rows
+      .map(function(r){ return { name: (r.name || "").trim(), location: (r.location || "").trim() }; })
+      .filter(function(r){ return r.name || r.location; })
+      .map(function(r){ return r.location ? (r.name + "—" + r.location) : r.name; })
+      .join("\n");
+  }
+  function renderNameListWidget(cfg, wrap){
+    var rows = parseNameListText(wrap.__ta.value);
+    wrap.innerHTML = "";
+    if(!rows.length){
+      var empty = document.createElement("p");
+      empty.className = "namelist-empty";
+      empty.textContent = "None recorded.";
+      wrap.appendChild(empty);
+    }
+    rows.forEach(function(r){
+      wrap.appendChild(buildNameListRow(cfg, r.name, r.location));
+    });
+    var addBtn = document.createElement("button");
+    addBtn.type = "button";
+    addBtn.className = "namelist-add-btn";
+    addBtn.textContent = "+ Add name";
+    addBtn.addEventListener("click", function(){
+      var empty2 = wrap.querySelector(".namelist-empty");
+      if(empty2) empty2.remove();
+      var row = buildNameListRow(cfg, "", "");
+      wrap.insertBefore(row, addBtn);
+      var nameInput = row.querySelector(".nl-name");
+      if(nameInput) nameInput.focus();
+    });
+    wrap.appendChild(addBtn);
+  }
+  function buildNameListRow(cfg, name, location){
+    var row = document.createElement("div");
+    row.className = "namelist-row";
+    var nameInput = document.createElement("input");
+    nameInput.type = "text"; nameInput.className = "nl-name"; nameInput.placeholder = "Name"; nameInput.value = name || "";
+    row.appendChild(nameInput);
+    if(cfg.location){
+      var locInput = document.createElement("input");
+      locInput.type = "text"; locInput.className = "nl-loc"; locInput.placeholder = "State (optional)"; locInput.value = location || "";
+      row.appendChild(locInput);
+    }
+    var removeBtn = document.createElement("button");
+    removeBtn.type = "button"; removeBtn.className = "nl-remove"; removeBtn.title = "Remove"; removeBtn.setAttribute("aria-label", "Remove this name"); removeBtn.textContent = "×";
+    row.appendChild(removeBtn);
+    // Takes the wrap explicitly rather than reading row.parentNode - the remove handler
+    // below detaches `row` (row.remove()) before it needs to write back the remaining
+    // rows, and row.parentNode is already null by then.
+    var writeBackFromWrap = function(wrap){
+      var ta = wrap && wrap.__ta;
+      if(!ta) return;
+      var rows = Array.prototype.map.call(wrap.querySelectorAll(".namelist-row"), function(r){
+        return { name: r.querySelector(".nl-name").value, location: r.querySelector(".nl-loc") ? r.querySelector(".nl-loc").value : "" };
+      });
+      ta.value = serializeNameListRows(rows);
+      ta.dispatchEvent(new Event("input", { bubbles: true }));
+      ta.dispatchEvent(new Event("change", { bubbles: true }));
+    };
+    var writeBack = function(){ writeBackFromWrap(row.parentNode); };
+    nameInput.addEventListener("input", writeBack);
+    if(cfg.location) row.querySelector(".nl-loc").addEventListener("input", writeBack);
+    removeBtn.addEventListener("click", function(){
+      var wrap = row.parentNode;
+      row.remove();
+      if(wrap && !wrap.querySelector(".namelist-row")){
+        var empty = document.createElement("p");
+        empty.className = "namelist-empty";
+        empty.textContent = "None recorded.";
+        wrap.insertBefore(empty, wrap.firstChild);
+      }
+      writeBackFromWrap(wrap);
+    });
+    return row;
+  }
+  function initNameListWidgets(){
+    NAME_LIST_WIDGET_FIELDS.forEach(function(cfg){
+      var ta = document.getElementById(cfg.id);
+      if(!ta || ta.dataset.nameListInit) return;
+      ta.dataset.nameListInit = "1";
+      ta.style.display = "none";
+      var wrap = document.createElement("div");
+      wrap.className = "namelist-widget";
+      wrap.id = cfg.id + "_widget";
+      wrap.__ta = ta;
+      ta.parentNode.insertBefore(wrap, ta.nextSibling);
+      renderNameListWidget(cfg, wrap);
+    });
+  }
+  // Re-syncs every widget's rows from its (possibly programmatically changed - CSV import
+  // auto-fill, a full reset, restoring a snapshot) textarea value. Safe to call any time
+  // hydrateFields() runs: every real call site is a load/import/reset event, never a
+  // per-keystroke one, so this never fights an in-progress edit inside the widget itself.
+  function refreshNameListWidgets(){
+    NAME_LIST_WIDGET_FIELDS.forEach(function(cfg){
+      var wrap = document.getElementById(cfg.id + "_widget");
+      if(wrap) renderNameListWidget(cfg, wrap);
+    });
+  }
   function hydrateFields(){
     FIELD_MAP.forEach(function(m){
       var el = document.getElementById(m[0]);
@@ -3138,6 +3354,8 @@
     if(typeof checkNameForOrdinal === "function") checkNameForOrdinal();
     if(typeof applyOutputType === "function") applyOutputType(state.meta.outputType || "traditional");
     if(typeof updateEventIdDisplay === "function") updateEventIdDisplay();
+    initNameListWidgets();
+    refreshNameListWidgets();
   }
   FIELD_MAP.forEach(function(m){
     var el = document.getElementById(m[0]);
@@ -3742,7 +3960,7 @@
   }
 
   // "In honor of the sick and homebound: Blake Morris; Robert Greenberg" -> auto-fills the
-  // Names & Lists tab's Sick/Deceased fields straight from a Memorial-tagged row's notes,
+  // Memorials tab's Sick/Deceased fields straight from a Memorial-tagged row's notes,
   // so the compiler doesn't have to retype names the CSV already has. Splits on ";" when
   // present (keeps "Name—State" groupings on one line, matching real minutes' convention),
   // else falls back to ",". Best-effort — still worth the compiler reviewing afterward.
@@ -4300,8 +4518,14 @@
     if(!state.roles.committee && firstArranger){ state.roles.committee = firstArranger; autoFilled.push("arranging committee"); }
     if(!state.roles.chaplain && firstChaplain){ state.roles.chaplain = firstChaplain; autoFilled.push("chaplain"); }
     if(firstMemorialLesson){
+      // The leader name embedded in an imported file's own Memorial Lesson Leader
+      // column is no longer copied into a role field - it's derived live from the
+      // Memorial-tagged song rows themselves (deriveMemorialLeader()), so a separate
+      // imported copy would just reintroduce the duplicate-entry problem that removal
+      // fixed. The sick/deceased names sometimes embedded in that same column (an older
+      // convention, from before Memorials existed as its own place for them) are
+      // still worth auto-filling.
       var memParsed = parseMemorialLessonField(firstMemorialLesson);
-      if(!state.roles.memorial && memParsed.leader){ state.roles.memorial = memParsed.leader; autoFilled.push("memorial lesson leader"); }
       if(memParsed.sick && !sickAutoText) sickAutoText = memParsed.sick;
       if(memParsed.deceased && !deceasedAutoText) deceasedAutoText = memParsed.deceased;
     }
@@ -4320,7 +4544,10 @@
     });
     Object.keys(officerByDay).forEach(function(day){
       var dayOfficers = officerByDay[day];
-      var roleKeyFor = { chair:"chair", vicechair:"vicechair", secretary:"secretary", treasurer:"treasurer", committee:"committee", chaplain:"chaplain", memorial:"memorial" };
+      // "memorial" deliberately isn't in this map any more - the Memorial Lesson Leader
+      // is derived from tagged rows now, not a role value that can differ-from-default
+      // per session the way the others can.
+      var roleKeyFor = { chair:"chair", vicechair:"vicechair", secretary:"secretary", treasurer:"treasurer", committee:"committee", chaplain:"chaplain" };
       Object.keys(roleKeyFor).forEach(function(field){
         var val = dayOfficers[field];
         // RC6-01: compare even a blank val against the default - an explicit blank that
@@ -4348,11 +4575,11 @@
     }
     if(sickAutoText && !state.lists.sick.trim()){
       state.lists.sick = sickAutoText;
-      autoFilled.push("sick and shut-in names (see Names & Lists tab)");
+      autoFilled.push("sick and shut-in names (see Memorials tab)");
     }
     if(deceasedAutoText && !state.lists.deceased.trim()){
       state.lists.deceased = deceasedAutoText;
-      autoFilled.push("deceased names (see Names & Lists tab)");
+      autoFilled.push("deceased names (see Memorials tab)");
     }
 
     // If different days used different locations, capture that per-day so the narrative and
@@ -4400,7 +4627,7 @@
       if(!m.field) return;
       var parts = m.field.split(".");
       var META_HYDRATE_KEYS = ["ordinal","eventType","outputType","recurringDate","openingStyle","presidingTitle","prayerStyle","closingPrayerStyle","host","present","defaultBook","books","suiteVersion","mmBookCodeStyle"];
-      var META_BOOLEAN_KEYS = ["mmSongNumber","mmSongTitle","mmAllSources","mmSingers","mmLeaders","mmSongs","mmSongIndex","mmTitleCaps","mmStateDefaultBook","mmNoNames","mmSHEdition","slBookTitleProper","slSingLoudCode","slSHMHACode","slTunebookList","slShowOfficers"];
+      var META_BOOLEAN_KEYS = ["mmSongNumber","mmSongTitle","mmAllSources","mmSingers","mmLeaders","mmSongs","mmSongIndex","mmTitleCaps","mmStateDefaultBook","mmNoNames","mmSHEdition","mmShowTimeCalled","slBookTitleProper","slSingLoudCode","slSHMHACode","slTunebookList","slShowOfficers"];
       if(parts[0] === "meta" && META_BOOLEAN_KEYS.indexOf(parts[1]) !== -1){
         state.meta[parts[1]] = (m.value === "true"); metadataHydrated++;
         // A meta.mmNoNames row in the file - either value - is a decision already made
@@ -4433,7 +4660,7 @@
         state.metaPassthrough.push({ field: m.field, value: m.value, session: m.session || "", sessionId: m.sessionId || "", timestampISO: m.timestampISO || "", timeEntered: m.timeEntered || "" });
       }
     });
-    if(metadataHydrated) autoFilled.push(metadataHydrated + " field(s) restored from a previously-completed Compile file (Business/Names & Lists/Sessions — worth a quick look)");
+    if(metadataHydrated) autoFilled.push(metadataHydrated + " field(s) restored from a previously-completed Compile file (Business/Recognitions/Memorials/Sessions — worth a quick look)");
 
     // A record with real songs and not one leader name on any of them isn't missing data
     // to chase down - it's a singing where names weren't collected, which is Simple
@@ -4723,7 +4950,7 @@
           ? '<div class="flag-note" style="margin-top:3px;">Part of this reads like an auto-generated "back to order" phrase — the app already says this in the re-entry sentence, so that part is trimmed on export. Anything else in the note is kept.</div>'
           : "";
         var memorialHint = (isMemorialTag(s.tag) && s.notes && s.notes.trim())
-          ? '<div class="flag-note" style="margin-top:3px;">This note isn\'t printed for Memorial-tagged rows — move the leader\'s name to Roles &rarr; Memorial lesson leader, and the sick/shut-in and deceased names to the Names &amp; Lists tab, so they show up in the write-up.</div>'
+          ? '<div class="flag-note" style="margin-top:3px;">This note isn\'t printed for Memorial-tagged rows — the leader here already counts toward the Memorial lesson leader shown on the Memorials tab, and the sick/shut-in and deceased names go on that same tab, so they show up in the write-up.</div>'
           : "";
         notesCell = '<input class="mini-input notes-in" placeholder="Notes" aria-label="Notes for entry '+s.order+'" value="'+esc(s.notes)+'">' + boilerplateHint + memorialHint +
           '<div style="margin-top:4px;display:flex;align-items:center;gap:5px;">' +
@@ -4932,7 +5159,7 @@
           if(s.type === "namesuggestion" && s.leader) already[s.leader] = true;
           if(s.type === "song" && s.leader) already[s.leader] = true;
         });
-        [state.roles.chair, state.roles.vicechair, state.roles.secretary, state.roles.treasurer, state.roles.committee, state.roles.chaplain, state.roles.memorial].forEach(function(v){
+        [state.roles.chair, state.roles.vicechair, state.roles.secretary, state.roles.treasurer, state.roles.committee, state.roles.chaplain, deriveMemorialLeader()].forEach(function(v){
           splitNamesForSuggestions(v).forEach(function(n){ already[n] = true; });
         });
         var realRows = state.songs.filter(function(s){ return s.type !== "metadata"; });
@@ -4969,7 +5196,7 @@
     if(l === "SINGING SCHOOL") return leader ? ("A singing school was taught by " + leader + ".") : "A singing school was held.";
     if(l === "PRAYER") return leader ? (leader + " led the class in prayer.") : "The class was led in prayer.";
     return ""; // RECESS / LUNCH print as bare markers unless you add prose here;
-               // MEMORIAL LESSON is built automatically from Roles + Names & Lists.
+               // MEMORIAL LESSON is built automatically from Roles + Memorials.
   }
 
   // For a Business Meeting row tagged with a specific report type: if no leader was logged,
@@ -5144,7 +5371,10 @@
   var SESSION_OFFICER_FIELDS = [
     ["chair", "Chair"], ["vicechair", "Vice-chair"], ["secretary", "Secretary"],
     ["treasurer", "Treasurer"], ["committee", "Arranging committee"],
-    ["chaplain", "Chaplain"], ["memorial", "Memorial lesson leader"]
+    ["chaplain", "Chaplain"]
+    // Memorial lesson leader deliberately isn't here - see r_memorial_display and
+    // deriveMemorialLeader(): it's derived per session from that session's own
+    // Memorial-tagged rows, so there's nothing to override by hand.
   ];
 
   function updateMultiDayNote(){
@@ -5514,6 +5744,42 @@
     return tag === "Memorial" || tag === "Memorial (Sick)" || tag === "Memorial (Deceased)";
   }
 
+  // The Memorial Lesson Leader, derived rather than typed - Kevin's own call, 2026-09-17.
+  // There used to be three separate free-text places to name this role (Setup's own
+  // default, Compile's event-wide Roles field, and a per-session override), none of them
+  // connected to the Leader field already sitting on the tagged row itself - the row's
+  // own data is properly embedded in the schema, so a second, disconnected typed copy was
+  // exactly the kind of duplicate entry that invites drift if one is ever corrected and
+  // the other isn't. Every distinct name across the relevant Memorial-tagged SONG rows
+  // (Memorial/Memorial (Sick)/Memorial (Deceased) all count), first-seen order,
+  // comma-joined - covers a co-led lesson without a separate field for it. Pass a
+  // sessionId to scope to one session (the per-row CSV export wants this); omit it for a
+  // whole-singing figure (Simple List and the Memorials tab display both want this
+  // instead, since neither is broken down by session). This function itself always
+  // returns the real derived name(s) regardless of "no individual leaders" - the CSV
+  // column and the on-screen display are data, same as the Leader column on Song List,
+  // which stays populated and visible under no-names too. It's buildMemorialParagraphs()'s
+  // own narrative prose, specifically, that suppresses this under no-names (Kevin's own
+  // call, 2026-09-17: once this stopped being a separate typed Officer field, there was no
+  // longer a real reason to exempt it from the same suppression every other per-song
+  // leader gets under that setting).
+  function memorialLeaderNamesFromRows(rows){
+    var names = [];
+    rows.forEach(function(r){
+      if(r.type !== "song" || !isMemorialTag(r.tag)) return;
+      // splitNamesForSuggestions, not splitNames - the latter belongs to Capture's own
+      // script scope, not Compile's; same comma/"and"/"&" splitting logic either way.
+      splitNamesForSuggestions(effectiveLeader(r)).forEach(function(n){
+        if(n && names.indexOf(n) === -1) names.push(n);
+      });
+    });
+    return names;
+  }
+  function deriveMemorialLeader(sessionId){
+    var rows = sessionId !== undefined ? state.songs.filter(function(r){ return r.sessionId === sessionId; }) : state.songs;
+    return memorialLeaderNamesFromRows(rows).join(", ");
+  }
+
   function pageDisplay(row, effectiveDefault, abbrFn, chaplainNameToSuppress, forceSuppressNote, mode){
     var loc;
     if(mode === "singloud"){
@@ -5557,7 +5823,7 @@
     }
     // A Memorial-tagged row's notes are very often the whole raw lesson writeup dumped by
     // the capture tool (sick/shut-in and deceased names, prayer references, etc.) rather
-    // than a short per-song dedication — that belongs on the Names & Lists tab and the
+    // than a short per-song dedication — that belongs on the Memorials tab and the
     // Memorial lesson leader role, not stuffed into this sentence as a fake dedication.
     var cleanedNote = (isMemorialTag(row.tag) || forceSuppressNote) ? "" : cleanDedicationText(row.notes, chaplainNameToSuppress);
     var dedication = cleanedNote ? " (" + cleanedNote + ")" : "";
@@ -5567,7 +5833,12 @@
     // recess/lunch re-entry sentence, so none of these should also show up as a raw
     // bracketed tag.
     var tagNote = (row.tag && !isMemorialTag(row.tag) && row.tag !== "Closing" && row.tag !== "Call Back" && row.tag !== "Singing School" && !forceSuppressNote) ? " [" + row.tag + "]" : "";
-    return loc + bookTag + dedication + tagNote;
+    // "Show time called" (Kevin's own request, 2026-09-17) - Minutes Maker only, reading
+    // the same Time entered value already carried on every row from Capture. SHMHA's own
+    // fixed submission format never reads this, same as every other Minutes-Maker-only
+    // style choice above.
+    var timeCalled = (mode === "singloud" && state.meta.mmShowTimeCalled && row.timeEntered) ? (" at " + row.timeEntered) : "";
+    return loc + timeCalled + bookTag + dedication + tagNote;
   }
 
   // scans forward from startIdx over song rows (not marker/Memorial/Closing/Call Back),
@@ -5617,7 +5888,7 @@
 
 
   // builds 1-2 prose paragraphs for a run of Memorial-tagged songs, weaving in the
-  // memorial-lesson leader plus the Sick & Shut-in / Deceased lists from Names & Lists
+  // memorial-lesson leader plus the Sick & Shut-in / Deceased lists from Memorials
   function memorialGroupConsecutiveByLeader(songRows, effectiveDefault, abbrFn, mode){
     var groups = [];
     songRows.forEach(function(r){
@@ -5770,17 +6041,16 @@
     var markerRows = run.filter(function(r){ return r.type === "marker"; });
     run = run.filter(function(r){ return r.type === "song"; });
 
-    // Found while verifying the v152 review's own finding-4 reproduction, and a leak the
-    // review itself didn't reach: when no Memorial Lesson Leader officer is on file, this
-    // falls back to the first memorial song's own leader - reasonable with names on, since
-    // in practice that's usually who gave the lesson. Under noNames it is exactly the thing
-    // the option exists to prevent: an individual song leader's name printed in the officer
-    // position ("The memorial lesson was conducted by Alice Singer."), while every other
-    // mention of that same person is correctly suppressed. With no-names on, only a real
-    // Officer field may be named here; with none on file the prose falls through to the
-    // same generic "The leader" the rest of the suite has used since v151.
-    var memorialOfficer = officerFor(sessionId, "memorial", roles.memorial);
-    var leaderName = noNames ? memorialOfficer : (memorialOfficer || (run[0] ? effectiveLeader(run[0]) : ""));
+    // The Memorial Lesson Leader is derived from this run's own tagged song rows - see
+    // deriveMemorialLeader()/memorialLeaderNamesFromRows() for the full rationale. Kevin's
+    // own call (2026-09-17, after the checkbox's old promise - "the Memorial Lesson
+    // Leader, a separate Officer, is still named" under no-names - stopped being true the
+    // moment that Officer's name started coming from the same per-song Leader data
+    // no-names suppresses): under no-names, this is suppressed exactly like every other
+    // per-song attribution, since there's no longer a genuinely separate Officer value to
+    // exempt. Falls through to the same generic "The leader" the rest of the suite uses
+    // when nothing is named.
+    var leaderName = noNames ? "" : memorialLeaderNamesFromRows(run).join(", ");
     var who = leaderName || "The leader";
     var sickItems = listLines(lists.sick);
     var deceasedItems = listLines(lists.deceased);
@@ -5814,40 +6084,56 @@
     if(sickItems.length && !sickSongRow && leftover2[li]){ sickSongRow = leftover2[li]; li++; }
     if(deceasedItems.length && !deceasedSongRow && leftover2[li]){ deceasedSongRow = leftover2[li]; li++; }
 
+    // Which name reads which list? A real, correct pattern: one person can direct the
+    // sick/shut-in portion and a different person the deceased portion of the same
+    // lesson (Kevin's own example, the 1996 James River Convention minutes - Kathy
+    // Manning on the sick/shut-in portion, Kelly Macklin on deceased). The combined
+    // `leaderName`/`who` above is still right for the lesson's own opening sentence
+    // (introducing everyone involved in it), but crediting BOTH names on BOTH
+    // "read the following list" sentences would misattribute whichever portion a given
+    // reader didn't actually read. Each portion's own tagged row already names its own
+    // reader - the same effectiveLeader() the per-song "led [page]" sentence below already
+    // trusts - so that's used here too, falling back to the combined `who` only when a
+    // portion has no row of its own to ask (no sick/deceased tag split, or that row's own
+    // leader is blank). Under noNames this collapses to the same "The leader" fallback as
+    // everything else, same as `who` itself.
+    var sickWho = (!noNames && sickSongRow && effectiveLeader(sickSongRow)) || who;
+    var deceasedWho = (!noNames && deceasedSongRow && effectiveLeader(deceasedSongRow)) || who;
+
     var p1 = [leaderName ? ("The memorial lesson was conducted by " + leaderName + ".") : "The memorial lesson was conducted."];
     if(sickItems.length){
-      p1.push(who + " read the following list of names of the sick and shut-ins: " + joinNames(sickItems) + ".");
-      // The person who led this specific song is often a different singer than the
-      // memorial-lesson leader themselves - confirmed live against a real, published
-      // set of minutes where the lesson leader gave the talk but someone else led the
-      // actual song for the sick list. Credit whoever the row itself names; only fall
-      // back to the lesson leader when the row leaves its own leader blank.
-      // Under noNames the song is described by what was sung, not who sang it. Note this
-      // does NOT touch leaderName/who above: the Memorial Lesson Leader is a separate
-      // Officer field, and stays named here exactly as the checkbox's own label promises.
+      p1.push(sickWho + " read the following list of names of the sick and shut-ins: " + joinNames(sickItems) + ".");
+      // The person who led this specific song is often a different singer than whoever
+      // read the sick/shut-in list itself - confirmed live against a real, published set
+      // of minutes where the lesson leader gave the talk but someone else led the actual
+      // song for the sick list. Credit whoever the row itself names; only fall back to
+      // sickWho when the row leaves its own leader blank.
+      // Under noNames the song is described by what was sung, not who sang it - sickWho/
+      // who above are already suppressed to "The leader" in that case (see this
+      // function's opening), so this branch doesn't need its own separate check.
       // v152 review finding 4 - only the "extra songs" branch further down had been given
       // this rule, so Alice was still printed leading the sick-list song with the box on.
       if(sickSongRow){
         p1.push(noNames
           ? (pageDisplay(sickSongRow, effectiveDefault, abbrFn, null, true, mode) + " was sung for the sick and shut-ins.")
-          : ((effectiveLeader(sickSongRow) || who) + " led " + pageDisplay(sickSongRow, effectiveDefault, abbrFn, null, true, mode) + "."));
+          : ((effectiveLeader(sickSongRow) || sickWho) + " led " + pageDisplay(sickSongRow, effectiveDefault, abbrFn, null, true, mode) + "."));
       }
     }
 
     var paras2 = [];
     if(deceasedItems.length){
-      var p2 = [who + " read the following list of names of the deceased: " + joinNames(deceasedItems) + "."];
+      var p2 = [deceasedWho + " read the following list of names of the deceased: " + joinNames(deceasedItems) + "."];
       if(deceasedSongRow){
         p2.push(noNames
           ? (pageDisplay(deceasedSongRow, effectiveDefault, abbrFn, null, true, mode) + " was sung in their memory.")
-          : ((effectiveLeader(deceasedSongRow) || who) + " led " + pageDisplay(deceasedSongRow, effectiveDefault, abbrFn, null, true, mode) + " in their memory."));
+          : ((effectiveLeader(deceasedSongRow) || deceasedWho) + " led " + pageDisplay(deceasedSongRow, effectiveDefault, abbrFn, null, true, mode) + " in their memory."));
       }
       paras2.push(p2.join(" "));
     }
 
     // Neither list has been filled in yet (common right after CSV import, before the
     // compiler has transcribed the sick/shut-in and deceased names from their raw notes
-    // onto the Names & Lists tab) — still credit the tagged song rather than stranding them.
+    // onto the Memorials tab) — still credit the tagged song rather than stranding them.
     if(!sickItems.length && !deceasedItems.length && !sickSongRow && !deceasedSongRow && run[0]){
       p1.push(noNames
         ? (pageDisplay(run[0], effectiveDefault, abbrFn, null, true, mode) + " was sung in their memory.")
@@ -6155,6 +6441,10 @@
         bits.push((code && shmhaCodeFor(code)) || "\u2014");
       }
     }
+    // "Show time called" (Kevin's own request, 2026-09-17), shared with Minutes Maker
+    // above - the same Time entered value already carried on every row from Capture. Its
+    // own trailing column, since this list's columns are tab-separated data, not prose.
+    if(meta.mmShowTimeCalled && s.timeEntered) bits.push(s.timeEntered);
     return bits;
   }
 
@@ -6208,7 +6498,7 @@
         ["Treasurer", state.roles.treasurer],
         ["Arranger(s)", state.roles.committee],
         ["Chaplain", state.roles.chaplain],
-        ["Memorial Lesson Leader", state.roles.memorial]
+        ["Memorial Lesson Leader(s)", deriveMemorialLeader()]
       ];
       var anyOfficer = false;
       officerList.forEach(function(o){
@@ -6624,7 +6914,7 @@
   // This is Minutes' one master project file — a real v4-schema CSV that either app
   // opens as the current authoritative revision, not a simplified reference dump and not a
   // separate "project format" from whatever Capture produced. Everything Compile knows that
-  // a plain song row can't hold (Business tab, Names & Lists, per-session officer overrides,
+  // a plain song row can't hold (Business tab, Recognitions, Memorials, per-session officer overrides,
   // the ordinal number, and anything this build doesn't even recognize) goes out as
   // "metadata" rows; everything Compile has corrected about a specific song (a merged
   // leader spelling, an assigned Work Code) goes out as extra columns on that same row.
@@ -6722,7 +7012,7 @@
         officerFor(s.sessionId, "chair", state.roles.chair), officerFor(s.sessionId, "vicechair", state.roles.vicechair),
         officerFor(s.sessionId, "secretary", state.roles.secretary), officerFor(s.sessionId, "treasurer", state.roles.treasurer),
         officerFor(s.sessionId, "committee", state.roles.committee), officerFor(s.sessionId, "chaplain", state.roles.chaplain),
-        officerFor(s.sessionId, "memorial", state.roles.memorial)
+        deriveMemorialLeader(s.sessionId)
       ];
       if(s.type === "session"){
         // RC4-08: Session Label must round-trip the *original* label the compiler actually
@@ -6755,7 +7045,7 @@
       ], identityTail(s.status)));
     });
 
-    // Metadata rows: everything on Business and Names & Lists, plus the ordinal number,
+    // Metadata rows: everything on Business, Recognitions, and Memorials, plus the ordinal number,
     // appended after the song rows so every export always parses the same way regardless
     // of how much metadata there is.
     function metaRow(field, value){
@@ -6798,6 +7088,7 @@
     if(state.meta.mmTitleCaps) metaRow("meta.mmTitleCaps", "true");
     if(state.meta.mmStateDefaultBook === false) metaRow("meta.mmStateDefaultBook", "false");
     if(state.meta.mmBookCodeStyle && state.meta.mmBookCodeStyle !== "singloud") metaRow("meta.mmBookCodeStyle", state.meta.mmBookCodeStyle);
+    if(state.meta.mmShowTimeCalled) metaRow("meta.mmShowTimeCalled", "true");
     if(state.meta.slBookTitleProper) metaRow("meta.slBookTitleProper", "true");
     if(state.meta.slSingLoudCode === false) metaRow("meta.slSingLoudCode", "false");
     if(state.meta.slSHMHACode) metaRow("meta.slSHMHACode", "true");
@@ -6933,6 +7224,11 @@
 
   // ---------------- preview ----------------
   function renderPreview(){
+    var memDisplay = document.getElementById("r_memorial_display");
+    if(memDisplay){
+      var wholeSingingMemorial = deriveMemorialLeader();
+      memDisplay.textContent = wholeSingingMemorial || "(none tagged yet)";
+    }
     if(state.meta.outputType === "shmha"){
       document.getElementById("previewText").textContent = toSHMHAMinutesText();
       document.getElementById("previewModeNote").textContent = "Shown exactly as the SHMHA export will read: their book abbreviations, straight quotes, \"--\" dashes, two spaces between sentences.";
@@ -7017,7 +7313,7 @@
   document.getElementById("outputTypeSimpleList").addEventListener("click", function(){ applyOutputType("simplelist"); });
 
   // Wording & presentation fields now live on this tab, so they should update the preview
-  // live rather than waiting for a tab-switch (which is how Business/Names & Lists fields
+  // live rather than waiting for a tab-switch (which is how Business/Recognitions/Memorials fields
   // still work, since those live elsewhere).
   ["m_recurringdate","m_openingstyle","m_presidingtitle","m_prayerstyle"].forEach(function(id){
     var el = document.getElementById(id);
@@ -7154,7 +7450,6 @@
     roleTreasurerEl.value = '';
     roleArrangerEl.value = '';
     roleChaplainEl.value = '';
-    roleMemorialLessonEl.value = '';
     seriesCodeEl.value = '';
     previousEventIdEl.value = '';
     // Was [BOOKS[0].abbr] - an arbitrary book silently pre-selected based on Library
@@ -7226,7 +7521,6 @@
   const roleTreasurerEl = document.getElementById('roleTreasurer');
   const roleArrangerEl = document.getElementById('roleArranger');
   const roleChaplainEl = document.getElementById('roleChaplain');
-  const roleMemorialLessonEl = document.getElementById('roleMemorialLesson');
   const bookCheckRowEl = document.getElementById('bookCheckRow');
   const extraBookChipsEl = document.getElementById('extraBookChips');
   const bookSearchInputEl = document.getElementById('bookSearchInput');
@@ -7293,11 +7587,14 @@
     // banner - exactly the kind of inconsistency the secretary is using this screen to
     // avoid.
     var summaryRoles = currentSessionRoles || {};
+    // Memorial Lesson is derived live from this session's own Memorial-tagged rows
+    // (deriveMemorialLeaderCapture) rather than read from currentSessionRoles - see
+    // Kevin's own call, 2026-09-17: there's no longer a typed field for it to hold.
     const officerPairs = [
       ['Chair', (summaryRoles.chair || '').trim()], ['Vice-Chair', (summaryRoles.viceChair || '').trim()],
       ['Secretary', (summaryRoles.secretary || '').trim()], ['Treasurer', (summaryRoles.treasurer || '').trim()],
       ['Arranger(s)', (summaryRoles.arranger || '').trim()], ['Chaplain(s)', (summaryRoles.chaplain || '').trim()],
-      ['Memorial Lesson', (summaryRoles.memorialLesson || '').trim()]
+      ['Memorial Lesson', deriveMemorialLeaderCapture(currentSessionId)]
     ].filter(function(pair){ return pair[1]; });
     if (officerPairs.length){
       lines.push('<span class="dim">Officers:</span> ' + officerPairs.map(function(pair){
@@ -7977,7 +8274,7 @@
     document.getElementById('modeBannerEndBtn').addEventListener('click', function(){ setActiveMode(null); });
     tagRow.style.display = 'none';
     // Kevin's own direction: the only place sick/shut-in and deceased names are typed is
-    // the dedicated Names & Lists section in Compile - Capture's own job is just marking
+    // the dedicated Memorials section in Compile - Capture's own job is just marking
     // WHICH song, if any, went with which list, in whatever real order it happened (not
     // locked into "sick song then deceased song"), so the compiler can credit the right
     // song to the right list instead of guessing from notes text or bare position.
@@ -8126,7 +8423,6 @@
         if (sticky.treasurer) roleTreasurerEl.value = sticky.treasurer;
         if (sticky.arranger) roleArrangerEl.value = sticky.arranger;
         if (sticky.chaplain) roleChaplainEl.value = sticky.chaplain;
-        if (sticky.memorialLesson) roleMemorialLessonEl.value = sticky.memorialLesson;
         if (sticky.seriesCode) seriesCodeEl.value = sticky.seriesCode;
         if (sticky.previousEventId) previousEventIdEl.value = sticky.previousEventId;
         if (Array.isArray(sticky.activeBooks)){
@@ -8174,7 +8470,6 @@
         event: eventEl.value, date: dateEl.value, location: locationEl.value,
         chair: roleChairEl.value, viceChair: roleViceChairEl.value, secretary: roleSecretaryEl.value,
         treasurer: roleTreasurerEl.value, arranger: roleArrangerEl.value, chaplain: roleChaplainEl.value,
-        memorialLesson: roleMemorialLessonEl.value,
         seriesCode: seriesCodeEl.value, previousEventId: previousEventIdEl.value,
         activeBooks: activeBooks
       }));
@@ -8227,9 +8522,34 @@
       secretary: roleSecretaryEl.value.trim(),
       treasurer: roleTreasurerEl.value.trim(),
       arranger: roleArrangerEl.value.trim(),
-      chaplain: roleChaplainEl.value.trim(),
-      memorialLesson: roleMemorialLessonEl.value.trim()
+      chaplain: roleChaplainEl.value.trim()
+      // No memorialLesson here - see deriveMemorialLeaderCapture(). It isn't one of
+      // Setup's own typed fields any more, so there's nothing to snapshot.
     };
+  }
+  // Capture-side counterpart to Compile's deriveMemorialLeader() - same rule (every
+  // distinct name across this session's own Memorial-tagged song rows, first-seen order,
+  // comma-joined), applied to Capture's own entries[] shape (e.caller/e.canonicalLeader,
+  // not row.leader/row.canonicalLeaderOverride) since Capture and Compile don't share one
+  // internal row representation.
+  function deriveMemorialLeaderCapture(sessionId){
+    // Inlined rather than calling isMemorialTag(): that helper lives in Compile's own
+    // script scope, not Capture's, and the two apps' scripts don't share functions.
+    function isMemorialTagLocal(tag){
+      return tag === 'Memorial' || tag === 'Memorial (Sick)' || tag === 'Memorial (Deceased)';
+    }
+    var names = [];
+    entries.forEach(function(e){
+      if(e.type !== 'song' || e.sessionId !== sessionId) return;
+      if(!isMemorialTagLocal(e.tag)) return;
+      var val = e.canonicalLeader || e.caller || '';
+      var parts = splitNames(val);
+      parts.forEach(function(n){
+        n = (n || '').trim();
+        if(n && names.indexOf(n) === -1) names.push(n);
+      });
+    });
+    return names.join(', ');
   }
   function rolesSnapshot(){
     // A row logged right now carries the CURRENT session's own officers, not
@@ -8337,8 +8657,7 @@
       .concat(splitNames(roleSecretaryEl.value))
       .concat(splitNames(roleTreasurerEl.value))
       .concat(splitNames(roleArrangerEl.value))
-      .concat(splitNames(roleChaplainEl.value))
-      .concat(splitNames(roleMemorialLessonEl.value));
+      .concat(splitNames(roleChaplainEl.value));
     const names = Array.from(new Set(fromOfficers.concat(fromEntries).concat(previousEventSuggestedNames))).sort();
     callerListEl.innerHTML = names.map(function(n){ return '<option value="' + n.replace(/"/g,'&quot;') + '">'; }).join('');
   }
@@ -8556,7 +8875,9 @@
                 x.chair = survivorRoles.chair; x.viceChair = survivorRoles.viceChair;
                 x.secretary = survivorRoles.secretary; x.treasurer = survivorRoles.treasurer;
                 x.arranger = survivorRoles.arranger; x.chaplain = survivorRoles.chaplain;
-                x.memorialLesson = survivorRoles.memorialLesson;
+                // No x.memorialLesson here - the Memorial Lesson Leader column is derived
+                // at export time from the row's own tag/leader (deriveMemorialLeaderCapture),
+                // not carried as a role property on each row.
               }
             });
             entries.splice(idx, 1);
@@ -8919,8 +9240,8 @@
         currentSessionRoles = {
           chair: row.chair || '', viceChair: row.viceChair || '',
           secretary: row.secretary || '', treasurer: row.treasurer || '',
-          arranger: row.arranger || '', chaplain: row.chaplain || '',
-          memorialLesson: row.memorialLesson || ''
+          arranger: row.arranger || '', chaplain: row.chaplain || ''
+          // No memorialLesson here - see deriveMemorialLeaderCapture().
         };
         return;
       }
@@ -9002,7 +9323,6 @@
       treasurer: document.getElementById('newSessionTreasurer').value.trim(),
       arranger: document.getElementById('newSessionArranger').value.trim(),
       chaplain: document.getElementById('newSessionChaplain').value.trim(),
-      memorialLesson: document.getElementById('newSessionMemorialLesson').value.trim(),
       timestamp: now,
       displayTime: formatClock(now)
     });
@@ -9147,7 +9467,6 @@
       roleTreasurerEl.value = sessionTransitionSnapshot.treasurer;
       roleArrangerEl.value = sessionTransitionSnapshot.arranger;
       roleChaplainEl.value = sessionTransitionSnapshot.chaplain;
-      roleMemorialLessonEl.value = sessionTransitionSnapshot.memorialLesson;
       saveSticky();
     }
     newSessionDateEl.value = '';
@@ -9157,8 +9476,7 @@
   document.getElementById('startSessionBtn').addEventListener('click', function(){
     sessionTransitionSnapshot = {
       chair: roleChairEl.value, viceChair: roleViceChairEl.value, secretary: roleSecretaryEl.value,
-      treasurer: roleTreasurerEl.value, arranger: roleArrangerEl.value, chaplain: roleChaplainEl.value,
-      memorialLesson: roleMemorialLessonEl.value
+      treasurer: roleTreasurerEl.value, arranger: roleArrangerEl.value, chaplain: roleChaplainEl.value
     };
     eventEl.disabled = true; // Event is global, not session-specific — no editing it mid-transition
     // A new session most often continues at the same venue on a nearby date, so these
@@ -9188,7 +9506,6 @@
     document.getElementById('newSessionTreasurer').value = inheritedRoles.treasurer || '';
     document.getElementById('newSessionArranger').value = inheritedRoles.arranger || '';
     document.getElementById('newSessionChaplain').value = inheritedRoles.chaplain || '';
-    document.getElementById('newSessionMemorialLesson').value = inheritedRoles.memorialLesson || '';
     document.getElementById('newSessionOfficersDetails').open = false;
     newDayTransitionBannerEl.style.display = 'block';
     newDayBannerEl.style.display = 'none';
@@ -9214,8 +9531,7 @@
       secretary: document.getElementById('newSessionSecretary').value.trim(),
       treasurer: document.getElementById('newSessionTreasurer').value.trim(),
       arranger: document.getElementById('newSessionArranger').value.trim(),
-      chaplain: document.getElementById('newSessionChaplain').value.trim(),
-      memorialLesson: document.getElementById('newSessionMemorialLesson').value.trim()
+      chaplain: document.getElementById('newSessionChaplain').value.trim()
     };
     newSessionDateEl.value = '';
     newSessionLocationEl.value = '';
@@ -9299,8 +9615,9 @@
   locationEl.addEventListener('input', function(){ saveSticky(); propagateSetupCorrection('location', locationEl.value.trim()); });
   [
     [roleChairEl, 'chair'], [roleViceChairEl, 'viceChair'], [roleSecretaryEl, 'secretary'],
-    [roleTreasurerEl, 'treasurer'], [roleArrangerEl, 'arranger'], [roleChaplainEl, 'chaplain'],
-    [roleMemorialLessonEl, 'memorialLesson']
+    [roleTreasurerEl, 'treasurer'], [roleArrangerEl, 'arranger'], [roleChaplainEl, 'chaplain']
+    // No roleMemorialLessonEl pair here - it's derived at export time, not corrected
+    // retroactively on stored rows.
   ].forEach(function(pair){
     pair[0].addEventListener('input', function(){
       saveSticky();
@@ -9362,7 +9679,9 @@
           return e.raw[colName] !== undefined ? e.raw[colName] : '';
         });
       }
-      const roleCols = [e.chair || '', e.viceChair || '', e.secretary || '', e.treasurer || '', e.arranger || '', e.chaplain || '', e.memorialLesson || ''];
+      // Memorial Lesson Leader is derived per session (deriveMemorialLeaderCapture), not
+      // read off a stored e.memorialLesson property - see Kevin's own call, 2026-09-17.
+      const roleCols = [e.chair || '', e.viceChair || '', e.secretary || '', e.treasurer || '', e.arranger || '', e.chaplain || '', deriveMemorialLeaderCapture(e.sessionId)];
       if (e.type === 'metadata'){
         // Capture never creates these — they arrive from a Compile-enriched file and must
         // survive unchanged if the secretary reopens it here to log more songs. Session ID
@@ -9815,7 +10134,7 @@
     const booksSeen = {};
     let lastEvent = '', lastDate = '', lastLocation = '';
     let currentImportSessionId = newSessionId(); // covers rows before any explicit session boundary
-    let lastChair = '', lastViceChair = '', lastSecretary = '', lastTreasurer = '', lastArranger = '', lastChaplain = '', lastMemorialLesson = '';
+    let lastChair = '', lastViceChair = '', lastSecretary = '', lastTreasurer = '', lastArranger = '', lastChaplain = '';
     let lastSeriesCode = '', lastPreviousEventId = '';
     let orderProblem = false;
     const seenOrders = {};
@@ -9842,7 +10161,9 @@
       const chaplainVal = get('Chaplain(s)') || get('Chaplain');
       const seriesCodeVal = get('Series Code');
       const previousEventIdVal = get('Previous Event ID');
-      const memorialLessonVal = get('Memorial Lesson Leader');
+      // Memorial Lesson Leader isn't read back into a role field on resume - it's
+      // derived at export time from each row's own tag/leader, and stays that way
+      // whether resumed here or reopened fresh.
       const bookVal = get('Book');
       const editionCodeVal = get('Edition Code') || get('SingLoud Code');
       const nameVal = get('Leader(s)');
@@ -9903,7 +10224,6 @@
         lastTreasurer = treasurerVal;
         lastArranger = arrangerVal;
         lastChaplain = chaplainVal;
-        lastMemorialLesson = memorialLessonVal;
       }
       if (bookVal) booksSeen[bookVal] = true;
 
@@ -10006,7 +10326,6 @@
         treasurer: treasurerVal,
         arranger: arrangerVal,
         chaplain: chaplainVal,
-        memorialLesson: memorialLessonVal,
         timestamp: recordTimestamp,
         displayTime: recordDisplayTime
       };
@@ -10106,7 +10425,6 @@
       treasurer: lastTreasurer,
       arranger: lastArranger,
       chaplain: lastChaplain,
-      memorialLesson: lastMemorialLesson,
       seriesCode: lastSeriesCode,
       previousEventId: lastPreviousEventId,
       // Zero songs logged yet (a brand-new event, most commonly) means zero real book
@@ -10206,7 +10524,6 @@
       roleTreasurerEl.value = result.treasurer || '';
       roleArrangerEl.value = result.arranger || '';
       roleChaplainEl.value = result.chaplain || '';
-      roleMemorialLessonEl.value = result.memorialLesson || '';
       seriesCodeEl.value = result.seriesCode || '';
       previousEventIdEl.value = result.previousEventId || '';
       resetEntryForm();
