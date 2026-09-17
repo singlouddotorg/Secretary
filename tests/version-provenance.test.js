@@ -23,9 +23,9 @@ const read = (...p) => fs.readFileSync(path.join(SUITE_DIR, ...p), 'utf8');
 // ignore a suite.
 const APP_FILE = fs.existsSync(path.join(SUITE_DIR, 'minutes.html')) ? 'minutes.html' : 'index.html';
 
-// Each app in the Sing Loud Suite versions itself. This file enforces that for Minutes -
+// Each app in the Sing Loud Suite versions itself. This file enforces that for Secretary -
 // the app and the page describing it must agree - and that no stale literal is hiding
-// anywhere else in it. Tunebooks and Simple Minutes declare their own, in their own repos.
+// anywhere else in it. Bibliographer and Simple Minutes declare their own, in their own repos.
 const MINUTES_VERSION = require(path.join(SUITE_DIR, 'minutes-version.js')).VERSION;
 
 test('version provenance', async (t) => {
@@ -36,8 +36,8 @@ test('version provenance', async (t) => {
   });
 
   await t.test('shared-utils.js carries its own version, not an application\'s', () => {
-    // Tunebooks vendors this same file. If it held Minutes' number, Tunebooks would ship
-    // Minutes' version inside it - the drift this suite keeps having, in a new costume.
+    // Bibliographer vendors this same file. If it held Secretary's number, Bibliographer would ship
+    // Secretary's version inside it - the drift this suite keeps having, in a new costume.
     const shared = require(path.join(SUITE_DIR, 'shared-utils.js'));
     assert.ok(shared.SHARED_UTILS_VERSION, 'shared-utils.js should report its own version');
     assert.equal(shared.SUITE_VERSION, undefined,
@@ -63,7 +63,7 @@ test('version provenance', async (t) => {
     // text so the page still shows a real version when opened alone or with scripting off.
     // That fallback is only honest if it is kept current, which is what this checks.
     const instructions = read('instructions.html');
-    const shown = instructions.match(/Minutes · Version ([^ ]+) · Schema 5/g) || [];
+    const shown = instructions.match(/Secretary · Version ([^ ]+) · Schema 5/g) || [];
     assert.ok(shown.length >= 2, 'expected the version to appear in the body and the footer');
     shown.forEach((line) => {
       assert.ok(line.includes(MINUTES_VERSION),
@@ -81,7 +81,7 @@ test('version provenance', async (t) => {
 
   await t.test('the working tree\'s simple-minutes/tunebook-library.js mirrors the canonical copy', () => {
     // Simple Minutes lives at simple-minutes/simple-minutes.html in the shared working
-    // tree - unlike Minutes and Tunebooks, which sit at the tree root beside
+    // tree - unlike Secretary and Bibliographer, which sit at the tree root beside
     // tunebook-library.js already. Its own bundled copy (added by the 2026-09-06c revised
     // review's offline-fallback fix) has to sit in that same subfolder for a relative
     // <script src="tunebook-library.js"> to resolve there at all, which means the working

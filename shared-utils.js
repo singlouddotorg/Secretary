@@ -1,4 +1,4 @@
-// Minutes / Tunebooks — Shared Utilities
+// Secretary / Bibliographer — Shared Utilities
 //
 // Plain global-scope script (attaches to window.EZMinutesShared), NOT an ES module -
 // deliberately, since `import`/`export` modules are blocked by Chrome when a page is
@@ -23,8 +23,8 @@
   // It briefly held the whole suite's version number, which was the right answer while one
   // repository held every app: the v156 review had found instructions.html six revisions
   // behind the running app, and a single literal that every page reads at runtime fixed it.
-  // Splitting the suite made that answer wrong. Tunebooks carries its own copy of this file
-  // and would have been shipping Minutes' version number inside it. Each app versions
+  // Splitting the suite made that answer wrong. Bibliographer carries its own copy of this file
+  // and would have been shipping Secretary's version number inside it. Each app versions
   // itself now - see minutes-version.js and TUNEBOOK_EDITOR_VERSION - and what belongs here
   // is only the identity of these shared utilities, so an app can report which vintage of
   // them it is carrying.
@@ -172,9 +172,9 @@
   // ---------------- Tunebook Library adapters ----------------
   // Projects EZ_MINUTES_TUNEBOOK_LIBRARY (the Work/Edition/State model) into the exact
   // shapes EZ_MINUTES_TUNEBOOKS and EZ_MINUTES_MASTER_TUNEBOOK_LIST have always had, so
-  // every existing lookup throughout Capture, Compile, Tunebooks, and the Registry
+  // every existing lookup throughout Capture, Compile, Bibliographer, and the Registry
   // keeps working completely unchanged - none of that code needs to know the Library
-  // exists. This is deliberately the SAME projection logic Tunebooks' own "Generate
+  // exists. This is deliberately the SAME projection logic Bibliographer's own "Generate
   // legacy projection" export uses (ported here so both call one real implementation
   // instead of two that could quietly drift apart), just returning a live object instead
   // of writing a file.
@@ -190,7 +190,7 @@
         fullTitle: buildFullTitle(e.titleProper || w.titleProper, e.subtitle),
         // This Edition's own effective title proper - e.titleProper when the Edition
         // overrides it, otherwise the owning Work's - with no subtitle folded in, unlike
-        // fullTitle. Kevin's own request: Minutes' book-naming prose (the opening "Song
+        // fullTitle. Kevin's own request: Secretary's book-naming prose (the opening "Song
         // selections were from ___" sentence and its all-books variant) should read as
         // "The Sacred Harp", not "The Sacred Harp: 2025 Edition" - fullTitle is still the
         // right choice anywhere the subtitle actually disambiguates (dropdowns, warnings).
@@ -273,7 +273,7 @@
         workTitleProper: w && w.titleProper,
         // Same titleProper/fullTitle split as buildTunebookIndexFromLibrary() above, kept
         // here too so a known-but-unindexed Edition (findMasterListMatch's own fallback)
-        // gets the same subtitle-free name in Minutes' book-naming prose.
+        // gets the same subtitle-free name in Secretary's book-naming prose.
         titleProper: e.titleProper || (w && w.titleProper),
         publicationYear: e.publicationYear || (/^\d{4}$/.test(e.editionIdentifierYear || "") ? e.editionIdentifierYear : (e.editionFirstPublicationDate || e.editionIdentifierYear)),
         commonName: e.commonName || (w && w.titleProper),

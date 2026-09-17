@@ -1,4 +1,4 @@
-# Minutes
+# Secretary
 
 A static local application for logging songs during a shape-note singing and turning that log into a clean, ready-to-publish record of minutes. Keep all distributed files together in the same folder — the app shares a tunebook data file that won't work correctly if it's separated from the rest.
 
@@ -6,20 +6,21 @@ Built for the Sacred Harp / shape-note singing community, but usable for any eve
 
 ## Part of the Sing Loud Suite
 
-Minutes is one of five apps, each in its own repository. Minutes and Tunebooks are the two
+Secretary is one of six apps, each in its own repository. Secretary and Bibliographer are the two
 full-featured, editing-capable apps in the suite — functioning and robust in daily use, but
-not yet called "release ready" the way the other three are, simply because there's much more
+not yet called "release ready" the way the others are, simply because there's much more
 surface area to a full editor than to a single-purpose tool.
 
 | App | What it does | Status |
 |---|---|---|
-| **Minutes** (here) | Log a singing as it happens, then turn that log into publishable minutes. | Beta |
-| [**Tunebooks**](https://github.com/singlouddotorg/tunebooks) | Curate the shared tunebook data — editions, page indexes, Level 3 scholarly files. Most people recording a singing never need it. | Beta |
-| [**Simple Minutes**](https://github.com/singlouddotorg/simple-minutes) | A phone-sized logger: page numbers only, no names. Its files import straight into Minutes. | 1.0 release |
-| [**Simple Compile**](https://github.com/singlouddotorg/simple-compile) | A one-page, no-editing version of Minutes: open a CSV, get readable minutes back. | 1.0 release |
-| [**Tunebook Registry**](https://github.com/singlouddotorg/tunebook-registry) | The published tunebook data the others read. | 1.0 release |
+| **Secretary** (here) | Log a singing as it happens, then turn that log into publishable minutes. | Beta |
+| [**Bibliographer**](https://github.com/singlouddotorg/Bibliographer) | Curate the shared tunebook data — editions, page indexes, Level 3 scholarly files. Most people recording a singing never need it. | Beta |
+| [**Capture**](https://github.com/singlouddotorg/Simple-Minutes) | A phone-sized logger: page numbers only, no names. Its files import straight into Secretary. | 1.0 release |
+| [**Compile**](https://github.com/singlouddotorg/Simple-Compile) | A one-page, no-editing version of Secretary: open a CSV, get readable minutes back. | 1.0 release |
+| [**Singing Ledger**](https://github.com/singlouddotorg/Ledger) | Combines many finished singings into one master record and set of totals. | New (0.1) |
+| [**Tunebook Registry**](https://github.com/singlouddotorg/Tunebook-Registry) | The published tunebook data the others read. | 1.0 release |
 
-Minutes covers the whole life of a singing in four stages — Setup, Capture (recording live),
+Secretary covers the whole life of a singing in four stages — Setup, Capture (recording live),
 Compile (review and enrichment), and Export — shown as numbered steps down the left, with
 the same singing carrying automatically from one stage to the next.
 
@@ -28,13 +29,13 @@ the same singing carrying automatically from one stage to the next.
 | `index.html` | **The app.** Open this file directly — there's no separate start page. |
 | `instructions.html` | Full instructions, quick start, and troubleshooting. |
 | `minutes-version.js` | This app's version number, read by both pages above so they can't disagree. |
-| `shared-utils.js` | Utilities shared with Tunebooks (CSV parsing, page sorting, title building). |
+| `shared-utils.js` | Utilities shared with Bibliographer (CSV parsing, page sorting, title building). |
 | `tunebook-library.js` | Tunebook data — every Work and Edition, with full page/title indexes. **Required**; the app shows a visible error if it is missing or moved out of the folder. Published by the Tunebook Registry. |
 | `tunebook-files/` | Level 3 scholarly data for the books that have it. |
 | `samples/` | 15 real historical Singing Records, as worked examples and test fixtures. |
 | `SCHEMA-5.md` | The Singing Record file format, which this repository owns. |
 
-**Minutes is built for a laptop, desktop computer, or a tablet with a physical keyboard.** It is not designed for phones or phone-sized screens; no development effort goes toward optimizing for that case.
+**Secretary is built for a laptop, desktop computer, or a tablet with a physical keyboard.** It is not designed for phones or phone-sized screens; no development effort goes toward optimizing for that case.
 
 ## Getting started
 
@@ -50,7 +51,7 @@ See `instructions.html` for the full walkthrough.
 
 - **Fast entry, built for the keyboard.** Type a leader's name and a page number, hit Enter — no button required. The song title looks itself up from the book's index as you type. Leader names already used that day (and everyone listed in Officers & Roles) show up as autocomplete suggestions.
 - **Catches mistakes before they happen.** Warns if a page number could mean two different songs (top/bottom), flags pages that don't exist in the book's index, and gently notes if a page has already been logged that day. The same checks apply when editing an existing entry, not just a new one.
-- **A growing set of songbooks fully indexed** with a complete page-title index (several of them with a full Level 3 scholarly file besides — richer per-song data such as meter, key, and attribution), plus every other tunebook the suite knows about at some level, and an "Other" option for anything not from a listed book. See [`TUNEBOOK-CHANGELOG.md`](https://github.com/singlouddotorg/tunebooks/blob/main/TUNEBOOK-CHANGELOG.md) (in the Tunebooks repo, which owns it) and the Tunebook Library tab in Tunebooks for the current count and list.
+- **A growing set of songbooks fully indexed** with a complete page-title index (several of them with a full Level 3 scholarly file besides — richer per-song data such as meter, key, and attribution), plus every other tunebook the suite knows about at some level, and an "Other" option for anything not from a listed book. See [`TUNEBOOK-CHANGELOG.md`](https://github.com/singlouddotorg/Bibliographer/blob/main/TUNEBOOK-CHANGELOG.md) (in the Bibliographer repo, which owns it) and the Tunebook Library tab in Bibliographer for the current count and list.
 - **Officers & Roles** — optional fields for Chair, Vice-Chair, Secretary, Treasurer, Arranger(s), Chaplain(s), and Memorial Lesson Leader, carried through on every row of the export.
 - **Setup finds or starts a singing.** Recurring singings group by series automatically, with a randomly-generated Series Code linking occurrences together and a Previous Event ID chaining each one to the last — **New Singing in This Series** carries the venue and series forward while starting fresh on date, officers, and the song list. The same continuation is available from any currently-open singing directly, as **New Singing Based on This One** — not just from a series list.
 - **Markers** for Recess, Lunch, and Announcements, plus a distinct **Start New Session** action for a new day, changed location, or otherwise distinct segment of the same event — it opens its own dedicated Date and Location fields (and, if this session's officers genuinely differ, an "Officers different for this session?" section you can expand), pre-filled from what's currently in effect so leaving them untouched simply carries everything forward, then writes a real session record rather than a plain marker. This stays inside the same singing; it's not the same as starting a whole new one. Deleting a session boundary that still has songs or markers attached asks explicitly what to do with them — delete the session and everything in it together, or merge it away and fold its entries into the previous session — rather than removing just the boundary and leaving its entries silently orphaned.
@@ -86,7 +87,7 @@ Every export (manual download, clipboard copy, or automatic backup) uses these 3
 | `Location` | Free text — venue and place together (e.g. "St. Giles Presbyterian Church, Richmond, Virginia"). Blank on `metadata` rows. |
 | `Chair`, `Vice-Chair`, `Secretary`, `Treasurer`, `Arranger(s)`, `Chaplain(s)` | Optional officer names, repeated on every song/marker/session row like Event/Date/Location. Blank on `metadata` rows. |
 | `Memorial Lesson Leader` | Just the name of whoever gave the memorial lesson, if any — not the names being remembered (those live in the Notes of the Memorial/Special-tagged song rows themselves). |
-| `Book` | One of the built-in book abbreviations (see [`TUNEBOOK-CHANGELOG.md`](https://github.com/singlouddotorg/tunebooks/blob/main/TUNEBOOK-CHANGELOG.md) in the Tunebooks repo for the current list), or `OTHER`. Blank for markers, session, and metadata rows. |
+| `Book` | One of the built-in book abbreviations (see [`TUNEBOOK-CHANGELOG.md`](https://github.com/singlouddotorg/Bibliographer/blob/main/TUNEBOOK-CHANGELOG.md) in the Bibliographer repo for the current list), or `OTHER`. Blank for markers, session, and metadata rows. |
 | `Edition Code` | The book's edition-specific identifier (e.g. `SHM1991`), when Compile has assigned or auto-detected one. |
 | `Leader(s)` | Free text; multiple leaders are comma-separated. Blank for markers, session, and metadata rows. |
 | `Canonical Leader(s)` | A corrected/canonical spelling of the leader's name, when Compile has one. Normally paired with a raw `Leader(s)` value it corrects — but if it ever arrives on its own, with `Leader(s)` blank, it is kept and treated as that song's leader rather than discarded. A field carrying a real name is never dropped because a related field is empty. |
@@ -128,7 +129,7 @@ Some singings don't collect leader names at all, and some publish their minutes 
 
 **It travels with the singing.** The setting is written to the Master CSV as the metadata row `meta.mmNoNames` and restored on import. It survives moving between stages, reopening the file later, and opening it on another device — the Master CSV is the authoritative record of it, not the browser.
 
-**It turns itself on for a nameless file.** Importing a record that has songs but not one leader name on any of them — Simple Minutes' own everyday output, or any other file logged without names — enables this setting automatically and says so in the import summary, so the minutes read properly without anyone having to know the checkbox exists. Left alone, such a file would otherwise compile as "called to order by the leader leading…" followed by "the leader" once per song.
+**It turns itself on for a nameless file.** Importing a record that has songs but not one leader name on any of them — Capture's own everyday output, or any other file logged without names — enables this setting automatically and says so in the import summary, so the minutes read properly without anyone having to know the checkbox exists. Left alone, such a file would otherwise compile as "called to order by the leader leading…" followed by "the leader" once per song.
 
 The detection is deliberately narrow, because the cost of guessing wrong is publishing a singing with its leaders stripped out:
 
@@ -137,7 +138,7 @@ The detection is deliberately narrow, because the cost of guessing wrong is publ
 - **Your choice wins, and it sticks.** Ticking or unticking the box yourself is recorded as a deliberate decision and written to the Master CSV either way — including `meta.mmNoNames,false`. So if a nameless singing genuinely wants "the leader" prose, untick it once and reimporting that file will not quietly switch it back on. This is the one setting the app will change on its own, which is exactly why "off by default" and "off on purpose" are stored as different things.
 - **Officers are unaffected**, as always — a prayer or singing-school leader logged on a marker isn't song attribution, and Officer fields are named regardless.
 
-One thing worth knowing when compiling a Simple Minutes file: Recess and Lunch markers print as bare `RECESS` / `LUNCH` lines unless you give them prose on Compile's Song List tab. That's long-standing behavior for every record, not something specific to nameless ones.
+One thing worth knowing when compiling a Capture file: Recess and Lunch markers print as bare `RECESS` / `LUNCH` lines unless you give them prose on Compile's Song List tab. That's long-standing behavior for every record, not something specific to nameless ones.
 
 ## Unused tunebook warning
 

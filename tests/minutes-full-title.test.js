@@ -1,4 +1,4 @@
-// The Minutes half of a contract the two apps share: a book's Full Title must really be
+// The Secretary half of a contract the two apps share: a book's Full Title must really be
 // built from Title Proper + Subtitle, not just Title Proper.
 //
 // Both apps call buildFullTitle() in shared-utils.js, so both must agree. This used to be
@@ -13,7 +13,7 @@ const { loadPage, wait, closeAllWindows } = require('./helpers');
 
 test.after(closeAllWindows);
 
-test('Minutes-side book projection includes the real subtitle in fullTitle', async () => {
+test('Secretary-side book projection includes the real subtitle in fullTitle', async () => {
   const dom = loadPage('minutes.html');
   const win = dom.window;
   win.confirm = () => true;

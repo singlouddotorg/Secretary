@@ -1,4 +1,4 @@
-// Minutes / Tunebooks — Tunebook Library
+// Secretary / Bibliographer — Tunebook Library
 // Actively maintained directly in this file - not a periodic re-export from elsewhere.
 
 const EZ_MINUTES_TUNEBOOK_LIBRARY_VERSION = "1";

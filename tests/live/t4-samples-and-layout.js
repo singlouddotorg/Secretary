@@ -39,9 +39,9 @@ const SAMPLES = P.samples();
   L.check('every sample imports and compiles to real narrative with no errors', bad.length === 0, bad.join('\n'));
 
   // ---- responsive layout ----
-  // Tunebooks is checked here only when it is actually present. In the single working tree
-  // it is; in the Minutes repo it is not, and its layout is that repo's business - the
-  // tunebooks repo runs the same check on itself. A missing app is skipped rather than
+  // Bibliographer is checked here only when it is actually present. In the single working tree
+  // it is; in the Secretary repo it is not, and its layout is that repo's business - the
+  // bibliographer repo runs the same check on itself. A missing app is skipped rather than
   // failed, which is the difference between "not my concern here" and "broken".
   const apps = [P.minutesApp(), P.tunebooksApp()].filter(Boolean);
   L.check('at least the app this repo owns is present to check', apps.length >= 1, apps.length + ' app(s)');

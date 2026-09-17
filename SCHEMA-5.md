@@ -1,15 +1,15 @@
 # Singing Record — Schema 5
 
-The file format for one singing. **Minutes** reads and writes it; **Simple Minutes** writes
-it; anything else that wants to hand a singing to Minutes should produce it.
+The file format for one singing. **Secretary** reads and writes it; **Simple Minutes** writes
+it; anything else that wants to hand a singing to Secretary should produce it.
 
 This document exists because Schema 5 is a contract between applications that no longer
-share a repository. Before the split it was described only inside Minutes' own README, which
+share a repository. Before the split it was described only inside Secretary's own README, which
 was fine while both sides were edited together and is not fine now: the first time either
 side adds a column without the other knowing, files start failing in ways neither app can
 explain.
 
-**Owned by the Minutes repository.** Minutes holds the importer, the validator, and the
+**Owned by the Secretary repository.** Secretary holds the importer, the validator, and the
 tests that enforce this. A change to the format is a change here first.
 
 ---
@@ -181,7 +181,7 @@ Type, an unknown book code, an unrecognized metadata field — is accepted and f
 Simple Minutes is the worked example: it writes one `session` row and one `song` or `marker`
 row per entry, fills `Event` / `Date` / `Location` / `Book` / `Page` / `Song` / timestamps,
 and leaves **every officer and leader column blank**. That is a complete, valid Schema 5
-file. Minutes imports it, notices there are songs but no leader names anywhere, and turns on
+file. Secretary imports it, notices there are songs but no leader names anywhere, and turns on
 `meta.mmNoNames` so the minutes read as prose about what was sung rather than "the leader"
 once per song.
 
@@ -193,11 +193,11 @@ sung. Everything else can be filled in later, in Compile, by a person.
 
 ## Changing this format
 
-1. Change this document first, in the Minutes repository.
+1. Change this document first, in the Secretary repository.
 2. Bump `Schema Version` only when a change would make an older build misread a file. Adding
    a metadata field does **not** need a bump — passthrough already covers it. Adding,
    removing or reordering a *column* does.
-3. Update Minutes' importer and its round-trip tests together.
+3. Update Secretary's importer and its round-trip tests together.
 4. Tell the other writers. Today that is Simple Minutes.
 
 The passthrough rules exist precisely so that most useful changes need no version bump and

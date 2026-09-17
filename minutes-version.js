@@ -1,4 +1,4 @@
-// Minutes — application version.
+// Secretary — application version.
 //
 // One literal, in a file small enough to have no other reason to change, loaded by both
 // minutes.html and instructions.html so the running app and the page describing it cannot
@@ -6,9 +6,9 @@
 // behind the app, in exactly the page someone reads while writing a bug report.
 //
 // This used to live in shared-utils.js, which solved the same problem while every app
-// shared one repository. It cannot stay there now: Tunebooks carries its own copy of
-// shared-utils.js, and would have been carrying Minutes' version number with it. Each app
-// in the Sing Loud Suite versions itself - Simple Minutes has no business being at Minutes'
+// shared one repository. It cannot stay there now: Bibliographer carries its own copy of
+// shared-utils.js, and would have been carrying Secretary's version number with it. Each app
+// in the Sing Loud Suite versions itself - Simple Minutes has no business being at Secretary's
 // number just because they were released together.
 //
 // Kept as a plain global-scope script, not a module, for the same reason as every other
@@ -16,7 +16,10 @@
 // whole promise is that you double-click a file and it works.
 (function(global){
   "use strict";
-  var MINUTES_VERSION = "1.0.0-beta.108";
+  var MINUTES_VERSION = "1.0.0-beta.114"; // 2026-09-17: renamed Minutes to Secretary (display name only,
+  // per the suite-wide rebrand - repo moved to singlouddotorg/Secretary; the working-tree
+  // file minutes.html, this variable name, and the EZMinutesVersion global are unchanged,
+  // since Simple Minutes/Simple Compile still read this file as a cross-app contract.
   var api = { VERSION: MINUTES_VERSION, SCHEMA_VERSION: "5" };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else global.EZMinutesVersion = api;

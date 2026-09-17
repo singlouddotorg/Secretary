@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Minutes</title>
+<title>Secretary</title>
 <script src="tunebook-library.js"></script>
 <script src="shared-utils.js"></script>
 <script src="minutes-version.js"></script>
@@ -74,7 +74,7 @@
   /* ---------- main ---------- */
   .main{ flex:1; min-width:0; display:flex; flex-direction:column; }
   /* padding-top 18px, not the original 14px - matches .rail's own top padding exactly
-     (see .rail above), so the sidebar's "Minutes" wordmark and this bar's own title sit
+     (see .rail above), so the sidebar's "Secretary" wordmark and this bar's own title sit
      at the same vertical offset from the top of the viewport instead of landing 4px
      apart - close enough to read as intentional at a glance, off enough that Kevin
      could see it wasn't. */
@@ -966,7 +966,7 @@
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#c9a227" stroke-width="2"><rect x="4" y="4" width="16" height="16"/></svg>
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#c9a227" stroke-width="2"><polygon points="12,2 22,12 12,22 2,12"/></svg>
       </span>
-      <span class="suite-name">Minutes</span>
+      <span class="suite-name">Secretary</span>
     </div>
     <button type="button" class="stage-btn" data-stage="setup" id="stageBtn-setup" aria-current="true"><span class="num">1</span>Setup</button>
     <button type="button" class="stage-btn" data-stage="minutes" id="stageBtn-minutes"><span class="num">2</span>Capture</button>
@@ -985,7 +985,7 @@
     <a href="instructions.html" class="stage-btn support-link">Instructions</a>
     <button type="button" class="stage-btn support-link" id="stageBtn-shmha">SHMHA Guide</button>
     <div class="rail-foot">
-      <div id="railVersion">Minutes</div>
+      <div id="railVersion">Secretary</div>
     </div>
   </nav>
 
@@ -1016,16 +1016,16 @@
         <p class="sub">Find or create a singing. Everything works from a local folder on your computer; nothing is uploaded anywhere.</p>
 
         <details class="notice" style="margin:0 0 18px;cursor:default;">
-          <summary style="cursor:pointer;font-weight:600;">About Minutes &amp; before you begin</summary>
+          <summary style="cursor:pointer;font-weight:600;">About Secretary &amp; before you begin</summary>
           <div style="margin-top:10px;font-size:13px;line-height:1.6;">
             <p style="margin:0 0 8px;"><strong>Pre-release.</strong> This suite is still in testing. Feedback is welcome — please use with caution, and keep a backup of anything important. Reach the developer, Kevin of SingLoud.org, at <a href="mailto:sacredharpbiblio@gmail.com">sacredharpbiblio@gmail.com</a>.</p>
             <p style="margin:0 0 8px;">Use a laptop, desktop computer, or tablet with a physical keyboard — this suite isn't designed for phones. Everything runs locally and works fully offline once this page is open.</p>
             <p style="margin:0 0 8px;">Opening a singing offers a folder browser, which needs a Chromium-based browser (Chrome, Edge, Opera) — Firefox and Safari don't support it yet, though <strong>choosing a singing file directly</strong> works everywhere regardless.</p>
-            <!-- Tunebooks lives in its own repository now, so a relative link to it cannot work:
+            <!-- Bibliographer lives in its own repository now, so a relative link to it cannot work:
                  the two apps are separate downloads and there is no folder layout both can rely
                  on. An absolute link to the repo always resolves, whether or not GitHub Pages is
                  serving the app, and is also where someone would go to get it. -->
-            <p style="margin:0;"><a href="https://github.com/singlouddotorg/tunebooks" target="_blank" rel="noopener">Tunebooks</a> is a separate app for curating tunebook data itself (editions, page indexes, contributions) — most people recording a singing will never need it; this suite already ships with the tunebook data built in.</p>
+            <p style="margin:0;"><a href="https://github.com/singlouddotorg/Bibliographer" target="_blank" rel="noopener">Bibliographer</a> is a separate app for curating tunebook data itself (editions, page indexes, contributions) — most people recording a singing will never need it; this suite already ships with the tunebook data built in.</p>
           </div>
         </details>
 
@@ -1175,7 +1175,7 @@
   
 
   <div id="welcomeGate">
-    <p class="welcome-text">Welcome to Minutes — is this a:</p>
+    <p class="welcome-text">Welcome to Secretary — is this a:</p>
     <div class="welcome-actions" id="resumeRow" style="display:none">
       <button type="button" id="resumeSessionBtn" class="btn-solid-full">Open Current Singing</button>
     </div>
@@ -1785,7 +1785,7 @@
       </section>
 
     </div>
-    <p class="page-footnote" id="compileFootnote" style="display:none;">Minutes: Compile keeps everything on this device only — nothing is uploaded anywhere. Use Reset all to start a fresh set of minutes.</p>
+    <p class="page-footnote" id="compileFootnote" style="display:none;">Secretary: Compile keeps everything on this device only — nothing is uploaded anywhere. Use Reset all to start a fresh set of minutes.</p>
   </div>
 </div>
 
@@ -1808,7 +1808,7 @@
   // actually happened since. Exposed here as a real global rather than three strings that
   // have to be remembered and kept in sync by hand, which has already visibly failed once.
   window.__ezMinutesWrapperVersion = SUITE_VERSION;
-  document.getElementById("railVersion").textContent = "Minutes " + SUITE_VERSION;
+  document.getElementById("railVersion").textContent = "Secretary " + SUITE_VERSION;
 
   // ---------------- shared event state ----------------
   // The whole point of the wrapper: ONE active event object every stage reads and writes,
@@ -2515,7 +2515,7 @@
           var summary = parseSingingEventSummary(text);
           if(summary) files.push({ filename: entry.name, handle: entry, summary: summary });
         }catch(err){
-          console.warn("Minutes: couldn't read " + entry.name + " — " + err.message);
+          console.warn("Secretary: couldn't read " + entry.name + " — " + err.message);
         }
       }
     }
@@ -2741,7 +2741,7 @@
              mmNoNames:false,
              // mmNoNames is the one Minutes Maker setting the app will turn on BY ITSELF,
              // when an imported record has songs but not one leader name on any of them
-             // (Simple Minutes' own everyday output, and any other nameless file). That
+             // (Capture's own everyday output, and any other nameless file). That
              // makes "off" ambiguous in a way the other booleans never are: it could mean
              // "nobody has decided yet" or it could mean "a person looked at this nameless
              // singing and deliberately wants 'the leader' prose." Without telling those
@@ -2754,7 +2754,7 @@
              mmNoNamesSet:false,
              // Which identifier a per-song book tag (and the opening "name every book"
              // sentence) actually shows, in Minutes Maker's narrative only - the SingLoud
-             // work code Minutes has always used ("(SHM)"), the SHMHA code instead ("(ShM)"
+             // work code Secretary has always used ("(SHM)"), the SHMHA code instead ("(ShM)"
              // for a book whose two codes differ), or the book's own Title Proper spelled
              // out in full ("(The Sacred Harp)"). One choice, not a checklist: unlike the
              // Simple List's book-identifier columns below, this sits inside running prose,
@@ -3044,7 +3044,7 @@
     }
   });
   if(WORKCODE_DUPLICATE_CODES.length){
-    console.warn("Minutes: Compile — duplicate SingLoud Work Codes detected (second entry was NOT loaded):", WORKCODE_DUPLICATE_CODES);
+    console.warn("Secretary: Compile — duplicate SingLoud Work Codes detected (second entry was NOT loaded):", WORKCODE_DUPLICATE_CODES);
   }
 
   // SHMHA's own abbreviations, used only in the printed Sacred Harp Minutes Book (page 44
@@ -3429,7 +3429,7 @@
   // previously killed the rest of Compile's setup including its import handlers.
   var cmpFooterEl = document.getElementById("cmpVersionFooter");
   if(cmpFooterEl) cmpFooterEl.textContent =
-    "Minutes · Version " + EZ_MINUTES_SUITE_VERSION + " · Schema " + KNOWN_CAPTURE_SCHEMA_VERSIONS[KNOWN_CAPTURE_SCHEMA_VERSIONS.length - 1] +
+    "SingLoud.org Shape-Note Secretary · Version " + EZ_MINUTES_SUITE_VERSION + " · Schema " + KNOWN_CAPTURE_SCHEMA_VERSIONS[KNOWN_CAPTURE_SCHEMA_VERSIONS.length - 1] +
     (typeof EZ_MINUTES_TUNEBOOKS !== "undefined" && EZ_MINUTES_TUNEBOOKS.books ? " · Tunebook Library " + (typeof EZ_MINUTES_TUNEBOOK_LIBRARY_VERSION !== "undefined" ? EZ_MINUTES_TUNEBOOK_LIBRARY_VERSION : "(unknown)") : " · Tunebook Library MISSING");
 
   // RC-13: Compile is built for a laptop/desktop/keyboard-tablet, not a phone. Rather than
@@ -3662,9 +3662,9 @@
     return -1;
   }
 
-  // Minutes' own CSV writes a leading apostrophe before any field starting with
+  // Secretary's own CSV writes a leading apostrophe before any field starting with
   // = + - @, to stop spreadsheet apps from treating it as a formula. Undo that on the way
-  // back in — mirrors Minutes' own unescapeFormulaGuard exactly.
+  // back in — mirrors Secretary's own unescapeFormulaGuard exactly.
   function unescapeFormulaGuard(s){
     if(typeof s === "string" && s.length >= 2 && s[0] === "'" && "=+-@".indexOf(s[1]) !== -1){
       return s.slice(1);
@@ -3672,7 +3672,7 @@
     return s;
   }
 
-  // Minutes' own short codes for the books it ships with, mapped to Work Codes
+  // Secretary's own short codes for the books it ships with, mapped to Work Codes
   // where a confident match exists — and the full tunebook names for narrative prose (e.g.
   // "Song selections were from ___ unless otherwise noted"). Both are derived from the
   // externally-loaded EZ_MINUTES_TUNEBOOKS (derived from tunebook-library.js) rather
@@ -3688,7 +3688,7 @@
       EZ_MINUTES_BOOK_TITLEPROPER[abbr] = b.titleProper || b.fullTitle;
     });
   } else {
-    console.error('Minutes: tunebook-library.js failed to load — book names and codes will be unavailable until it is restored next to this file.');
+    console.error('Secretary: tunebook-library.js failed to load — book names and codes will be unavailable until it is restored next to this file.');
     var depBanner = document.getElementById('cmpMissingDepBanner');
     if(depBanner) depBanner.style.display = 'block';
   }
@@ -3868,7 +3868,7 @@
     // one. Two different cases, on Kevin's own explicit direction: an occasional missing
     // name among otherwise-named leaders reads fine with a plain, singular substitute
     // ("the leader"); but this whole singing deliberately not naming anyone (the
-    // "mmNoNames" checkbox - Simple Minutes' own real, common case, or any CSV where
+    // "mmNoNames" checkbox - Capture's own real, common case, or any CSV where
     // names just were never collected) reads much better restructured around what
     // actually happened - the class was called to order and a song was opened with -
     // than by repeating "the leader" as if one person did everything, which is a
@@ -3979,7 +3979,7 @@
     return lines || null;
   }
 
-  // Minutes' "Memorial Lesson" field is free text — "Who gave it, and/or who was
+  // Secretary's "Memorial Lesson" field is free text — "Who gave it, and/or who was
   // remembered" per its own placeholder. Typically "Leader — name, name, name". Splits off
   // the leader (before a dash) from the remembered names (after it); if the remainder has
   // explicit "sick:"/"deceased:" labels those are used, otherwise the whole remainder is
@@ -4016,7 +4016,7 @@
       return false;
     }
 
-    // Compile stays tolerant of most schema-version mismatches - Minutes: Capture is the
+    // Compile stays tolerant of most schema-version mismatches - Secretary: Capture is the
     // one that enforces this strictly on its own re-import - but a file reporting a version
     // genuinely NEWER than this build knows about is a different risk: re-exporting it
     // through this build's own fixed current-schema header could silently discard whatever
@@ -4029,11 +4029,11 @@
     var highestKnownSchemaVersion = Math.max.apply(null, KNOWN_CAPTURE_SCHEMA_VERSIONS.map(function(v){ return parseInt(v, 10); }));
     var fileSchemaVersionNum = /^\d+$/.test(fileSchemaVersion) ? parseInt(fileSchemaVersion, 10) : null;
     if(fileSchemaVersionNum !== null && fileSchemaVersionNum > highestKnownSchemaVersion){
-      setImportStatus("This file reports schema version " + fileSchemaVersion + ", which is newer than what this build of Compile (schema " + highestKnownSchemaVersion + ") understands. Re-exporting it here could silently drop whatever that newer schema added. Open this file in a version of Minutes: Compile that supports schema " + fileSchemaVersion + " instead.");
+      setImportStatus("This file reports schema version " + fileSchemaVersion + ", which is newer than what this build of Compile (schema " + highestKnownSchemaVersion + ") understands. Re-exporting it here could silently drop whatever that newer schema added. Open this file in a version of Secretary: Compile that supports schema " + fileSchemaVersion + " instead.");
       return false;
     }
     if(fileSchemaVersion && KNOWN_CAPTURE_SCHEMA_VERSIONS.indexOf(fileSchemaVersion) === -1){
-      schemaVersionNote = " This file reports Minutes: Capture schema version " + fileSchemaVersion + ", which this build of Compile wasn't tested against — double-check the import carefully.";
+      schemaVersionNote = " This file reports Secretary: Capture schema version " + fileSchemaVersion + ", which this build of Compile wasn't tested against — double-check the import carefully.";
     }
 
     function getFrom(r, key){ return idx[key] > -1 ? unescapeFormulaGuard((r[idx[key]]||"").trim()) : ""; }
@@ -4169,7 +4169,7 @@
     var autoMappedBooks = [];
     var sickAutoText = "";
     var deceasedAutoText = "";
-    // These repeat on every row in Minutes' export (like Event/Date/Location already do).
+    // These repeat on every row in Secretary's export (like Event/Date/Location already do).
     // The first explicit session is authoritative for these — captured exactly once from
     // that session's own rows, including a genuinely blank value, rather than scanning the
     // whole file for the first non-blank occurrence (which could wrongly promote a later
@@ -4318,8 +4318,8 @@
       }
 
       // Prefer the file's own Record Type column when present (song/marker) — matches
-      // Minutes' current export exactly. Only fall back to a blank-fields heuristic for
-      // older or hand-edited files that lack that column, using Minutes' own fallback
+      // Secretary's current export exactly. Only fall back to a blank-fields heuristic for
+      // older or hand-edited files that lack that column, using Secretary's own fallback
       // rule rather than guessing from marker-word text (which isn't reliable once the
       // marker word lives in its own column instead of Notes).
       var isSession = recordTypeRaw === "session";
@@ -4663,8 +4663,8 @@
     if(metadataHydrated) autoFilled.push(metadataHydrated + " field(s) restored from a previously-completed Compile file (Business/Recognitions/Memorials/Sessions — worth a quick look)");
 
     // A record with real songs and not one leader name on any of them isn't missing data
-    // to chase down - it's a singing where names weren't collected, which is Simple
-    // Minutes' own everyday output and the reason the no-names setting exists. Left to
+    // to chase down - it's a singing where names weren't collected, which is
+    // Capture's own everyday output and the reason the no-names setting exists. Left to
     // itself the compiler would faithfully render that as "called to order by the leader
     // leading", then "Leaders: the leader ...; the leader ...", once per song: the exact
     // "misleadingly-repeated fallback implying one person led everything" this suite has
@@ -5237,7 +5237,7 @@
     return d[m][n];
   }
 
-  // Minutes exports co-leaders comma-separated ("Chris Wolf, Elena Conway"). Minutes
+  // Secretary exports co-leaders comma-separated ("Chris Wolf, Elena Conway"). Minutes
   // Book style joins co-leaders with "and", so reformat for display — but only when the
   // string doesn't already read naturally (i.e. no "and"/"&" already present).
   function formatLeaderDisplay(name){
@@ -5671,9 +5671,9 @@
   }
   function normBookName(b){ return String(b||"").trim().toLowerCase(); }
 
-  // Some capture tools (including Minutes) auto-write a clause like "Brought the class
+  // Some capture tools (including Secretary) auto-write a clause like "Brought the class
   // back to order", "Called the class back together", or "Led to bring the class together"
-  // into a song's notes — administrative flow description, not a real dedication. Minutes
+  // into a song's notes — administrative flow description, not a real dedication. Secretary
   // Builder already generates that exact meaning itself in the recess/lunch re-entry
   // sentence, so printing it too would just repeat it. Rather than an all-or-nothing check
   // on the whole note, this splits on sentence/clause breaks and drops only the matching
@@ -5828,7 +5828,7 @@
     var cleanedNote = (isMemorialTag(row.tag) || forceSuppressNote) ? "" : cleanDedicationText(row.notes, chaplainNameToSuppress);
     var dedication = cleanedNote ? " (" + cleanedNote + ")" : "";
     // "Memorial" (in any of its three tag forms), "Singing School", and "Closing" are all
-    // handled structurally elsewhere in the narrative; "Call Back" (Minutes' own tag for
+    // handled structurally elsewhere in the narrative; "Call Back" (Secretary's own tag for
     // the row that brought the class back to order) is likewise already expressed by the
     // recess/lunch re-entry sentence, so none of these should also show up as a raw
     // bracketed tag.
@@ -6060,7 +6060,7 @@
     // buttons, shown only while Memorial Lesson mode is active - is the most reliable
     // signal there is, since it's a deliberate choice made in the moment, not a guess
     // made later from freeform text. Only fall back to checking each row's own note
-    // content (Minutes sometimes tagged these two rows identically as plain "Memorial"
+    // content (Secretary sometimes tagged these two rows identically as plain "Memorial"
     // before the two specific tags existed) when the explicit tag isn't present, and
     // fall back further to positional assumption (sick first, then deceased) only after
     // that - preserving the old behavior for older data with neither signal.
@@ -6266,7 +6266,7 @@
         // "0 leaders led 6 songs" is arithmetically true and reads as a malfunction. The
         // no-names branch above has always dropped the leader half for that reason; this
         // named branch hadn't, so a nameless record compiled WITHOUT the no-names setting
-        // still ended on it - visible the moment a Simple Minutes file was imported and
+        // still ended on it - visible the moment a Capture file was imported and
         // compiled as-is. Same rule in both branches now: with no names on file, report
         // what can honestly be reported, which is how many songs were sung.
         var haveLeaderCount = leaderCount > 0;
@@ -6327,7 +6327,7 @@
   // sentence) rather than a sectioned field dump. This is a strong first draft — real
   // minutes vary their phrasing more than a rules-based generator can, so expect to polish it.
   // Minutes Maker's own per-song book identifier, in whichever single style
-  // meta.mmBookCodeStyle names - the SingLoud work code Minutes has always used, the SHMHA
+  // meta.mmBookCodeStyle names - the SingLoud work code Secretary has always used, the SHMHA
   // code instead, or the book's own Title Proper spelled out. Deliberately one style, not
   // a checklist the way the Simple List's book columns are: this sits inside a running
   // sentence, where more than one identifier at once reads as clutter. Used both for the
@@ -6372,7 +6372,7 @@
         // their own SHMHA code, even when one isn't this singing's default book - SHMHA's
         // codes exist to flag OTHER books appearing alongside the tradition's baseline
         // book, not to identify the baseline itself. Readers infer which edition from
-        // context/date, the same way Minutes never assigns it a SingLoud-to-SHMHA
+        // context/date, the same way Secretary never assigns it a SingLoud-to-SHMHA
         // translation in the first place. This is SHMHA's own fixed submission format -
         // entirely separate from mmBookCodeStyle, which only ever governs Minutes Maker.
         if(isSacredHarpDefaultBook(bookName)) return "";
@@ -6464,7 +6464,7 @@
   function buildSimpleList(){
     var meta = state.meta;
     var lines = [];
-    lines.push(meta.name || "Minutes");
+    lines.push(meta.name || "Secretary");
     var dateRange = headerDateRange();
     if(dateRange) lines.push(dateRange);
     if(meta.location) lines.push(meta.location);
@@ -6668,7 +6668,7 @@
           afterMarker = null; i = m; continue;
         }
 
-        // Minutes tags the row that actually called the class back together as "Call
+        // Secretary tags the row that actually called the class back together as "Call
         // Back" — treat that as equivalent to following a RECESS marker even if no marker
         // row was logged, so the re-entry sentence still gets generated.
         if(afterMarker || row.tag === "Call Back"){
@@ -6808,7 +6808,7 @@
     // export EXCEPT the SHMHA Minutes Book submission, which keeps the proper name alone
     // in its 3-line header (matching the real minutes samples reviewed) even though the
     // ordinal still shows up in the opening sentence either way.
-    var displayName = meta.name || "Minutes";
+    var displayName = meta.name || "Secretary";
     if(mode !== "shmha" && meta.ordinal && meta.ordinal.trim()){
       displayName = titleCaseWords(meta.ordinal.trim().replace(/^the\s+/i,"")) + " " + (meta.name || "Singing");
     }
@@ -6856,7 +6856,7 @@
   }
 
   function headerLines(doc){
-    var lines = [doc.displayName || doc.meta.name || "Minutes"];
+    var lines = [doc.displayName || doc.meta.name || "Secretary"];
     var line2 = doc.meta.location || doc.meta.host || "";
     if(line2) lines.push(line2);
     if(doc.dateRangeDisplay) lines.push(doc.dateRangeDisplay);
@@ -6911,7 +6911,7 @@
     return parts.join("\n");
   }
 
-  // This is Minutes' one master project file — a real v4-schema CSV that either app
+  // This is Secretary's one master project file — a real v4-schema CSV that either app
   // opens as the current authoritative revision, not a simplified reference dump and not a
   // separate "project format" from whatever Capture produced. Everything Compile knows that
   // a plain song row can't hold (Business tab, Recognitions, Memorials, per-session officer overrides,
@@ -7184,13 +7184,13 @@
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
     setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
   }
-  // Kevin's report, 2026-09-15: a singing opened from Simple Minutes arrives with a
-  // date-coded filename (Simple Minutes' own downloadCsv() names it
+  // Kevin's report, 2026-09-15: a singing opened from Capture arrives with a
+  // date-coded filename (Capture's own downloadCsv() names it
   // slugify(eventName)+"-"+eventDate+".csv" - see baltimore-second-monday-2026-09-14.csv),
-  // but every export Minutes itself produces dropped the date entirely, using only the
-  // event name - a regression relative to the file Minutes started from, and a real loss
+  // but every export Secretary itself produces dropped the date entirely, using only the
+  // event name - a regression relative to the file Secretary started from, and a real loss
   // for anyone keeping multiple dated exports of a recurring singing side by side. Matches
-  // Simple Minutes' own convention: slug, then the ISO date if one is known.
+  // Capture's own convention: slug, then the ISO date if one is known.
   function safeName(){
     var base = (state.meta.name || "minutes").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"") || "minutes";
     var iso = bestGuessISODate(state.meta.date);
@@ -7381,7 +7381,7 @@
       SPLIT_PAGES[abbr] = Object.keys(splitPages).map(Number);
     });
   } else {
-    console.error('Minutes: tunebook-library.js failed to load — no song lookups will work until it is restored next to this file.');
+    console.error('Secretary: tunebook-library.js failed to load — no song lookups will work until it is restored next to this file.');
     var depBanner = document.getElementById('capMissingDepBanner');
     if(depBanner) depBanner.style.display = 'block';
   }
@@ -8203,7 +8203,7 @@
   // explicit direction (100% - never both at once), and persists across a Recess/Lunch
   // occurring mid-lesson/school, since that's still the same lesson/school with a break
   // in it, not two separate ones - so turning a mode on does NOT get cleared by logging a
-  // marker; only an explicit toggle-off (or Reset in Simple Minutes-style tools) ends it.
+  // marker; only an explicit toggle-off (or Reset in Capture-style tools) ends it.
   const MODE_KEY = 'singingMinutesActiveMode';
   let activeMode = null;
   // v152 review finding 2: the stored value is now {owner, mode}, not a bare mode string -
@@ -9632,7 +9632,7 @@
   // Schema 5: Event ID is purely derived from Series Code + the event's own date - never a
   // second field to keep in sync by hand, and deliberately not its own visible input here,
   // since Capture's whole job is staying fast and uncluttered (per the Directive, Setup -
-  // not Minutes - is where this kind of identity work belongs; this is the bare minimum
+  // not Secretary - is where this kind of identity work belongs; this is the bare minimum
   // needed so a Capture-only file still carries valid Schema 5 identity if a Series Code
   // was given at all).
   // Event ID is the occurrence's own permanent identity, used to chain a recurring
@@ -10076,13 +10076,13 @@
     const header = rows[0].map(function(h){ return h.trim(); });
     const missingRequired = REQUIRED_HEADER_COLUMNS.filter(function(col){ return header.indexOf(col) === -1; });
     if (missingRequired.length){
-      return { error: "This doesn't look like an Minutes CSV — missing column(s): " + missingRequired.join(', ') + '.' };
+      return { error: "This doesn't look like a Secretary CSV — missing column(s): " + missingRequired.join(', ') + '.' };
     }
     const versionIdx = header.indexOf('Schema Version');
     if (rows.length > 1 && versionIdx !== -1){
       const fileVersion = (rows[1][versionIdx] || '').trim();
       if (fileVersion && KNOWN_SCHEMA_VERSIONS.indexOf(fileVersion) === -1){
-        return { error: 'This file is schema version ' + fileVersion + ', but this app recognizes versions ' + KNOWN_SCHEMA_VERSIONS.join('/') + '. Re-export it from a matching version of Minutes.' };
+        return { error: 'This file is schema version ' + fileVersion + ', but this app recognizes versions ' + KNOWN_SCHEMA_VERSIONS.join('/') + '. Re-export it from a matching version of Secretary.' };
       }
     }
     const idx = {};
@@ -10126,7 +10126,7 @@
     }
     const duplicateSessionIdList = Object.keys(duplicateSessionIdSet);
     if (duplicateSessionIdList.length){
-      return { error: 'Two or more sessions in this file share the same Session ID (' + duplicateSessionIdList.join(', ') + ') — this file needs to be repaired before it can be imported, since Minutes can no longer tell those sessions apart.' };
+      return { error: 'Two or more sessions in this file share the same Session ID (' + duplicateSessionIdList.join(', ') + ') — this file needs to be repaired before it can be imported, since Secretary can no longer tell those sessions apart.' };
     }
 
     const parsed = [];
@@ -10551,7 +10551,7 @@
         showToast('Loaded ' + entries.length + ' — order numbers were missing or duplicated, so file order was used instead');
       } else if (warnCount){
         showToast('Loaded ' + entries.length + ' — ' + warnCount + ' minor ' + (warnCount === 1 ? 'issue' : 'issues') + ' noted (see console)');
-        console.warn('Minutes import warnings:', result.rowWarnings);
+        console.warn('Secretary import warnings:', result.rowWarnings);
       } else {
         showToast('Loaded ' + entries.length + ' ' + (entries.length === 1 ? 'entry' : 'entries'));
       }
@@ -10584,7 +10584,7 @@
   render();
   renderWelcomeGate();
   document.getElementById('capVersionFooter').textContent =
-    'Minutes · Version ' + EZ_MINUTES_SUITE_VERSION + ' · Schema ' + SCHEMA_VERSION +
+    'SingLoud.org Shape-Note Secretary · Version ' + EZ_MINUTES_SUITE_VERSION + ' · Schema ' + SCHEMA_VERSION +
     (TUNEBOOKS_LOADED ? ' · Tunebook Library ' + (typeof EZ_MINUTES_TUNEBOOK_LIBRARY_VERSION !== 'undefined' ? EZ_MINUTES_TUNEBOOK_LIBRARY_VERSION : '(unknown)') : ' · Tunebook Library MISSING');
 
   // ---------------- bridges for the wrapper (minutes.html only) ----------------

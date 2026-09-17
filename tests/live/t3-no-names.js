@@ -10,14 +10,19 @@ const L = require('./lib');
 const HEADER = 'Schema Version,Order of entry,Record Type,Session Label,Session ID,Metadata Field,Metadata Value,Event,Date,Location,Chair,Vice-Chair,Secretary,Treasurer,Arranger(s),Chaplain(s),Memorial Lesson Leader,Book,Edition Code,Leader(s),Canonical Leader(s),Page,Song,Tag,Notes,Marker,Timestamp ISO,Time entered,Series Code,Event ID,Previous Event ID,Status';
 
 const EVENT = 'No Names Test', DATE = '2026-08-15', LOC = 'Union Hall';
-const CHAIR = 'Alice Chair', MEM = 'Mary Memorial', SID = 'sess0001';
+// STALE_MEM is an old-style "Memorial Lesson Leader" column value, the kind an older file
+// might carry from before that field was derived rather than typed (Kevin's own call,
+// 2026-09-17). It must never appear anywhere in the output - the real leader is derived
+// fresh from the Memorial-tagged rows' own Leader(s) values (Alice Singer / Dan Singer
+// below), same as every other CSV import.
+const CHAIR = 'Alice Chair', STALE_MEM = 'Mary Memorial (stale)', SID = 'sess0001';
 
 let order = 0;
 function row(type, opts){
   order++;
   const c = new Array(32).fill('');
   c[0] = '5'; c[1] = String(order); c[2] = type; c[4] = SID;
-  c[7] = EVENT; c[8] = DATE; c[9] = LOC; c[10] = CHAIR; c[16] = MEM;
+  c[7] = EVENT; c[8] = DATE; c[9] = LOC; c[10] = CHAIR; c[16] = STALE_MEM;
   if (opts.book){ c[17] = opts.book; c[18] = opts.book; }
   if (opts.leader) c[19] = opts.leader;
   if (opts.page) c[21] = opts.page;
@@ -78,7 +83,7 @@ async function setCheckbox(page, id, want){
   await L.open(page);
   await importCSV(page, CSV, 'no-names-test-master.csv');
 
-  // Names & Lists, so the Memorial lesson has real sick/deceased lists to read
+  // Recognitions/Memorials, so the Memorial lesson has real sick/deceased lists to read
   await page.click('#stageBtn-compile');
   await page.waitForTimeout(800);
 
@@ -90,18 +95,15 @@ async function setCheckbox(page, id, want){
   L.check('Closing tag survived the import', songs.some(r => r['Tag'] === 'Closing'),
     songs.map(r => r['Tag'] || '-').join(','));
 
-  await page.click('.substage-btn[data-panel-target="lists"]');
+  await page.click('.substage-btn[data-panel-target="memorials"]');
   await page.waitForTimeout(500);
   await page.fill('#l_sick', 'John Doe');
   await page.fill('#l_deceased', 'Jane Roe');
   await page.waitForTimeout(400);
 
-  // Memorial Lesson Leader is an Officer, set on Compile's Roles tab - the field the
-  // checkbox's own label promises stays named.
-  await page.click('.substage-btn[data-panel-target="roles"]');
-  await page.waitForTimeout(400);
-  await page.fill('#r_memorial', 'Mary Memorial');
-  await page.waitForTimeout(400);
+  // Memorial Lesson Leader is no longer a typed Officer field (Kevin's own call,
+  // 2026-09-17) - it's derived from the Leader(s) values already on the Memorial-tagged
+  // rows (Alice Singer / Dan Singer), so there's nothing to fill in here.
 
   // ---------- baseline with names ON ----------
   await setCheckbox(page, 'm_mmNoNames', false);
@@ -112,7 +114,11 @@ async function setCheckbox(page, id, want){
     (named.match(/[^.]*Dan Singer[^.]*\./) || ['(not found)'])[0]);
   L.check('baseline: closing song leader printed (Cora Closer)', /Cora Closer/.test(named),
     (named.match(/[^.]*closing song[^.]*\./i) || ['(not found)'])[0]);
-  L.check('baseline: Memorial Lesson Leader printed (Mary Memorial)', /Mary Memorial/.test(named));
+  L.check('baseline: Memorial Lesson Leader derived from tagged rows (Alice Singer, Dan Singer)',
+    /The memorial lesson was conducted by Alice Singer, Dan Singer\./.test(named),
+    (named.match(/The memorial lesson was conducted[^.]*\./) || ['(not found)'])[0]);
+  L.check('baseline: stale imported Memorial Lesson Leader column value never appears',
+    !named.includes(STALE_MEM));
 
   // ---------- Finding 4: no-names ON ----------
   await setCheckbox(page, 'm_mmNoNames', true);
@@ -126,7 +132,12 @@ async function setCheckbox(page, id, want){
     (p.match(/[^.]*in their memory\./i) || ['(deceased clause not found)'])[0]);
   L.check('no-names: CLOSING song leader absent (Cora Closer)', !/Cora Closer/.test(p),
     (p.match(/[^.]*closing song[^.]*\./i) || ['(closing clause not found)'])[0]);
-  L.check('no-names: Memorial Lesson Leader IS still named', /Mary Memorial/.test(p),
+  // Kevin's own call, 2026-09-17: once the Memorial Lesson Leader stopped being a
+  // separate typed Officer field, there was no longer a reason to exempt it from the
+  // same no-names suppression every other per-song leader gets - it's now suppressed
+  // right along with them, printing the same generic sentence as when nothing's tagged.
+  L.check('no-names: Memorial Lesson Leader is ALSO suppressed now (no longer exempt)',
+    /The memorial lesson was conducted\./.test(p) && !/conducted by/.test(p),
     (p.match(/The memorial lesson was conducted[^.]*\./) || ['(not found)'])[0]);
   L.check('no-names: memorial songs read as prose about what was sung',
     /was sung for the sick and shut-ins\./.test(p) && /was sung in their memory\./.test(p),
@@ -188,24 +199,26 @@ async function setCheckbox(page, id, want){
     /was sung for the sick and shut-ins\./.test(reopened) || !/led "Memorial Song"/.test(reopened),
     (reopened.match(/[^.]*sick and shut-ins[^.]*\.[^.]*\./) || ['(not found)'])[0]);
 
-  // ---------- no-names with NO Memorial Lesson Leader officer on file ----------
-  // With names on, the lesson's own first song leader stands in for the officer. Under
-  // no-names that stand-in would print an individual song leader in the officer position,
-  // which is precisely what the option exists to prevent.
+  // ---------- no-names with an UNTAGGED memorial run (no Memorial (Sick)/(Deceased)
+  // split, just plain "Memorial") ----------
+  // There's no separate officer field left to leave blank any more - this now just
+  // confirms suppression holds for the plain "Memorial" tag family too, not only the two
+  // split tags exercised above.
+  const CSV_PLAIN_TAG = CSV.replace('Memorial (Sick)', 'Memorial').replace('Memorial (Deceased)', 'Memorial');
   await page.evaluate(() => localStorage.clear());
   await L.open(page);
-  await importCSV(page, CSV, 'no-officer-master.csv');
+  await importCSV(page, CSV_PLAIN_TAG, 'plain-memorial-tag-master.csv');
   await page.click('#stageBtn-compile');
   await page.waitForTimeout(800);
-  await page.click('.substage-btn[data-panel-target="lists"]');
+  await page.click('.substage-btn[data-panel-target="memorials"]');
   await page.waitForTimeout(400);
   await page.fill('#l_sick', 'John Doe');
   await page.waitForTimeout(300);
   await setCheckbox(page, 'm_mmNoNames', true);
-  const noOfficer = await preview(page);
-  L.check('no-names with no Memorial officer: no song leader stands in as the officer',
-    !/Alice Singer/.test(noOfficer),
-    (noOfficer.match(/The memorial lesson was conducted[^.]*\.[^.]*\./) || ['(not found)'])[0]);
+  const plainTagNoNames = await preview(page);
+  L.check('no-names with plain "Memorial" tag: leader still suppressed',
+    !/Alice Singer/.test(plainTagNoNames) && !/conducted by/.test(plainTagNoNames),
+    (plainTagNoNames.match(/The memorial lesson was conducted[^.]*\.[^.]*\./) || ['(not found)'])[0]);
 
   L.check('no page errors', page._errors.length === 0, page._errors.slice(0, 3).join(' | '));
 

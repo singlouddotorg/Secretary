@@ -271,7 +271,7 @@ describe('"New Singing Based on This One" works regardless of how the singing wa
   });
 });
 
-describe('Minutes-side book projection uses the real publicationYear field (v81 review, finding 8)', () => {
+describe('Secretary-side book projection uses the real publicationYear field (v81 review, finding 8)', () => {
   test('a real edition where Publication Year has been edited to genuinely differ from Edition Identifier Year is projected with its real, current value, not derived from the identifier', async () => {
     // Modifying the real, parsed object and re-serializing it is robust to legitimate
     // field-order changes in the real source file (this suite's own Save tunebook-
@@ -296,7 +296,7 @@ describe('Minutes-side book projection uses the real publicationYear field (v81 
 
     const publicationYear = win.eval("EZ_MINUTES_TUNEBOOKS.books['ScH1855'].publicationYear");
     assert.equal(publicationYear, '1934',
-      'The Minutes-side projection must use the real, current publicationYear field - previously it was derived purely from editionIdentifierYear/editionFirstPublicationDate, ignoring the real field entirely, invisible only because every real bundled edition happened to have both values coincide');
+      'The Secretary-side projection must use the real, current publicationYear field - previously it was derived purely from editionIdentifierYear/editionFirstPublicationDate, ignoring the real field entirely, invisible only because every real bundled edition happened to have both values coincide');
     win.close();
   });
 });

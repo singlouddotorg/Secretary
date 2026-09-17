@@ -30,7 +30,7 @@ async function open(page){
 }
 
 // Setup stage: fill event/date/location/chair, then go to Capture
-async function setupSinging(page, { event, date, location, chair, memorialLeader }){
+async function setupSinging(page, { event, date, location, chair }){
   await page.click('#stageBtn-setup');
   await page.waitForTimeout(200);
   const visible = await page.evaluate(() => {
@@ -45,7 +45,9 @@ async function setupSinging(page, { event, date, location, chair, memorialLeader
   await page.fill('#date', date);
   await page.fill('#location', location);
   if (chair !== undefined) await page.fill('#roleChair', chair).catch(()=>{});
-  if (memorialLeader !== undefined) await page.fill('#roleMemorialLesson', memorialLeader).catch(()=>{});
+  // Memorial lesson leader is no longer a Setup field (Kevin's own call, 2026-09-17) -
+  // it's derived from whichever song(s) get tagged Memorial, so there's nothing to fill
+  // in here any more.
   await page.waitForTimeout(200);
 }
 

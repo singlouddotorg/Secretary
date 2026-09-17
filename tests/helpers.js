@@ -1,4 +1,4 @@
-// Shared test helpers for the EZ Minutes suite's Node-based regression tests.
+// Shared test helpers for the Sing Loud Suite's Node-based regression tests.
 //
 // These wrap the same jsdom patterns used throughout this project's development to
 // manually verify fixes - the point of this test suite is to make those checks
