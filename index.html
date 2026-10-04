@@ -288,6 +288,27 @@
     margin:0 0 18px 6px;
     font-style:italic;
   }
+  .singers-controls{ display:flex; flex-wrap:wrap; gap:8px 12px; align-items:center; margin:0 0 8px; }
+  .singers-controls input[type="text"]{ flex:1 1 200px; min-width:160px; padding:8px 10px; border:1px solid var(--line2); border-radius:6px; font:inherit; font-size:14px; }
+  .singers-controls select{ padding:8px 10px; border:1px solid var(--line2); border-radius:6px; font:inherit; font-size:14px; background:#fff; }
+  .singers-check{ font-size:13px; color:var(--ink-soft); display:flex; gap:6px; align-items:center; }
+  .singers-count{ font-size:12.5px; color:var(--ink-soft); margin:0 0 8px; }
+  .singer-row{ border:1px solid var(--line2); border-radius:8px; padding:10px 12px; margin:0 0 8px; background:#fff; }
+  .singer-row .singer-top{ display:flex; flex-wrap:wrap; gap:6px 10px; align-items:center; }
+  .singer-row .singer-name{ flex:1 1 220px; min-width:180px; font:inherit; font-size:15px; font-weight:600; padding:6px 8px; border:1px solid transparent; border-radius:6px; background:transparent; }
+  .singer-row .singer-name:hover, .singer-row .singer-name:focus{ border-color:var(--line2); background:#fff; }
+  .singer-row .singer-meta{ font-size:12px; color:var(--ink-soft); }
+  .singer-row .singer-also{ font-size:12px; color:var(--ink-soft); margin:2px 8px 0; }
+  .singer-row .singer-dupe{ font-size:12px; margin:4px 8px 0; color:var(--oxblood); }
+  .singer-row .singer-dupe button{ font-size:12px; margin-left:4px; }
+  .singer-row .singer-contact{ display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:6px 10px; margin-top:8px; }
+  .singer-row .singer-contact input{ width:100%; padding:7px 9px; border:1px solid var(--line2); border-radius:6px; font:inherit; font-size:13.5px; }
+  .singer-row .singer-contact input.bad{ border-color:var(--oxblood); }
+  .singers-actions{ display:flex; flex-wrap:wrap; gap:8px 10px; align-items:center; margin-top:14px; }
+  .singers-hint{ font-size:12px; color:var(--ink-soft); }
+  .report-statement{ font-size:26px; line-height:1.55; max-width:760px; margin:18px 0 20px; font-family:Georgia, "Times New Roman", serif; color:var(--ink); }
+  .report-statement .report-num{ font-weight:700; }
+  @media (max-width:600px){ .report-statement{ font-size:22px; } }
   .tab-btn{
     position:relative;
     text-align:left;
@@ -775,6 +796,18 @@
   .entry .body .song{font-weight:600; color:var(--accent);}
   .card{background:var(--card); border:1px solid var(--line); border-radius:6px; padding:16px; margin-bottom:22px;}
   .card .field + .field{margin-top:10px;}
+  /* Leader(s) autofill. Hand-built instead of <datalist>: a native datalist matches the whole
+     field, so after "Smith, " it offers nothing. This one completes only the name being
+     typed - the part after the last comma, "and", or "&" - so a second, third, or fifth
+     leader gets the same help as the first. */
+  .caller-wrap{ position:relative; }
+  .caller-suggest{ position:absolute; left:0; right:0; top:100%; z-index:20; margin-top:2px; max-height:220px; overflow-y:auto;
+    background:#fff; border:1px solid #d8cbaa; border-radius:6px; box-shadow:0 6px 18px rgba(43,35,24,.15); }
+  .caller-suggest[hidden]{ display:none; }
+  .caller-suggest button{ display:block; width:100%; text-align:left; padding:9px 10px; border:none; border-bottom:1px solid #ece3cc;
+    background:#fff; color:#241f1a; font:inherit; font-size:14px; cursor:pointer; }
+  .caller-suggest button:last-child{ border-bottom:none; }
+  .caller-suggest button.active, .caller-suggest button:hover{ background:#f8f3e6; }
   .btn-add{
     margin-top:14px; width:100%; background:var(--accent); color:var(--card);
     border:none; border-radius:5px; padding:11px 0; font-weight:600; font-size:14px;
@@ -978,6 +1011,8 @@
       <button type="button" class="substage-btn" data-panel-target="memorials">Memorials</button>
       <button type="button" class="substage-btn" data-panel-target="business">Business</button>
       <button type="button" class="substage-btn" data-panel-target="songs">Song List</button>
+      <button type="button" class="substage-btn" data-panel-target="singers">Singers</button>
+      <button type="button" class="substage-btn" data-panel-target="report">Report</button>
     </div>
     <button type="button" class="stage-btn" data-stage="export" id="stageBtn-export"><span class="num">4</span>Export</button>
     <div class="rail-divider" role="separator" aria-hidden="true"></div>
@@ -1211,8 +1246,10 @@
     <div class="field" id="entryBookField" style="margin-bottom:10px;"></div>
     <div class="field">
       <label for="caller">Leader(s)</label>
-      <input id="caller" placeholder="Who's calling this one" list="callerList" autocomplete="off">
-      <datalist id="callerList"></datalist>
+      <div class="caller-wrap">
+        <input id="caller" placeholder="Who's calling this one" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="callerSuggest">
+        <div id="callerSuggest" class="caller-suggest" role="listbox" hidden></div>
+      </div>
     </div>
     <div class="field">
       <label for="page" id="pageLabel">Page / order (e.g. 50t or 50.1)</label>
@@ -1421,7 +1458,7 @@
         <div class="field"><label for="m_location">Location / venue</label><input type="text" id="m_location" placeholder="e.g. St. Giles Presbyterian Church, Richmond, Virginia — or St. Multose Church, Cork, Ireland"></div>
         <div class="field"><label for="m_host">Host institution</label><input type="text" id="m_host" placeholder="e.g. Mount Pleasant Baptist Church congregation"></div>
         <div class="field"><label for="m_books">Book(s) used</label><input type="text" id="m_books" placeholder="e.g. The Shenandoah Harmony, 2012, and Other"></div>
-        <div class="field"><label for="m_present">Number present or total registered, if known</label><input type="text" id="m_present" placeholder="e.g. 62"></div>
+        <div class="field"><label for="m_present">Number present or total registered, if known (Minutes Maker's "Number of singers present" uses the Singers page count when this is blank)</label><input type="text" id="m_present" placeholder="e.g. 62"></div>
       </div>
     </section>
 
@@ -1536,6 +1573,38 @@
         </thead>
         <tbody id="songBody"></tbody>
       </table>
+      </div>
+    </section>
+
+    <!-- ================= SINGERS ================= -->
+    <section class="panel" data-panel="report" role="tabpanel" id="panel-report" aria-labelledby="tab-report">
+      <h2 class="panel-title">Report</h2>
+      <p class="panel-desc">A statement to read aloud. Nothing here is typed in: the numbers are counted from the Singers page and the songs entered.</p>
+      <p class="report-statement" id="reportStatement" aria-live="polite"></p>
+      <p class="singers-hint" id="reportBasis"></p>
+    </section>
+
+    <section class="panel" data-panel="singers" role="tabpanel" id="panel-singers" aria-labelledby="tab-singers">
+      <h2 class="panel-title">Singers</h2>
+      <p class="panel-desc">Every name entered in this singing: leaders, officers, visitors, and out-of-town singers. Use it to check spellings, and to keep a phone number or email for anyone you'd like to reach.</p>
+      <div class="notice" style="margin:0 0 14px;">
+        <strong>Contact details are private.</strong> Phone numbers and emails are saved inside this singing's Master CSV so they travel with the file, so keep that file to yourself. Minutes Maker, Simple List, SHMHA, and every other published output never include them. To share the Master CSV, use <em>Export .csv without contact details</em> on the Export stage.
+      </div>
+      <div class="singers-controls">
+        <input type="text" id="singersSearch" placeholder="Search names" aria-label="Search singers" autocomplete="off">
+        <select id="singersSort" aria-label="Sort singers">
+          <option value="last">Sort: last name</option>
+          <option value="songs">Sort: most songs led</option>
+        </select>
+        <label class="singers-check"><input type="checkbox" id="singersOnlyContact"> Only people with contact info</label>
+      </div>
+      <p class="singers-count" id="singersCount" aria-live="polite"></p>
+      <p class="panel-desc" style="margin:0 0 10px;">To fix a spelling, edit the name. To merge two entries, type the exact name of the other one. The fix applies to every song, officer field, and list in this singing.</p>
+      <div id="singersList"></div>
+      <div class="singers-actions">
+        <button type="button" class="primary small" id="singersMailingBtn">Download mailing list (.csv)</button>
+        <button type="button" class="secondary small" id="singersContactsBtn">Download all contacts (.csv)</button>
+        <span class="singers-hint" id="singersMailingHint"></span>
       </div>
     </section>
 
@@ -1777,6 +1846,8 @@
           <h4>Master CSV</h4>
           <p>The complete project file — songs, corrections, and everything on Business/Names &amp; Lists. This is the file to keep and hand back and forth between Capture and Compile; each new export is the current authoritative revision.</p>
           <button class="primary small" id="exp_csv">Export .csv</button>
+          <p id="exp_csv_contact_note" style="display:none;margin:10px 0 6px;font-size:12px;color:var(--oxblood);">This file includes the contact details entered on the Singers page. Keep it private.</p>
+          <button class="secondary small" id="exp_csv_nocontacts" style="display:none;">Export .csv without contact details</button>
         </div>
       </div>
     </section>
@@ -1941,6 +2012,8 @@
     // exception for this one sub-panel, not a return to the old "Compile is just wide
     // by default" state every other sub-panel already moved on from.
     document.getElementById("panel-compile").classList.toggle("wide-songlist", target === "songs");
+    if(target === "singers" && typeof window.__ezMinutesRenderSingers === "function") window.__ezMinutesRenderSingers();
+    if(target === "report" && typeof window.__ezMinutesRenderReport === "function") window.__ezMinutesRenderReport();
   }
 
   // ---------------- keeping Minutes and Compile in sync with the active singing ----------------
@@ -2799,6 +2872,10 @@
       business:{ announcements:"", motions:"", reports:"", nextdate:"", nextchair:"", thanks:"", closing:"" },
       songs:[],  // {id, order, type:'song'|'marker', day, book, page, title(for Other), leader, notes(=dedication for songs), tag, prose(for markers)}
       nameMap:{}, // rawLeaderLower -> canonical
+      // Contact details for singers, keyed by singerKey(canonical name):
+      // { name, phone, email, notes }. Stored in the Master CSV as "singer.<key>.<field>"
+      // metadata rows, so no schema change; older builds carry them through untouched.
+      singers:{},
       // RC5-03: any metadata row whose field Compile doesn't recognize gets kept here
       // verbatim rather than silently dropped — could be Capture-specific metadata, a field
       // from a newer suite version, or anything else this build doesn't yet know to
@@ -2834,6 +2911,7 @@
         });
       }
       if(!parsed.nameMap) parsed.nameMap = {};
+      if(!parsed.singers || typeof parsed.singers !== "object") parsed.singers = {};
       if(!parsed.songs) parsed.songs = [];
       if(!Array.isArray(parsed.metaPassthrough)) parsed.metaPassthrough = [];
       if(!Array.isArray(parsed.unknownTypeRows)) parsed.unknownTypeRows = [];
@@ -4648,6 +4726,10 @@
         if(!state.meta.dayLocations[overrideKey].officers) state.meta.dayLocations[overrideKey].officers = {};
         state.meta.dayLocations[overrideKey].officers[parts[1]] = m.value;
         metadataHydrated++;
+      } else if(parts[0] === "singer" && parts.length === 3 && /^(name|phone|email|notes)$/.test(parts[2])){
+        if(!state.singers[parts[1]]) state.singers[parts[1]] = { name:"", phone:"", email:"", notes:"" };
+        state.singers[parts[1]][parts[2]] = m.value;
+        metadataHydrated++;
       } else if(parts[0] === "nameMap" && parts[1]){
         // Restored directly into state.nameMap regardless of whether any surviving row
         // currently uses this name — that's the whole point (RC4-04).
@@ -5258,7 +5340,20 @@
   function canonicalLeader(raw){
     if(!raw) return raw;
     var key = normKey(raw);
-    return formatLeaderDisplay(state.nameMap[key] || raw);
+    if(state.nameMap[key]) return formatLeaderDisplay(state.nameMap[key]);
+    // "Jon Smith and Bo Marsh": a correction filed for one person (the Singers page and Find
+    // variants both file them per person) must reach that person inside a co-led row too.
+    var parts = splitCoLeaders(raw);
+    if(parts.length > 1){
+      var changed = false;
+      var mapped = parts.map(function(n){
+        var m = state.nameMap[normKey(n)];
+        if(m && m.trim()){ changed = true; return m.trim(); }
+        return n;
+      });
+      if(changed) return formatLeaderDisplay(mapped.join(", "));
+    }
+    return formatLeaderDisplay(raw);
   }
 
   // The name a row actually carries, from either column. A row's own canonical override
@@ -5346,6 +5441,371 @@
   document.getElementById("dismissMerges").addEventListener("click", function(){
     document.getElementById("mergeGroupWrap").style.display = "none";
   });
+
+  // ---------------- Singers page ----------------
+  // One master list of every name in this singing, for two jobs: checking spellings, and keeping
+  // a phone number / email for a mailing list. A name's spelling is fixed through the same
+  // state.nameMap the Song List's "Find variants" uses, so nothing about the original rows is
+  // destroyed; contact details live in state.singers and travel in the Master CSV.
+  function singerKey(name){
+    var s = String(name || "");
+    var k = s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "");
+    if(k) return k;
+    // Names with no Latin letters at all still need a stable, dot-free key.
+    return Array.from(s.trim().toLowerCase()).map(function(c){ return c.codePointAt(0).toString(16); }).join("_") || "unnamed";
+  }
+  function singerCanonicalOf(raw){
+    var k = normKey(raw);
+    var m = k ? state.nameMap[k] : "";
+    return (m && String(m).trim()) ? String(m).trim() : raw;
+  }
+  var SINGER_ROLE_FIELDS = [
+    ["chair","Chair"], ["vicechair","Vice-chair"], ["secretary","Secretary"], ["treasurer","Treasurer"],
+    ["committee","Arranging committee"], ["chaplain","Chaplain"], ["pitcher","Pitcher"],
+    ["localhost","Local host"], ["memorial","Memorial lesson leader"]
+  ];
+  // Every distinct person in the singing, keyed by singerKey of their corrected name.
+  function collectSingers(){
+    var people = {};
+    function add(raw, how, canonicalAlready){
+      raw = String(raw || "").trim();
+      if(!raw) return;
+      var canon = canonicalAlready ? raw : singerCanonicalOf(raw);
+      var key = singerKey(canon);
+      var p = people[key];
+      if(!p) p = people[key] = { key:key, canonCounts:{}, variants:{}, led:0, roles:{}, visitor:false, outoftown:false, suggested:false };
+      p.canonCounts[canon] = (p.canonCounts[canon] || 0) + 1;
+      p.variants[raw] = (p.variants[raw] || 0) + 1;
+      if(how === "led") p.led++;
+      else if(how === "suggested") p.suggested = true;
+      else if(how === "visitor") p.visitor = true;
+      else if(how === "outoftown") p.outoftown = true;
+      else if(how && how.indexOf("role:") === 0) p.roles[how.slice(5)] = true;
+    }
+    state.songs.forEach(function(s){
+      if(!s || s.type === "metadata" || s.type === "unknown") return;
+      if(s.type === "namesuggestion"){ add(s.leader, "suggested"); return; }
+      var songRow = s.type === "song";
+      if(s.canonicalLeaderOverride){
+        splitCoLeaders(s.canonicalLeaderOverride).forEach(function(n){ add(n, songRow ? "led" : "other", true); });
+      } else {
+        splitCoLeaders(s.leader).forEach(function(n){ add(n, songRow ? "led" : "other"); });
+      }
+    });
+    SINGER_ROLE_FIELDS.forEach(function(r){
+      splitCoLeaders(state.roles[r[0]]).forEach(function(n){ add(n, "role:" + r[1]); });
+    });
+    Object.keys((state.meta && state.meta.dayLocations) || {}).forEach(function(sid){
+      var off = (state.meta.dayLocations[sid] && state.meta.dayLocations[sid].officers) || {};
+      SINGER_ROLE_FIELDS.forEach(function(r){
+        if(off[r[0]]) splitCoLeaders(off[r[0]]).forEach(function(n){ add(n, "role:" + r[1]); });
+      });
+    });
+    parseNameListText(state.lists.visitors).forEach(function(r){ add(r.name, "visitor"); });
+    parseNameListText(state.lists.outoftown).forEach(function(r){ add(r.name, "outoftown"); });
+    // Display name: the spelling that is used most.
+    Object.keys(people).forEach(function(k){
+      var p = people[k], best = "", bestN = -1;
+      Object.keys(p.canonCounts).forEach(function(c){ if(p.canonCounts[c] > bestN){ best = c; bestN = p.canonCounts[c]; } });
+      p.name = best;
+    });
+    // A saved contact whose name is no longer in any row still deserves a line.
+    Object.keys(state.singers).forEach(function(k){
+      var c = state.singers[k] || {};
+      if(!people[k] && (c.phone || c.email || c.notes)){
+        people[k] = { key:k, name:c.name || k, canonCounts:{}, variants:{}, led:0, roles:{}, visitor:false, outoftown:false, suggested:false, contactOnly:true };
+      }
+    });
+    return people;
+  }
+  function singerSortKey(name){
+    var toks = String(name || "").trim().split(/\s+/);
+    while(toks.length > 1 && /^(jr\.?|sr\.?|ii|iii|iv)$/i.test(toks[toks.length-1])) toks.pop();
+    var last = toks.length ? toks[toks.length-1] : "";
+    return (last + " " + toks.slice(0, -1).join(" ")).toLowerCase();
+  }
+  // Replaces whole names (never substrings) inside free text that holds one or more names.
+  function replaceNameInText(text, keySet, newName){
+    if(!text) return { text:text, changed:false };
+    var changed = false;
+    var out = String(text).split(/(\r?\n|,|;|\s+and\s+|\s+&\s+)/i).map(function(tok, i){
+      if(i % 2 === 1) return tok;
+      var trimmed = tok.trim();
+      if(!trimmed) return tok;
+      var namePart = trimmed, tail = "";
+      var dash = trimmed.indexOf("—");           // "Name—State" convention in name lists
+      if(dash !== -1){ namePart = trimmed.slice(0, dash).trim(); tail = trimmed.slice(dash); }
+      if(keySet[singerKey(namePart)]){
+        changed = true;
+        var lead = tok.match(/^\s*/)[0], trail = tok.match(/\s*$/)[0];
+        return lead + newName + (tail ? tail : "") + trail;
+      }
+      return tok;
+    }).join("");
+    return { text:out, changed:changed };
+  }
+  function renameSinger(person, newName){
+    newName = String(newName || "").trim();
+    if(!newName || newName === person.name) return false;
+    var oldKey = person.key, newKey = singerKey(newName);
+    var keySet = {}; keySet[oldKey] = true;
+    var rawNames = Object.keys(person.variants).concat([person.name]);
+    rawNames.forEach(function(v){ keySet[singerKey(v)] = true; });
+    // 1. Corrections table: every spelling this person has been entered under points to the new one.
+    rawNames.forEach(function(v){
+      var nk = normKey(v);
+      if(nk) state.nameMap[nk] = newName;
+    });
+    Object.keys(state.nameMap).forEach(function(nk){
+      if(singerKey(state.nameMap[nk]) === oldKey) state.nameMap[nk] = newName;
+    });
+    var nkNew = normKey(newName);
+    if(nkNew) state.nameMap[nkNew] = newName;
+    // 2. Free-text places that hold names.
+    state.songs.forEach(function(s){
+      if(s && s.canonicalLeaderOverride){
+        var r = replaceNameInText(s.canonicalLeaderOverride, keySet, newName);
+        if(r.changed) s.canonicalLeaderOverride = r.text;
+      }
+    });
+    SINGER_ROLE_FIELDS.forEach(function(f){
+      var r = replaceNameInText(state.roles[f[0]], keySet, newName);
+      if(r.changed) state.roles[f[0]] = r.text;
+    });
+    Object.keys(state.meta.dayLocations || {}).forEach(function(sid){
+      var off = (state.meta.dayLocations[sid] && state.meta.dayLocations[sid].officers) || {};
+      Object.keys(off).forEach(function(rk){
+        var r = replaceNameInText(off[rk], keySet, newName);
+        if(r.changed) off[rk] = r.text;
+      });
+    });
+    ["visitors","outoftown"].forEach(function(lk){
+      var r = replaceNameInText(state.lists[lk], keySet, newName);
+      if(r.changed) state.lists[lk] = r.text;
+    });
+    // 3. Contact details follow the person. If the destination already has some, it wins field by field.
+    var src = state.singers[oldKey];
+    if(src && newKey !== oldKey){
+      var dst = state.singers[newKey] || { name:"", phone:"", email:"", notes:"" };
+      ["phone","email","notes"].forEach(function(f){ if(!dst[f] && src[f]) dst[f] = src[f]; });
+      dst.name = newName;
+      state.singers[newKey] = dst;
+      delete state.singers[oldKey];
+    } else if(src){
+      src.name = newName;
+    }
+    saveState();
+    hydrateFields();
+    renderSongs();
+    renderPreview();
+    if(typeof renderDayLocations === "function") renderDayLocations();
+    return true;
+  }
+  function setSingerContact(key, name, field, value){
+    var c = state.singers[key];
+    if(!c) c = state.singers[key] = { name:name, phone:"", email:"", notes:"" };
+    c.name = name;
+    c[field] = String(value || "").trim();
+    if(!(c.phone || c.email || c.notes)) delete state.singers[key];
+    saveState();
+  }
+  function looksLikeEmail(v){ return !v || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+
+  function renderSingers(){
+    var host = document.getElementById("singersList");
+    if(!host) return;
+    var people = collectSingers();
+    var q = (document.getElementById("singersSearch").value || "").trim().toLowerCase();
+    var sortMode = document.getElementById("singersSort").value;
+    var onlyContact = document.getElementById("singersOnlyContact").checked;
+    var all = Object.keys(people).map(function(k){ return people[k]; });
+    // Likely duplicates: same fuzzy rule Find variants already uses.
+    var keys = all.map(function(p){ return p.key; });
+    all.forEach(function(p){
+      p.similar = [];
+      all.forEach(function(o){
+        if(o === p) return;
+        var maxLen = Math.max(p.key.length, o.key.length);
+        if(maxLen < 4) return;
+        if(levenshtein(p.key, o.key) <= Math.max(1, Math.floor(maxLen * 0.22))) p.similar.push(o);
+      });
+    });
+    var withContact = all.filter(function(p){ var c = state.singers[p.key]; return c && (c.phone || c.email || c.notes); }).length;
+    var withEmail = all.filter(function(p){ var c = state.singers[p.key]; return c && c.email; }).length;
+    var rows = all.filter(function(p){
+      var c = state.singers[p.key] || {};
+      if(onlyContact && !(c.phone || c.email || c.notes)) return false;
+      if(q){
+        var hay = (p.name + " " + Object.keys(p.variants).join(" ") + " " + (c.email||"") + " " + (c.phone||"")).toLowerCase();
+        if(hay.indexOf(q) === -1) return false;
+      }
+      return true;
+    });
+    rows.sort(function(a, b){
+      if(sortMode === "songs" && b.led !== a.led) return b.led - a.led;
+      var ka = singerSortKey(a.name), kb = singerSortKey(b.name);
+      return ka < kb ? -1 : ka > kb ? 1 : 0;
+    });
+    document.getElementById("singersCount").textContent =
+      all.length + " name" + (all.length === 1 ? "" : "s") + " in this singing" +
+      (rows.length !== all.length ? " (showing " + rows.length + ")" : "") +
+      ". " + withContact + " with contact info, " + withEmail + " with an email.";
+    document.getElementById("singersMailingHint").textContent =
+      withEmail ? "" : "Add emails below to enable the mailing list.";
+    document.getElementById("singersMailingBtn").disabled = !withEmail;
+    document.getElementById("singersContactsBtn").disabled = !withContact;
+    host.innerHTML = "";
+    if(!all.length){
+      host.innerHTML = '<p class="panel-desc">No names yet. Names appear here as leaders, officers, and visitors are entered.</p>';
+      return;
+    }
+    rows.forEach(function(p){
+      var c = state.singers[p.key] || { phone:"", email:"", notes:"" };
+      var row = document.createElement("div");
+      row.className = "singer-row";
+      var tags = [];
+      if(p.led) tags.push("led " + p.led + " song" + (p.led === 1 ? "" : "s"));
+      Object.keys(p.roles).forEach(function(r){ tags.push(r); });
+      if(p.visitor) tags.push("visitor");
+      if(p.outoftown) tags.push("out of town");
+      if(p.suggested && !tags.length) tags.push("name suggestion only");
+      if(p.contactOnly) tags.push("saved contact, not in any entry now");
+      var also = Object.keys(p.variants).filter(function(v){ return v !== p.name; });
+      row.innerHTML =
+        '<div class="singer-top">' +
+          '<input type="text" class="singer-name" value="' + esc(p.name) + '" aria-label="Name (edit to correct the spelling)" autocomplete="off">' +
+          '<span class="singer-meta">' + esc(tags.join(" · ")) + '</span>' +
+        '</div>' +
+        (also.length ? '<div class="singer-also">Also entered as: ' + esc(also.join(", ")) + '</div>' : '') +
+        (p.similar.length ? '<div class="singer-dupe">Looks like ' + p.similar.map(function(o, i){
+          return esc(o.name) + ' <button type="button" class="small secondary singer-merge" data-i="' + i + '">Same person</button>';
+        }).join(" · ") + '</div>' : '') +
+        '<div class="singer-contact">' +
+          '<input type="text" class="singer-phone" inputmode="tel" placeholder="Phone" aria-label="Phone for ' + esc(p.name) + '" value="' + esc(c.phone || "") + '">' +
+          '<input type="text" class="singer-email' + (looksLikeEmail(c.email) ? '' : ' bad') + '" inputmode="email" placeholder="Email" aria-label="Email for ' + esc(p.name) + '" value="' + esc(c.email || "") + '">' +
+          '<input type="text" class="singer-notes" placeholder="Notes" aria-label="Notes for ' + esc(p.name) + '" value="' + esc(c.notes || "") + '">' +
+        '</div>';
+      var nameIn = row.querySelector(".singer-name");
+      nameIn.addEventListener("change", function(){
+        var v = nameIn.value.trim();
+        if(!v){ nameIn.value = p.name; return; }
+        if(renameSinger(p, v)) renderSingers();
+      });
+      nameIn.addEventListener("keydown", function(ev){ if(ev.key === "Enter"){ ev.preventDefault(); nameIn.blur(); } });
+      Array.prototype.forEach.call(row.querySelectorAll(".singer-merge"), function(btn){
+        btn.addEventListener("click", function(){
+          var target = p.similar[+btn.dataset.i];
+          if(target && renameSinger(p, target.name)) renderSingers();
+        });
+      });
+      [["singer-phone","phone"],["singer-email","email"],["singer-notes","notes"]].forEach(function(pair){
+        var inp = row.querySelector("." + pair[0]);
+        inp.addEventListener("change", function(){
+          setSingerContact(p.key, p.name, pair[1], inp.value);
+          if(pair[1] === "email") inp.classList.toggle("bad", !looksLikeEmail(inp.value.trim()));
+          // Counts and the download buttons depend on what's filled in.
+          var cnt = Object.keys(state.singers).length;
+          renderSingersSummaryOnly();
+        });
+      });
+      host.appendChild(row);
+    });
+  }
+  // Refreshes just the count line and button states, so typing in a contact field never
+  // rebuilds the rows underneath the person's cursor.
+  window.__ezMinutesRenderSingers = renderSingers;
+  // Totals for the Report page and the Minutes Maker summary line, all derived from the
+  // same Singers list so nothing has to be typed in twice.
+  function singerTotals(){
+    var people = collectSingers();
+    var keys = Object.keys(people);
+    var leaders = keys.filter(function(k){ return people[k].led > 0; }).length;
+    var songs = state.songs.filter(function(s){ return s && s.type === "song"; }).length;
+    return { total: keys.length, leaders: leaders, songs: songs };
+  }
+  window.__ezMinutesSingerTotals = singerTotals;
+  function reportSingingName(){
+    var name = (state.meta.name || "").trim() || "singing";
+    var ord = (state.meta.ordinal || "").trim().replace(/^the\s+/i, "");
+    if(!ord) return "The " + name.replace(/^the\s+/i, "");
+    if(!/annual/i.test(ord)) ord += " annual";
+    return "The " + titleCaseWords(ord) + " " + name.replace(/^the\s+/i, "");
+  }
+  function renderReport(){
+    var host = document.getElementById("reportStatement");
+    var basis = document.getElementById("reportBasis");
+    if(!host) return;
+    var t = singerTotals();
+    function num(n){ return '<span class="report-num">' + n + '</span>'; }
+    function pl(n, w){ return n + " " + w + (n === 1 ? "" : "s"); }
+    if(!t.total && !t.songs){
+      host.textContent = "No names or songs have been entered yet.";
+      basis.textContent = "";
+      return;
+    }
+    var html = esc(reportSingingName()) + " consisted of " + num(t.total) + " total singer" + (t.total === 1 ? "" : "s");
+    if(t.leaders && t.songs){
+      html += ", with " + num(t.leaders) + " singer" + (t.leaders === 1 ? "" : "s") + " leading a total of " + num(t.songs) + " song" + (t.songs === 1 ? "" : "s") + ".";
+    } else if(t.songs){
+      html += ", with a total of " + num(t.songs) + " song" + (t.songs === 1 ? "" : "s") + " sung.";
+    } else {
+      html += ".";
+    }
+    host.innerHTML = html;
+    basis.textContent = "Total singers is every name on the Singers page (leaders, officers, visitors, out-of-town singers), so fix spellings and merge duplicates there first.";
+  }
+  window.__ezMinutesRenderReport = renderReport;
+  function renderSingersSummaryOnly(){
+    var people = collectSingers();
+    var all = Object.keys(people).map(function(k){ return people[k]; });
+    var withContact = all.filter(function(p){ var c = state.singers[p.key]; return c && (c.phone || c.email || c.notes); }).length;
+    var withEmail = all.filter(function(p){ var c = state.singers[p.key]; return c && c.email; }).length;
+    document.getElementById("singersCount").textContent =
+      all.length + " name" + (all.length === 1 ? "" : "s") + " in this singing. " + withContact + " with contact info, " + withEmail + " with an email.";
+    document.getElementById("singersMailingBtn").disabled = !withEmail;
+    document.getElementById("singersContactsBtn").disabled = !withContact;
+    document.getElementById("singersMailingHint").textContent = withEmail ? "" : "Add emails below to enable the mailing list.";
+    updateContactExportNote();
+  }
+  function hasAnyContacts(){
+    return Object.keys(state.singers).some(function(k){ var c = state.singers[k]; return c && (c.phone || c.email || c.notes); });
+  }
+  function updateContactExportNote(){
+    var b = document.getElementById("exp_csv_nocontacts");
+    var n = document.getElementById("exp_csv_contact_note");
+    var any = hasAnyContacts();
+    if(b) b.style.display = any ? "" : "none";
+    if(n) n.style.display = any ? "" : "none";
+  }
+  function singersCsvCell(v){
+    v = String(v == null ? "" : v);
+    // Same spreadsheet-formula guard as the Master CSV, except a phone number such as
+    // "+1 410 555 0100" is not a formula and must not gain a stray apostrophe.
+    if(v && "=+-@".indexOf(v[0]) !== -1 && !/^\+?[\d\s().\-]+$/.test(v)) v = "'" + v;
+    if(/[",\r\n]/.test(v)) v = '"' + v.replace(/"/g, '""') + '"';
+    return v;
+  }
+  function downloadSingersCsv(onlyEmail){
+    var people = collectSingers();
+    var list = Object.keys(people).map(function(k){ return people[k]; }).filter(function(p){
+      var c = state.singers[p.key];
+      return c && (onlyEmail ? c.email : (c.email || c.phone || c.notes));
+    }).sort(function(a, b){ var ka = singerSortKey(a.name), kb = singerSortKey(b.name); return ka < kb ? -1 : ka > kb ? 1 : 0; });
+    var lines = [["Name","Email","Phone","Notes"].join(",")];
+    list.forEach(function(p){
+      var c = state.singers[p.key];
+      lines.push([p.name, c.email || "", c.phone || "", c.notes || ""].map(singersCsvCell).join(","));
+    });
+    download(safeName() + (onlyEmail ? "-mailing-list.csv" : "-contacts.csv"), lines.join("\n") + "\n", "text/csv");
+  }
+  ["singersSearch","singersSort","singersOnlyContact"].forEach(function(id){
+    var el = document.getElementById(id);
+    if(!el) return;
+    el.addEventListener("input", renderSingers);
+    el.addEventListener("change", renderSingers);
+  });
+  document.getElementById("singersMailingBtn").addEventListener("click", function(){ downloadSingersCsv(true); });
+  document.getElementById("singersContactsBtn").addEventListener("click", function(){ downloadSingersCsv(false); });
 
   // ---------------- day locations (for multi-day, multi-venue singings) ----------------
   function distinctDays(){
@@ -6262,7 +6722,12 @@
         // are checked, the whole line is correctly omitted rather than defaulting to
         // anything. SHMHA's summary line (below) is a fixed, separate convention and is
         // never affected by these toggles.
-        if(state.meta.mmSingers && state.meta.present) bits.push(state.meta.present + " singers were present");
+        var presentShown = state.meta.present;
+        if(state.meta.mmSingers && !presentShown && typeof window.__ezMinutesSingerTotals === "function"){
+          var derivedTotal = window.__ezMinutesSingerTotals().total;
+          if(derivedTotal) presentShown = String(derivedTotal);
+        }
+        if(state.meta.mmSingers && presentShown) bits.push(presentShown + " singers were present");
         // "0 leaders led 6 songs" is arithmetically true and reads as a malfunction. The
         // no-names branch above has always dropped the leader half for that reason; this
         // named branch hadn't, so a nameless record compiled WITHOUT the no-names setting
@@ -6922,7 +7387,8 @@
   // master file" as the model — kept as-is internally to avoid an unnecessary rename of
   // every call site, but the exported filename and all user-facing text call this what it
   // actually is: the Master CSV.
-  function toCleanCSV(){
+  function toCleanCSV(opts){
+    opts = opts || {};
     var songs = state.songs.slice().sort(function(a,b){ return a.order-b.order; });
     // A genuine Work Code conflict - the same recognized Book edition, but rows disagree on
     // the annotated Edition Code - must not be silently normalized away on export. This is
@@ -7122,6 +7588,18 @@
     Object.keys(state.nameMap).forEach(function(key){
       if(state.nameMap[key] && state.nameMap[key].trim()) metaRow("nameMap." + key, state.nameMap[key].trim());
     });
+    // Singers' contact details. Left out entirely for the "without contact details" copy that is
+    // meant for sharing; everything else about the file is identical.
+    if(!opts.omitContacts){
+      Object.keys(state.singers).sort().forEach(function(k){
+        var c = state.singers[k] || {};
+        if(!(c.phone || c.email || c.notes)) return;
+        if(c.name) metaRow("singer." + k + ".name", c.name);
+        if(c.phone) metaRow("singer." + k + ".phone", c.phone);
+        if(c.email) metaRow("singer." + k + ".email", c.email);
+        if(c.notes) metaRow("singer." + k + ".notes", c.notes);
+      });
+    }
     if(state.meta.recurringDate && state.meta.recurringDate.trim()) metaRow("meta.recurringDate", state.meta.recurringDate.trim());
     if(state.meta.openingStyle && state.meta.openingStyle !== "A") metaRow("meta.openingStyle", state.meta.openingStyle);
     if(state.meta.presidingTitle) metaRow("meta.presidingTitle", state.meta.presidingTitle);
@@ -7252,6 +7730,9 @@
   });
   document.getElementById("exp_csv").addEventListener("click", function(){
     download(safeName()+"-master.csv", toCleanCSV(), "text/csv");
+  });
+  document.getElementById("exp_csv_nocontacts").addEventListener("click", function(){
+    download(safeName()+"-master-no-contacts.csv", toCleanCSV({ omitContacts:true }), "text/csv");
   });
   document.getElementById("exp_pdf").addEventListener("click", function(){
     var w = window.open("", "_blank");
@@ -7986,7 +8467,7 @@
     entryBookFieldEl.appendChild(row);
   }
   const callerEl = document.getElementById('caller');
-  const callerListEl = document.getElementById('callerList');
+  const callerSuggestEl = document.getElementById('callerSuggest');
   const pageEl = document.getElementById('page');
   const pageLabelEl = document.getElementById('pageLabel');
   const adhocTitleEl = document.getElementById('adhocTitle');
@@ -8650,7 +9131,7 @@
   let previousEventCustomBooks = [];
 
   function updateCallerList(){
-    const fromEntries = entries.map(function(e){ return e.caller; }).filter(Boolean);
+    const fromEntries = [].concat.apply([], entries.map(function(e){ return splitNames(e.caller); }));
     const fromOfficers = []
       .concat(splitNames(roleChairEl.value))
       .concat(splitNames(roleViceChairEl.value))
@@ -8659,8 +9140,90 @@
       .concat(splitNames(roleArrangerEl.value))
       .concat(splitNames(roleChaplainEl.value));
     const names = Array.from(new Set(fromOfficers.concat(fromEntries).concat(previousEventSuggestedNames))).sort();
-    callerListEl.innerHTML = names.map(function(n){ return '<option value="' + n.replace(/"/g,'&quot;') + '">'; }).join('');
+    callerNames = names;
+    refreshCallerSuggest();
   }
+
+  // ---- Leader(s) autofill: completes the name being typed, not the whole field ----
+  let callerNames = [];
+  let callerActive = -1;
+  // Separators are the same ones splitNames() already treats as one: comma, " and ", " & ".
+  function callerSplit(value){
+    // Returns { head, token }: everything up to and including the last separator, and the
+    // partial name after it. "Ann Lee, Bo" -> head "Ann Lee, ", token "Bo".
+    const re = /^(.*(?:,|\s+and\s+|\s*&\s*))([^,&]*)$/is;
+    const m = re.exec(value);
+    if (!m) return { head: '', token: value };
+    return { head: m[1], token: m[2] };
+  }
+  function hideCallerSuggest(){
+    callerSuggestEl.hidden = true;
+    callerSuggestEl.innerHTML = '';
+    callerActive = -1;
+    callerEl.setAttribute('aria-expanded', 'false');
+  }
+  function refreshCallerSuggest(){
+    if (document.activeElement !== callerEl) { hideCallerSuggest(); return; }
+    const parts = callerSplit(callerEl.value);
+    const token = parts.token.replace(/^\s+/, '');
+    if (!token) { hideCallerSuggest(); return; }
+    const already = splitNames(parts.head).map(function(n){ return n.toLowerCase(); });
+    const t = token.toLowerCase();
+    const starts = [], contains = [];
+    callerNames.forEach(function(n){
+      const l = n.toLowerCase();
+      if (l === t || already.indexOf(l) !== -1) return;
+      if (l.indexOf(t) === 0) starts.push(n); else if (l.indexOf(t) !== -1) contains.push(n);
+    });
+    const matches = starts.concat(contains).slice(0, 8);
+    if (!matches.length) { hideCallerSuggest(); return; }
+    callerSuggestEl.innerHTML = '';
+    matches.forEach(function(n, i){
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('role', 'option');
+      b.textContent = n;
+      // mousedown, not click: click fires after the input has already lost focus and the
+      // list has been hidden by the blur handler.
+      b.addEventListener('mousedown', function(ev){ ev.preventDefault(); chooseCallerName(n); });
+      callerSuggestEl.appendChild(b);
+    });
+    callerActive = -1;
+    callerSuggestEl.hidden = false;
+    callerEl.setAttribute('aria-expanded', 'true');
+  }
+  function chooseCallerName(name){
+    const parts = callerSplit(callerEl.value);
+    let head = parts.head;
+    // Normalize the joiner: "Ann Lee," -> "Ann Lee, ". A typed " and " / " & " is kept as typed.
+    if (head && /,$/.test(head)) head += ' ';
+    callerEl.value = head + name;
+    hideCallerSuggest();
+    callerEl.focus();
+    callerEl.dispatchEvent(new Event('input', { bubbles: true }));
+    hideCallerSuggest();
+  }
+  function moveCallerActive(delta){
+    const items = callerSuggestEl.querySelectorAll('button');
+    if (!items.length) return;
+    callerActive = (callerActive + delta + items.length) % items.length;
+    items.forEach(function(b, i){ b.classList.toggle('active', i === callerActive); });
+    items[callerActive].scrollIntoView({ block: 'nearest' });
+  }
+  callerEl.addEventListener('input', refreshCallerSuggest);
+  callerEl.addEventListener('focus', refreshCallerSuggest);
+  callerEl.addEventListener('blur', function(){ setTimeout(hideCallerSuggest, 120); });
+  callerEl.addEventListener('keydown', function(ev){
+    if (callerSuggestEl.hidden) return;
+    if (ev.key === 'ArrowDown'){ ev.preventDefault(); moveCallerActive(1); }
+    else if (ev.key === 'ArrowUp'){ ev.preventDefault(); moveCallerActive(-1); }
+    else if (ev.key === 'Escape'){ hideCallerSuggest(); }
+    else if ((ev.key === 'Enter' || ev.key === 'Tab') && callerActive >= 0){
+      // Only when a suggestion is actually highlighted; plain Enter still submits the entry.
+      ev.preventDefault(); ev.stopImmediatePropagation();
+      chooseCallerName(callerSuggestEl.querySelectorAll('button')[callerActive].textContent);
+    }
+  }, true);
 
   // Mirrors updateCallerList() exactly, for the same reason: a custom song source typed
   // in once should be easy to reuse, both later in this same singing and, via
