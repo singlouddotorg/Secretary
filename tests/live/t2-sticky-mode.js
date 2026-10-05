@@ -48,10 +48,9 @@ function bannerText(page){
     /Singing School in progress/.test(await bannerText(page)), await storedMode(page));
 
   // ---- B: loading a DIFFERENT record clears the mode (the review's own repro) ----
-  const sampleDir = require('path').resolve(__dirname, '..', '..', 'samples');
-  const samples = fs.readdirSync(sampleDir).filter(f => f.endsWith('.csv'));
-  const james = samples.find(f => /james/i.test(f)) || samples[0];
-  L.check('a bundled sample Singing Record is available to load', !!james, james);
+  const sampleDir = require('path').resolve(__dirname, 'fixtures');
+  const james = 'named-singing.csv';
+  L.check('a fixture Singing Record is available to load', fs.existsSync(require('path').join(sampleDir, james)), james);
 
   await page.click('#stageBtn-setup');
   await page.waitForTimeout(400);

@@ -6,7 +6,7 @@ const L = require('./lib');
 const fs = require('fs');
 const path = require('path');
 
-const SAMPLES = path.resolve(__dirname, '..', '..', 'samples');
+const SAMPLES = path.resolve(__dirname, 'fixtures');
 const HEADER = 'Schema Version,Order of entry,Record Type,Session Label,Session ID,Metadata Field,Metadata Value,Event,Date,Location,Chair,Vice-Chair,Secretary,Treasurer,Arranger(s),Chaplain(s),Memorial Lesson Leader,Book,Edition Code,Leader(s),Canonical Leader(s),Page,Song,Tag,Notes,Marker,Timestamp ISO,Time entered,Series Code,Event ID,Previous Event ID,Status';
 
 function record(event, songs){
@@ -82,7 +82,7 @@ async function fresh(page){ await page.evaluate(() => localStorage.clear()).catc
     Object.values(bridges).every(v => v === true), JSON.stringify(bridges));
 
   // ---- 2. Setup import opens the record in every stage ----
-  const jr = fs.readdirSync(SAMPLES).find(f => /james/i.test(f));
+  const jr = 'named-singing.csv';
   await fresh(page);
   await setupImport(page, fs.readFileSync(path.join(SAMPLES, jr), 'utf8'), jr);
   const key1 = await recordKey(page);

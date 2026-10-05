@@ -639,26 +639,6 @@
     font-size:10.5px; padding:0; text-decoration:underline; font-family:'Inter',sans-serif;
   }
   h1{font-family:'Spectral',serif; font-weight:600; font-size:22px; margin:6px 0 2px; letter-spacing:.01em;}
-  .welcome-text{font-family:'Inter',sans-serif; font-size:14px; color:var(--ink); margin:18px 0 10px; text-align:center;}
-  .welcome-actions{display:flex; gap:10px; margin-bottom:8px;}
-  .welcome-actions button{
-    flex:1; border-radius:6px; padding:13px 0; font-family:'Inter',sans-serif;
-    font-weight:700; font-size:14px; letter-spacing:.02em; cursor:pointer;
-  }
-  .btn-solid-full{background:var(--accent); color:#fff; border:1px solid var(--accent);}
-  .btn-outline-full{background:transparent; color:var(--accent); border:1px solid var(--accent);}
-  .welcome-status{font-family:'Inter',sans-serif; font-size:12px; color:var(--muted); margin-top:8px; min-height:0;}
-  .welcome-status.error{color:var(--accent); font-weight:600;}
-  #welcomeGate{margin-bottom:8px;}
-  .session-menu{
-    display:flex; flex-wrap:wrap; align-items:center; gap:6px;
-    margin:2px 0 16px; font-family:'Inter',sans-serif; font-size:11px;
-  }
-  .session-menu .session-link{
-    background:none; border:none; color:var(--faint); cursor:pointer;
-    font-size:11px; padding:0; text-decoration:underline; font-family:'Inter',sans-serif;
-  }
-  .session-menu .session-sep{color:var(--line);}
   .sub{font-family:'Inter',sans-serif; font-size:12px; line-height:1.5; color:var(--muted); margin:0 0 12px;}
   .setup-collapse-row{margin:4px 0 18px;}
   .setup-collapse-row button{
@@ -1065,7 +1045,7 @@
         <details class="notice" style="margin:0 0 18px;cursor:default;">
           <summary style="cursor:pointer;font-weight:600;">About Secretary &amp; before you begin</summary>
           <div style="margin-top:10px;font-size:13px;line-height:1.6;">
-            <p style="margin:0 0 8px;"><strong>Pre-release.</strong> This suite is still in testing. Feedback is welcome — please use with caution, and keep a backup of anything important. Reach the developer, Kevin of SingLoud.org, at <a href="mailto:sacredharpbiblio@gmail.com">sacredharpbiblio@gmail.com</a>.</p>
+            <p style="margin:0 0 8px;"><strong>Feedback is welcome.</strong> Keep a backup of anything important. Reach the developer, Kevin of SingLoud.org, at <a href="mailto:sacredharpbiblio@gmail.com">sacredharpbiblio@gmail.com</a>.</p>
             <p style="margin:0 0 8px;">Use a laptop, desktop computer, or tablet with a physical keyboard — this suite isn't designed for phones. Everything runs locally and works fully offline once this page is open.</p>
             <p style="margin:0 0 8px;">Opening a singing offers a folder browser, which needs a Chromium-based browser (Chrome, Edge, Opera) — Firefox and Safari don't support it yet, though <strong>choosing a singing file directly</strong> works everywhere regardless.</p>
             <!-- Bibliographer lives in its own repository now, so a relative link to it cannot work:
@@ -1221,35 +1201,9 @@
 
   
 
-  <div id="welcomeGate">
-    <p class="welcome-text">Welcome to Secretary — is this a:</p>
-    <div class="welcome-actions" id="resumeRow" style="display:none">
-      <button type="button" id="resumeSessionBtn" class="btn-solid-full">Open Current Singing</button>
-    </div>
-    <div class="welcome-actions">
-      <button type="button" id="newSingingBtn" class="btn-outline-full">New Singing</button>
-    </div>
-    <!-- v156 review finding 1: Capture's own Import CSV used to load a file into Capture
-         ALONE. It looked like opening a singing - the log filled with 87 real entries - but
-         the wrapper's activeEvent stayed null, so Setup and Compile never learned the record
-         existed, and Compile came up empty on the very next click. Capture and Compile are
-         no longer standalone apps; there is one authoritative Singing Record, and exactly
-         one place that opens one. The hidden file input below stays: the wrapper's own
-         stage-sync bridge dispatches through it, which is internal synchronization of the
-         record already open, not a second way to open a different one. -->
-    <p class="welcome-text" style="font-size:12px;margin-top:10px;">Opening a singing from a CSV file? That happens in <strong>Setup</strong> (stage 1), so the same singing opens everywhere in the suite.</p>
-    <div class="welcome-status" id="welcomeStatus"></div>
-    <input type="file" id="csvFileInput" accept=".csv" style="display:none">
-  </div>
+  <input type="file" id="csvFileInput" accept=".csv" style="display:none">
 
-  <div id="mainApp" style="display:none">
-  <div class="session-menu" id="sessionMenu">
-    <button type="button" class="session-link" id="sessionStartNewBtn">New Singing</button>
-    <span class="session-sep">·</span>
-    <button type="button" class="session-link" id="sessionDownloadBtn">Export CSV</button>
-    <span class="session-sep">·</span>
-    <button type="button" class="session-link" id="sessionReturnWelcomeBtn">Return to welcome</button>
-  </div>
+  <div id="mainApp">
   <p class="sub" id="captureSubText">Log each song as it's called: hit Enter in Leader, Page, or Notes to submit, no button needed. Entries are timestamped automatically. Use Recess / Lunch / Announcements / Prayer to mark breaks and prayers (type the leader's name into Leader first, if there is one), and tag a song as Call Back, Memorial, or Special if it applies. Download or copy the minutes when you're done.</p>
 
   <div class="setup-summary" id="setupSummary"></div>
@@ -5201,7 +5155,7 @@
       var isBusinessMeeting = s.type === "marker" && (s.markerType||"").toUpperCase() === "BUSINESS MEETING";
       var tagOpts = (isBusinessMeeting
         ? ["", "Treasurer's Report", "Secretary's Report", "Chaplain's Report", "Chair's Remarks"]
-        : ["","Call Back","Memorial","Memorial (Sick)","Memorial (Deceased)","Closing","Special","Singing School"]
+        : ["","Call Back","Memorial","Memorial (Sick)","Memorial (Deceased)","Opening","Closing","Special","Singing School"]
       ).map(function(o){
         return '<option value="'+esc(o)+'"'+(s.tag===o?" selected":"")+'>'+(o||"—")+'</option>';
       }).join("");
@@ -6961,7 +6915,7 @@
     // the row that brought the class back to order) is likewise already expressed by the
     // recess/lunch re-entry sentence, so none of these should also show up as a raw
     // bracketed tag.
-    var tagNote = (row.tag && !isMemorialTag(row.tag) && row.tag !== "Closing" && row.tag !== "Call Back" && row.tag !== "Singing School" && !forceSuppressNote) ? " [" + row.tag + "]" : "";
+    var tagNote = (row.tag && !isMemorialTag(row.tag) && row.tag !== "Closing" && row.tag !== "Opening" && row.tag !== "Call Back" && row.tag !== "Singing School" && !forceSuppressNote) ? " [" + row.tag + "]" : "";
     // "Show time called" (Kevin's own request, 2026-09-17) - Minutes Maker only, reading
     // the same Time entered value already carried on every row from Capture. SHMHA's own
     // fixed submission format never reads this, same as every other Minutes-Maker-only
@@ -6986,7 +6940,7 @@
   // needing its own copy of this same "which mode am I in" check.
   function collectLeaderRunText(rows, startIdx, effectiveDefault, abbrFn, mode, noNames){
     var items = []; var cur = null; var idx = startIdx; var allPages = [];
-    while(idx < rows.length && rows[idx].type === "song" && !isMemorialTag(rows[idx].tag) && rows[idx].tag !== "Closing" && rows[idx].tag !== "Call Back" && rows[idx].tag !== "Singing School"){
+    while(idx < rows.length && rows[idx].type === "song" && !isMemorialTag(rows[idx].tag) && rows[idx].tag !== "Closing" && rows[idx].tag !== "Opening" && rows[idx].tag !== "Call Back" && rows[idx].tag !== "Singing School"){
       var r = rows[idx];
       var pd = pageDisplay(r, effectiveDefault, abbrFn, null, false, mode);
       allPages.push(pd);
@@ -7741,6 +7695,7 @@
       var effectiveDefault = meta.defaultBook || autoDefaultBook(rows, mode === "shmha");
       var paragraphs = [];
       var afterMarker = "OPENING";
+      var openingSongDone = false; // set once the opening song's sentence has been written
       var openingPrayerBy = ""; // who the opening paragraph credited with the opening prayer
       var markersHandled = 0;   // markers seen so far in this day
       var isFirstDayOverall = (dayIdx === 0);
@@ -7840,8 +7795,9 @@
         // Secretary tags the row that actually called the class back together as "Call
         // Back" — treat that as equivalent to following a RECESS marker even if no marker
         // row was logged, so the re-entry sentence still gets generated.
-        if(afterMarker || row.tag === "Call Back"){
-          var effectiveMarker = afterMarker || "RECESS";
+        if(afterMarker || row.tag === "Call Back" || (row.tag === "Opening" && !openingSongDone)){
+          var effectiveMarker = afterMarker || (row.tag === "Opening" ? "OPENING" : "RECESS");
+          if(effectiveMarker === "OPENING") openingSongDone = true;
           // Same real-vs-display split as collectLeaderRunText's own fix: rawLeader0
           // (possibly empty) is what decides whether the next row is really the same
           // person; leader0 (with "the leader" filled in) is only ever used for display,
@@ -11226,66 +11182,12 @@
     }
   });
 
-  // ---------- Welcome gate / Import CSV ----------
-  const welcomeGateEl = document.getElementById('welcomeGate');
-  const mainAppEl = document.getElementById('mainApp');
-  const welcomeStatusEl = document.getElementById('welcomeStatus');
-  const resumeRowEl = document.getElementById('resumeRow');
-  const resumeSessionBtn = document.getElementById('resumeSessionBtn');
-  const newSingingBtn = document.getElementById('newSingingBtn');
-  // loadCsvBtn / sessionLoadCsvBtn were Capture's own two Import CSV controls, removed in
-  // the v156 review's finding 1 - see the note in the welcome gate markup. Their listeners
-  // are gone with them rather than left addressing elements that no longer exist.
+  // ---------- Import CSV ----------
+  // Capture has no start screen and no navigation links of its own: the sidebar and the
+  // Back / Next buttons move between stages, and Setup is the one place a singing is opened
+  // or started. The hidden file input below is how the stage hand-off delivers a record.
   const csvFileInputEl = document.getElementById('csvFileInput');
-  const sessionMenuEl = document.getElementById('sessionMenu');
-  const sessionStartNewBtn = document.getElementById('sessionStartNewBtn');
-  const sessionDownloadBtn = document.getElementById('sessionDownloadBtn');
-  const sessionReturnWelcomeBtn = document.getElementById('sessionReturnWelcomeBtn');
-
-  function showMainApp(){
-    welcomeGateEl.style.display = 'none';
-    mainAppEl.style.display = 'block';
-  }
-
-  function showWelcomeGate(){
-    mainAppEl.style.display = 'none';
-    welcomeGateEl.style.display = 'block';
-    renderWelcomeGate();
-  }
-
-  function renderWelcomeGate(){
-    const hasExistingWork = entries.length > 0;
-    resumeRowEl.style.display = hasExistingWork ? 'flex' : 'none';
-    newSingingBtn.className = hasExistingWork ? 'btn-outline-full' : 'btn-solid-full';
-    welcomeStatusEl.textContent = '';
-    welcomeStatusEl.classList.remove('error');
-  }
-
-  function startNewSinging(){
-    if (entries.length > 0){
-      const proceed = window.confirm(
-        'Starting a new singing will clear the ' + entries.length + ' ' +
-        (entries.length === 1 ? 'entry' : 'entries') + ' currently logged. Continue?'
-      );
-      if (!proceed) return;
-    }
-    performFullReset();
-    // performFullReset() (just above) already told the wrapper to clear activeEvent to
-    // null via its own reset bridge - correct for an ordinary Reset, but "Start New
-    // Singing" should end with a real, active singing, not nothing. This is what makes
-    // that the actual end state, using the exact same event-creation logic Setup's own
-    // button uses, not a second copy of it.
-    if(typeof window.__ezMinutesOnCaptureStartNewSinging === "function") window.__ezMinutesOnCaptureStartNewSinging();
-    showMainApp();
-    eventEl.focus();
-  }
-
-  resumeSessionBtn.addEventListener('click', showMainApp);
-  newSingingBtn.addEventListener('click', startNewSinging);
-
-  sessionStartNewBtn.addEventListener('click', startNewSinging);
-  sessionDownloadBtn.addEventListener('click', downloadCSV);
-  sessionReturnWelcomeBtn.addEventListener('click', showWelcomeGate);
+  function showMainApp(){}
 
   // Now lives in shared-utils.js — was byte-for-byte identical to this file's own copy.
   var parseCSV = EZMinutesShared.parseCSV;
@@ -11316,7 +11218,7 @@
   // sentence. A CSV a secretary tags "Closing" on the way out of the Song List editor
   // and re-imports later would hit this exact "unrecognized Tag" warning otherwise -
   // confirmed live building real sample data before fixing.
-  const VALID_TAGS = ['Call Back', 'Memorial', 'Special', 'Closing', 'Singing School', 'Memorial (Sick)', 'Memorial (Deceased)'];
+  const VALID_TAGS = ['Call Back', 'Memorial', 'Special', 'Opening', 'Closing', 'Singing School', 'Memorial (Sick)', 'Memorial (Deceased)'];
   // Marker tags are a separate vocabulary from song tags — currently just the Business
   // Meeting classifications Compile offers. An unrecognized marker tag is still kept (it
   // might be a legitimate classification Capture doesn't know about yet, e.g. added in a
@@ -11803,10 +11705,6 @@
 
   function reportImportError(msg){
     showToast(msg);
-    if (welcomeGateEl.style.display !== 'none'){
-      welcomeStatusEl.textContent = msg;
-      welcomeStatusEl.classList.add('error');
-    }
   }
 
   csvFileInputEl.addEventListener('change', function(){
@@ -11941,7 +11839,6 @@
   reconcileActiveModeOwner();
   renderCaptureSetupSummary();
   render();
-  renderWelcomeGate();
   document.getElementById('capVersionFooter').textContent =
     'SingLoud.org Shape-Note Secretary · Version ' + EZ_MINUTES_SUITE_VERSION + ' · Schema ' + SCHEMA_VERSION +
     (TUNEBOOKS_LOADED ? ' · Tunebook Library ' + (typeof EZ_MINUTES_TUNEBOOK_LIBRARY_VERSION !== 'undefined' ? EZ_MINUTES_TUNEBOOK_LIBRARY_VERSION : '(unknown)') : ' · Tunebook Library MISSING');

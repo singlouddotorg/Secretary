@@ -100,7 +100,7 @@ per-song leader, and publication settings that suppress song attribution do not 
 | `Canonical Leader(s)` | A corrected spelling of that row's leader. **Normally paired with a raw `Leader(s)` it corrects — but valid on its own.** If it carries a name and `Leader(s)` is blank, that name is the row's leader. It must not be discarded because a related field is empty. |
 | `Page` | The page or call number as spoken (`45t`, `45b`, `123`). Blank for `OTHER` entries, markers, sessions and metadata. |
 | `Song` | The title. Looked up from the book's index where possible, typed where not. **On `marker` rows this column instead carries custom prose for that marker**, if any was written. |
-| `Tag` | On song rows: blank, `Call Back`, `Memorial (Sick)`, `Memorial (Deceased)`, `Special`, `Singing School`, or `Closing`. On Business Meeting markers: blank, `Treasurer's Report`, `Secretary's Report`, `Chaplain's Report`, `Chair's Remarks`. |
+| `Tag` | On song rows: blank, `Call Back`, `Memorial (Sick)`, `Memorial (Deceased)`, `Special`, `Singing School`, `Opening`, or `Closing`. On Business Meeting markers: blank, `Treasurer's Report`, `Secretary's Report`, `Chaplain's Report`, `Chair's Remarks`. |
 | `Notes` | Free text. On memorial songs this often carries the names being remembered. |
 | `Marker` | The marker label — `RECESS`, `LUNCH`, `PRAYER`, `ANNOUNCEMENTS`, `SINGING SCHOOL`, `BUSINESS MEETING`. Blank for songs and sessions. |
 

@@ -29,7 +29,6 @@ the same singing carrying automatically from one stage to the next.
 | `minutes-version.js` | This app's version number, read by both pages above so they can't disagree. |
 | `shared-utils.js` | Utilities shared with Bibliographer (CSV parsing, page sorting, title building). |
 | `tunebook-library.js` | Tunebook data — every Work and Edition, with full page/title indexes. **Required**; the app shows a visible error if it is missing or moved out of the folder. Published by the Tunebook Registry. |
-| `samples/` | 15 real historical Singing Records, as worked examples and test fixtures. |
 | `SCHEMA-5.md` | The Singing Record file format, which this repository owns. |
 
 **Secretary is built for a laptop, desktop computer, or a tablet with a physical keyboard.** It is not designed for phones or phone-sized screens; no development effort goes toward optimizing for that case.
@@ -65,8 +64,6 @@ See `instructions.html` for the full walkthrough.
 5. Move to **Compile** (Stage 3) after the singing to review and enrich what was logged, then **Report** (Stage 4) for the attendance statement and **Export** (Stage 5) to preview and download the finished result. If you can't enter everyone's name (say you only have a head count), type a raw number under Event Details > "Total attendees (raw number)": the Report and Minutes Maker then show that number instead of the counted total. Leave it blank whenever you can, and enter all attendees' names on the Attendees page. The Report gives one statement per session when a singing has more than one, followed by a statement for all sessions. Capture reminds you at each Recess to enter attendees who haven't led. Business & Announcements is a focused editor for the Notes of Business Meeting and officer-announcement entries; it appears once one exists, and repeated announcements by one officer are numbered ("Treasurer announcement 1 of 2").
 6. Download the CSV (or copy it) whenever you like — it's safe to do this mid-singing, and again at the end.
 
-`samples/` contains a growing set of historical Singing Records — including these four representative examples: a single-session convention (James River), a two-day convention demonstrating Start New Session, Singing School, and Business Meeting markers (Western Massachusetts, 1999), a full 3-day, 247-entry convention transcription (National Sacred Harp Convention, 2000), and a single-session singing where the non-default tunebook (American Christmas Harp) is used far more than the primary Sacred Harp book, testing default-book detection under a reversed-majority split (Christmas Harp Singing, 2018). The rest are real, multi-year runs of two recurring singing series (the B.F. White Sacred Harp Singing Convention, 2017–2024, and the Christmas Harp Singing, 2013–2019), each year linked to the last via Series Code and Previous Event ID.
-
 ## The CSV format
 
 Every export (manual download, clipboard copy, or automatic backup) uses these 32 columns, in this order:
@@ -90,7 +87,7 @@ Every export (manual download, clipboard copy, or automatic backup) uses these 3
 | `Canonical Leader(s)` | A corrected/canonical spelling of the leader's name, when Compile has one. Normally paired with a raw `Leader(s)` value it corrects — but if it ever arrives on its own, with `Leader(s)` blank, it is kept and treated as that song's leader rather than discarded. A field carrying a real name is never dropped because a related field is empty. |
 | `Page` | The page/call number as typed (e.g. `45t`). Blank for `OTHER` entries, markers, session, and metadata rows. |
 | `Song` | Looked up automatically for indexed books; typed directly whenever no page lookup is available — `OTHER`, a custom source name, or a known-but-unindexed Edition — and, on `marker` rows specifically, this column instead carries Compile's custom prose override for that marker, if one was written. |
-| `Tag` | For song rows: blank, `Call Back`, `Memorial`, or `Special`. For `marker` rows (specifically Business Meeting markers): blank, `Treasurer's Report`, `Secretary's Report`, `Chaplain's Report`, or `Chair's Remarks`. |
+| `Tag` | For song rows: blank, `Call Back`, `Memorial`, `Special`, `Opening` (the opening song), `Closing` (the closing song), or `Singing School`. For `marker` rows (specifically Business Meeting markers): blank, `Treasurer's Report`, `Secretary's Report`, `Chaplain's Report`, or `Chair's Remarks`. |
 | `Notes` | Free text. |
 | `Marker` | The marker label — `RECESS`, `LUNCH`, `PRAYER`, `ANNOUNCEMENTS`, `SINGING SCHOOL`, or `BUSINESS MEETING`. Blank for songs and session rows. |
 | `Timestamp ISO` | The authoritative instant the entry was logged, in UTC. Used for sorting/auditing, and preserved exactly through Compile rather than being overwritten with export time. |
@@ -154,6 +151,10 @@ That also means: **this is single-device.** There's no sync between a phone and 
 - The book indexes are only as accurate as the data entered into this project; if you spot a wrong title or a missing page, please open an issue.
 - Automatic periodic backup is a real file download, not a silent background save — browsers can't do the latter. It's off by default; treat it as a bonus if you turn it on, not your only backup.
 - Not yet tested for screen-reader/keyboard-only accessibility beyond the basics already in place (labeled controls, keyboard-reachable actions, visible focus states).
+
+## How Secretary came to be
+
+The idea was first discussed with a few local singers in 2025, along with some concept art: a simple way to log a singing as it happens and turn the log into minutes. That idea became the small phone-friendly logger now released as Simple Minutes (Capture). On July 4, 2026 came the first working version of what would become Secretary, then called Minutes Builder. Over hundreds of revisions it grew into a suite of apps and into Secretary, the full editor at its center, with its own record format, Attendees and Report pages, and tunebook library. The first official field test was the Maryland All-Day Singing on October 3, 2026, and 1.0 followed.
 
 ## Contributing
 

@@ -39,5 +39,4 @@ module.exports = {
   // included, as of the 2026-09-06c revised review's offline-fallback fix), falling back to
   // the tests' own fixture copy only if that's somehow absent.
   tunebookLibrary:  () => firstExisting('tunebook-library.js', 'tests/live/fixtures/tunebook-library.js'),
-  samples:          () => firstExisting('samples')
 };

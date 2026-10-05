@@ -7,7 +7,7 @@
 
 const { test, describe, after } = require('node:test');
 const assert = require('node:assert/strict');
-const { loadStage, importIntoCompile, wait, readSample, closeAllWindows } = require('./helpers');
+const { loadStage, importIntoCompile, wait, fixtureCsv, closeAllWindows } = require('./helpers');
 
 const HEADER = 'Schema Version,Order of entry,Record Type,Session Label,Session ID,Metadata Field,Metadata Value,Event,Date,Location,Chair,Vice-Chair,Secretary,Treasurer,Arranger(s),Chaplain,Memorial Lesson Leader,Book,Edition Code,Leader(s),Canonical Leader(s),Page,Song,Tag,Notes,Marker,Timestamp ISO,Time entered'.split(',');
 
@@ -24,7 +24,7 @@ function row(fields) {
 async function loadCompileWithProject() {
   const dom = await loadStage('compile');
   const doc = dom.window.document;
-  const goodCsv = readSample('christmas-harp-singing-2018-12-29.csv');
+  const goodCsv = fixtureCsv('simple', 'Test Singing').text;
   importIntoCompile(dom.window, goodCsv, 'good.csv', 'text/csv');
   await wait(800);
   return { dom, doc };
@@ -76,13 +76,13 @@ describe('Compile: transactional import (no data loss on a failed replacement)',
   test('cancelling the replacement confirm leaves the project completely untouched', async () => {
     const dom = await loadStage('compile', { confirm: () => true });
     const doc = dom.window.document;
-    const goodCsv = readSample('christmas-harp-singing-2018-12-29.csv');
+    const goodCsv = fixtureCsv('simple', 'Test Singing').text;
     importIntoCompile(dom.window, goodCsv, 'good.csv', 'text/csv');
     await wait(800);
     const originalName = doc.getElementById('m_name').value;
 
     dom.window.confirm = () => false; // user clicks Cancel
-    const replacementCsv = readSample('james-river-convention-2025-11-01-minutes.csv');
+    const replacementCsv = fixtureCsv('multi', 'Replacement Convention').text;
     importIntoCompile(dom.window, replacementCsv, 'x.csv', 'text/csv');
     await wait(500);
 
@@ -91,9 +91,9 @@ describe('Compile: transactional import (no data loss on a failed replacement)',
 
   test('a genuinely valid replacement still succeeds normally', async () => {
     const { dom, doc } = await loadCompileWithProject();
-    const replacementCsv = readSample('james-river-convention-2025-11-01-minutes.csv');
+    const replacementCsv = fixtureCsv('multi', 'Replacement Convention').text;
     importIntoCompile(dom.window, replacementCsv, 'replacement.csv', 'text/csv');
     await wait(800);
-    assert.match(doc.getElementById('m_name').value, /James River/);
+    assert.match(doc.getElementById('m_name').value, /Replacement Convention/);
   });
 });

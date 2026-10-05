@@ -163,12 +163,12 @@ async function fresh(page){ await page.evaluate(() => localStorage.clear()).catc
     (optedOutPreview.match(/[^.]*(leaders led|songs? (was|were) sung)[^.]*\./) || ['(not found)'])[0]);
 
   // ---- 7. a normal, fully-named record is untouched ----
-  const samples = path.resolve(__dirname, '..', '..', 'samples');
-  const jr = fs.readdirSync(samples).find(f => /james/i.test(f));
+  const samples = path.resolve(__dirname, 'fixtures');
+  const jr = 'named-singing.csv';
   await fresh(page);
   await importCSV(page, fs.readFileSync(path.join(samples, jr), 'utf8'), jr);
   await exportPanel(page);
-  L.check('a fully-named real sample is left alone', (await noNames(page)) === false);
+  L.check('a fully-named record is left alone', (await noNames(page)) === false);
   const jrPreview = await previewText(page);
   L.check('that sample still names its leaders', /Matt Ference/.test(jrPreview),
     (jrPreview.match(/[^.]*called to order[^.]*\./) || ['(not found)'])[0]);

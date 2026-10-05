@@ -167,13 +167,28 @@ function importIntoCompile(win, contents, filename, mimeType) {
   win.__ezMinutesCompileHandleFile(file);
 }
 
-function listSamples() {
-  const dir = suitePath('samples');
-  return fs.readdirSync(dir).filter((f) => f.endsWith('.csv'));
-}
-
-function readSample(filename) {
-  return fs.readFileSync(suitePath('samples', filename), 'utf8');
+// Synthetic Singing Records for tests (no real singing is bundled with the app).
+// fixtures: 'simple' = one session; 'multi' = two sessions with markers.
+const FIXTURE_HEADER = ['Schema Version','Order of entry','Record Type','Session Label','Session ID','Metadata Field','Metadata Value','Event','Date','Location','Chair','Vice-Chair','Secretary','Treasurer','Arranger(s)','Chaplain(s)','Memorial Lesson Leader','Book','Edition Code','Leader(s)','Canonical Leader(s)','Page','Song','Tag','Notes','Marker','Timestamp ISO','Time entered','Series Code','Event ID','Previous Event ID','Status'];
+function fixtureCsv(kind, eventName) {
+  const multi = kind === 'multi';
+  const base = { 'Schema Version': '5', Event: eventName || (multi ? 'Test Two-Day Convention' : 'Test Singing'), Date: '2026-10-03', Location: 'Test Hall', Chair: 'Pat Chair', 'Series Code': 'tst', 'Event ID': 'tst-2026-10-03' };
+  const rows = [{ 'Record Type': 'session', 'Session ID': 's1', 'Session Label': multi ? 'Saturday' : '' }];
+  const song = (sid, who, page) => ({ 'Record Type': 'song', 'Session ID': sid, Book: 'ShH2012', 'Edition Code': 'ShH2012', 'Leader(s)': who, Page: page });
+  ['31b','47','49b','56b','63','68b','73t','77b'].forEach((pg, i) => rows.push(song('s1', ['Ann Lee','Bob Roe','Cy Poe','Dee Fox'][i % 4], pg)));
+  if (multi) {
+    rows.push({ 'Record Type': 'marker', 'Session ID': 's1', Marker: 'RECESS' });
+    rows.push({ 'Record Type': 'session', 'Session ID': 's2', 'Session Label': 'Sunday', Date: '2026-10-04' });
+    ['100','112','146','159','183'].forEach((pg, i) => rows.push(song('s2', ['Ann Lee','Eve Kay','Bob Roe'][i % 3], pg)));
+    rows.push({ 'Record Type': 'marker', 'Session ID': 's2', Marker: 'ANNOUNCEMENTS', 'Leader(s)': 'Pat Chair' });
+  }
+  const q = (v) => (/[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v);
+  const out = [FIXTURE_HEADER.join(',')];
+  rows.forEach((r, i) => {
+    const o = Object.assign({}, base, { 'Order of entry': String(i + 1), 'Timestamp ISO': '2026-10-03T14:' + String(10 + i).padStart(2, '0') + ':00.000Z' }, r);
+    out.push(FIXTURE_HEADER.map((h) => q(o[h] || '')).join(','));
+  });
+  return { text: out.join('\r\n') + '\r\n', rowCount: rows.length };
 }
 
 // Loads minutes.html and switches to the given stage ("minutes" for Capture,
@@ -206,6 +221,5 @@ module.exports = {
   pickFile,
   importIntoCompile,
   suiteAppPath,
-  listSamples,
-  readSample,
+  fixtureCsv,
 };
