@@ -59,6 +59,11 @@
     padding-bottom:6px; border-bottom:1px solid var(--line2); color:var(--ink);
   }
   h2:first-of-type{ margin-top:0; }
+  h4{ font-family:'Inter',sans-serif; font-weight:700; font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:var(--accent); margin:14px 0 4px; }
+  .toc{ font-size:13px; color:var(--muted); margin:14px 0 0; }
+  .toc a, .quick-start a{ color:var(--accent); }
+  h2[id]{ scroll-margin-top:12px; }
+  h3[id]{ scroll-margin-top:12px; border-top:1px solid var(--line2); padding-top:14px; margin-top:26px; }
   h3{ font-family:'Spectral',Georgia,serif; font-weight:600; font-size:15.5px; margin:18px 0 6px; }
   p, li{ font-size:14px; color:var(--ink); }
   ul, ol{ padding-left:22px; }
@@ -116,147 +121,247 @@
 
 <div class="wrap">
   <h1>Instructions and Workflow</h1>
-  <p class="intro">Everything below covers the complete process, start to finish: recording a singing in Capture, then reviewing and preparing finished minutes in Compile.</p>
+  <p class="intro">These instructions follow the app's five stages in order. Each stage, and each page within Compile, has its own section: first what to do, then the details and terms behind it.</p>
 
   <div class="feedback-notice">
     <h2>Feedback</h2>
     <p style="margin:0;">Feedback is welcome. Keep a backup of anything important. Reach the developer, Kevin of SingLoud.org, at <a href="mailto:sacredharpbiblio@gmail.com">sacredharpbiblio@gmail.com</a>.</p>
   </div>
 
-  <h2>Quick Start</h2>
+  <h2>The Five Stages at a Glance</h2>
   <div class="quick-start">
     <ol>
-      <li>Open <a href="index.html">Secretary</a> — one application, five stages, shown as numbered steps down the left.</li>
-      <li><strong>1 Setup:</strong> find an existing singing (grouped by series, if it's a recurring one) or start a new one.</li>
-      <li><strong>2 Capture:</strong> record the songs and officers live, during the singing.</li>
-      <li><strong>3 Compile:</strong> after the singing, review what was logged and fill in anything that shouldn't burden someone logging live.</li>
-      <li><strong>4 Report:</strong> the attendance statement, in large type, to read aloud.</li>
-      <li><strong>5 Export:</strong> preview and download the finished result.</li>
+      <li><a href="#setup"><strong>1 Setup:</strong></a> open an existing singing or start a new one.</li>
+      <li><a href="#capture"><strong>2 Capture:</strong></a> record the songs and markers live, during the singing.</li>
+      <li><a href="#compile"><strong>3 Compile:</strong></a> after the singing, review, correct and fill in everything the live log doesn't hold. Seven pages: Event Details, Attendees, Roles, Recognitions, Memorials, Business, Song List.</li>
+      <li><a href="#report"><strong>4 Report:</strong></a> the attendance statement, in large type, to read aloud.</li>
+      <li><a href="#export"><strong>5 Export:</strong></a> preview and download the finished minutes.</li>
     </ol>
-    <p style="margin:10px 0 0;font-size:13px;color:var(--muted);">The same singing carries across all five stages automatically — nothing needs to be downloaded and re-imported by hand between them. Each stage still has a working save/download of its own for backups.</p>
+    <p style="margin:10px 0 0;font-size:13px;color:var(--muted);">The same singing carries across all five stages automatically; nothing is downloaded and re-imported by hand between them. Move between stages with the numbered steps in the left sidebar, or with the Back and Next buttons. Each stage below starts with <strong>What to do</strong>, then explains the <strong>Details and terms</strong>.</p>
   </div>
 
-  <h2>Setup: Finding or Starting a Singing</h2>
+  <!-- ================= 1 SETUP ================= -->
+  <h2 id="setup">1 &middot; Setup</h2>
+  <h3>What to do</h3>
+  <ol>
+    <li>Open Secretary ahead of the event, ideally before you arrive. It is a single file with no install step and works fully offline once open. Use a laptop, desktop or a tablet with a physical keyboard; it isn't designed for phone-sized screens.</li>
+    <li>Click <strong>Open Singing</strong> to find an earlier singing, or start a new one. If your singing is part of a recurring series, open last year's and choose <strong>New Singing in This Series</strong>; it carries the venue and Series Code forward and starts fresh on the date, officers and song list.</li>
+    <li>Fill in Event, Date and Location, and the officers (Chair, Vice-Chair, Secretary, Treasurer, Arranger(s), Chaplain(s)) if known. None of this is required to start logging, but filling it in early saves guessing later.</li>
+    <li>Optionally load last time's file to bring last year's attendees forward as name suggestions (see Details).</li>
+    <li>Press <strong>Next</strong> to go to Capture.</li>
+  </ol>
+  <div class="note">Sacred Harp business-session officer elections are usually a ceremonial reconfirmation of whoever is already serving, not a new appointment. If that's the case, fill in Officers &amp; Roles with the actual presiding officers at the very start, rather than waiting for the business session to make it "official."</div>
+  <h3>Details and terms</h3>
   <ul>
-    <li>Setup is the home screen. If your singing is part of a recurring series, previous occurrences appear grouped together — expand a series to see its dated occurrences, or use <strong>New Singing in This Series</strong> to start the next one, which carries the venue and Series Code forward but starts fresh on date, officers, and the song list. The same continuation is also available from inside any currently-open singing itself, as <strong>New Singing Based on This One</strong> — useful when you opened a singing directly (an individual file, say) rather than by browsing a series list.</li>
-    <li>A <strong>Series Code</strong> links occurrences of the same recurring singing together. Click <strong>Generate</strong> to get one — a short, readable, human-invented code becomes a real collision risk once many singings are compiled over the years, so the generated code is deliberately not a readable word. The field stays editable too, for the real case of matching a code someone else already started a series with; typing your own is just not the encouraged path for starting a new one.</li>
-    <li>Series grouping needs a Chromium-based browser (Chrome, Edge, Opera) to browse a local folder; Firefox and Safari don't support that yet. Click <strong>Open Singing</strong>, then <strong>Choose a Singing File</strong> to open a single file directly instead \u2014 that works everywhere, in every browser, regardless.</li>
-    <li>Once a singing is open, its name, date, and status stay visible at the top of the screen no matter which of the five stages you're in.</li>
+    <li><strong>Setup is the one place a singing is opened or started.</strong> No other stage has its own open or start controls. If someone emails you a Singing Record (a CSV), open it here with <strong>Open Singing</strong>, then <strong>Choose a Singing File</strong>.</li>
+    <li><strong>Series Code.</strong> Links the occurrences of one recurring singing. Click <strong>Generate</strong> to get one; the generated code is deliberately not a readable word, to avoid collisions as many singings are compiled over the years. The field stays editable for matching a code someone else already uses. <strong>Previous Event ID</strong> chains each occurrence to the last.</li>
+    <li><strong>Browsing a folder</strong> (series grouping) needs a Chromium-based browser: Chrome, Edge or Opera. Firefox and Safari can't browse a folder, but <strong>Choose a Singing File</strong> works in every browser.</li>
+    <li><strong>New Singing Based on This One</strong> offers the same continuation from inside any open singing, useful when you opened a single file rather than browsing a series.</li>
+    <li>Once a singing is open, its name, date and status stay visible at the top of the screen in every stage.</li>
+    <li><strong>Schema version.</strong> A file with a schema version this build doesn't recognize, but isn't newer, is flagged so you can double-check the result, and opening still proceeds. A genuinely <em>newer</em> schema is blocked outright, because re-saving could silently drop what it added.</li>
+    <li><strong>Load last time's file</strong> brings forward only the people who attended that singing (led, held an office, or were marked visitor, VIP, out of town, present or added by hand). They suggest in name boxes and appear gray on Attendees until logged.</li>
   </ul>
 
-  <h2>Preparing Before the Event</h2>
+  <!-- ================= 2 CAPTURE ================= -->
+  <h2 id="capture">2 &middot; Capture</h2>
+  <h3>What to do</h3>
+  <ol>
+    <li>For each song, type the <strong>Leader</strong>, then the <strong>Page</strong> (for example <code>123</code>, <code>45t</code>, <code>45b</code> for a top or bottom page), and press Enter. No button needed. More than one person can lead a song: type the first name, then type &ldquo;and&rdquo; or a comma, then the next name. Name suggestions start again after each.</li>
+    <li>Use the <strong>Notes</strong> field to write down anything different about the lead: a child or other family member leading with them who isn't otherwise registered, an anecdote, a dedication to someone. You can edit or remove it later, but getting something in while it's happening makes it easy to remember.</li>
+    <li>Use <strong>Recess</strong>, <strong>Lunch</strong>, <strong>Announcements</strong>, <strong>Prayer</strong> and <strong>Business Meeting</strong> to mark what happens between songs. For an announcement, type who made it in the Leader box first. At each Recess a reminder asks you to use the break to enter attendees who haven't led (see Attendees).</li>
+    <li>Tag a song when it applies: <strong>Call Back</strong> (the leader who brings the class back together after a break) or <strong>Special</strong>. For a memorial lesson or singing school, use the <strong>Memorial Lesson</strong> or <strong>Singing School</strong> mode buttons.</li>
+    <li>To fix a recent entry, tap it in the log and edit it in place. The same page, leader and duplicate checks apply.</li>
+    <li>For a new day or a change of venue, press <strong>Start New Session</strong> (see Details).</li>
+    <li>Download or copy the CSV during the event and again at the end, as a backup.</li>
+  </ol>
+  <h3>Details and terms</h3>
   <ul>
-    <li>Secretary is built for a laptop, desktop computer, or a tablet with a physical keyboard — it isn't designed for phone-sized screens.</li>
-    <li>Open the app ahead of time, ideally before you arrive, so it's already loaded and ready. It's a single file with no install step, and works fully offline once open — nothing about logging songs depends on a network connection at all.</li>
-    <li>In Setup, either open a previous occurrence's next singing, or start a completely new one.</li>
-    <li>Fill in Event, Date, Location, and — if known — the Officers &amp; Roles fields (Chair, Vice-Chair, Secretary, Treasurer, Arranger(s), Chaplain(s)). None of these are required to start logging songs, but filling them in early means Compile won't need to guess later.</li>
-    <li>If it's useful, download an early backup CSV once the first few songs are in, just to confirm the whole save/export path works on this device before it matters.</li>
-  </ul>
-  <div class="note">Sacred Harp business-session officer elections are usually a ceremonial reconfirmation of whoever is already serving, not a new appointment. If that's the case, fill in Officers &amp; Roles with the actual presiding officers at the very start of logging, rather than waiting for the business session to make it "official."</div>
-
-  <h2>Recording (the Capture stage)</h2>
-  <ul>
-    <li>For each song: type the <strong>Leader</strong>, then the <strong>Page</strong> (e.g. <code>123</code>, <code>45t</code>, <code>45b</code> for a top/bottom page), and press Enter — no button needed.</li>
-    <li>The song title looks itself up automatically from whichever songbook is selected. If a page could mean two different songs, this stage asks you to specify top or bottom rather than guessing. If a page doesn't exist in the book's index, it asks you to confirm before adding it, so a typo doesn't get logged as if it were real.</li>
-    <li>Multiple leaders on one song can be entered comma-separated in the Leader field.</li>
-    <li>Use <strong>Recess / Lunch / Announcements</strong> to mark breaks.</li>
-    <li>Tag a song <strong>Call Back</strong> (the leader who brings the class back together after a break), <strong>Memorial</strong>, or <strong>Special</strong> as it applies. Whoever leads a Memorial-tagged song is automatically credited as the Memorial Lesson Leader in the write-up — there's no separate place to type that name, so if the wrong person shows up there, fix the Leader on the tagged song itself rather than looking for another field.</li>
-    <li>To correct a recent entry, tap it in the log to edit it in place — the same page/leader/duplicate checks apply to an edit as to a new entry.</li>
-  </ul>
-
-  <h2>Sessions, Days, and Locations</h2>
-  <p>A singing in Secretary can span more than one session — a second day of a convention, a change of venue, or any other clearly distinct segment of the same overall event. This is different from starting a whole new singing:</p>
-  <ul>
-    <li>A <strong>new singing</strong> is an entirely new event and a new file. Start or open one in <strong>Setup</strong>; Capture has no start screen of its own, and you move between stages with the sidebar or the Back and Next buttons.</li>
-    <li><strong>Start New Session</strong> stays inside the <em>same</em> event and the same file. Use this for a new day, a changed location, or a distinct segment of the same convention.</li>
-  </ul>
-  <p>Tapping <strong>Start New Session</strong> reopens the setup fields so you can update the Date and/or Location, add a session label if you like (e.g. "Day 2"), and update Officers &amp; Roles if anything genuinely differs for this session — then confirm. Nothing already logged changes; everything from that point forward carries the new details.</p>
-  <p>A session can carry its own:</p>
-  <ul>
-    <li>date</li>
-    <li>location</li>
-    <li>session label</li>
-    <li>officers, only where they actually differ from the event's usual officers</li>
+    <li><strong>Titles look themselves up</strong> from the selected songbook. If a page could mean two songs, you are asked for top or bottom. If a page doesn't exist in the book's index, you are asked to confirm before it is added, so a typo isn't logged as real.</li>
+    <li><strong>Top and bottom pages.</strong> Use <code>t</code> or <code>b</code> only when a page holds two songs that both start on it. If a page carries the continuation of a song from the previous page plus one new song starting lower down, that new song is the only one that <em>starts</em> on the page, so it gets no <code>b</code>; there is nothing to tell apart.</li>
+    <li><strong>Tags and who they credit.</strong> Whoever leads a Memorial-tagged song is credited as the Memorial Lesson Leader; there is no separate place to type that name, so fix the Leader on the tagged song itself. On the Song List a song can also be tagged <strong>Opening</strong> (the song that calls the class to order, even if a prayer or other entry was logged first) or <strong>Closing</strong> (the last song).</li>
+    <li><strong>Modes.</strong> Memorial Lesson and Singing School stay on, with a banner, until you press End; songs logged meanwhile belong to that lesson or school. While Memorial Lesson is on, <strong>For Sick/Shut-ins</strong> and <strong>For Deceased</strong> mark whom a song is for.</li>
+    <li><strong>Sessions.</strong> A singing can span more than one session: a second day, a change of venue, or any distinct segment of the same event. <strong>Start New Session</strong> stays inside the same event and the same file. It reopens the date and location fields, lets you add a label (for example "Day 2") and change officers only where they differ, then you confirm. Nothing already logged changes. A session can carry its own date, location, label and officers.</li>
+    <li><strong>Saving.</strong> Capture saves to this browser automatically; a status line shows "Saved locally at [time]" or a warning if local saving isn't working. Reopening on the same device and browser restores where you left off. Local saving is not a backup, so download or copy the CSV too. An optional automatic backup download (off by default) saves a copy to your Downloads folder every few minutes.</li>
+    <li><strong>Marker text.</strong> Typing in Notes before pressing an announcement or business marker saves it as that entry's note; it prints in the minutes at that point.</li>
   </ul>
 
-  <h2>Saving and Backups</h2>
+  <!-- ================= 3 COMPILE ================= -->
+  <h2 id="compile">3 &middot; Compile</h2>
+  <h3>What to do</h3>
+  <ol>
+    <li>Open the stage. What was logged is already there: Event Details, Roles and the Song List fill in from the record, with no file to choose.</li>
+    <li>Work down the sub-pages in the sidebar: <strong>Event Details</strong>, <strong>Attendees</strong>, <strong>Roles</strong>, <strong>Recognitions</strong>, <strong>Memorials</strong>, <strong>Business</strong>, <strong>Song List</strong>. Each has its own section below.</li>
+    <li>Clear anything flagged before exporting: a row missing a name or page, an unrecognized tunebook code, or a likely duplicate spelling of a leader. A proofing pass now is easier than a correction after publication.</li>
+    <li>Press <strong>Next</strong> to reach the Report.</li>
+  </ol>
+  <h3 id="c-details">3a &middot; Event Details</h3>
+  <h4>What to do</h4>
+  <ol>
+    <li>Check the name, date, location and book(s) used.</li>
+    <li>Enter the annual or edition number (for example "2nd annual") separately from the name.</li>
+    <li>Leave <strong>Total attendees (raw number)</strong> blank unless you can't enter everyone's name (see Details).</li>
+  </ol>
+  <h4>Details and terms</h4>
   <ul>
-    <li>The Capture stage saves to this browser automatically as you go — no action needed. A status line shows <strong>Saved locally at [time]</strong>, or a clear warning if local saving isn't working on this device.</li>
-    <li>If you accidentally refresh or close the tab, reopening on the same device and browser restores where you left off — the active singing, and which stage you were on.</li>
-    <li>Local saving alone isn't a substitute for a real backup — download or copy the CSV during the event as well, and definitely at the end.</li>
-    <li>An optional automatic periodic backup download exists (off by default) — turn it on if you'd like an extra copy saved to your Downloads folder every few minutes. It's a bonus, not a replacement for downloading the final file yourself.</li>
+    <li><strong>Name of singing</strong> is the proper, stable name (for example "Dahlonega Shenandoah Harmony Singing"). The SHMHA export keeps this printed title fixed; every other export bakes in the number ("2nd Annual Dahlonega Shenandoah Harmony Singing").</li>
+    <li><strong>Series Code, Event ID, Previous Event ID</strong> let related singings (this year, last year, next year) be recognized as one series across separate files, without any shared database. Leave blank for a one-off event.</li>
+    <li><strong>Total attendees (raw number)</strong> is only for when you can't enter names for all attendees and need a head count or registration total instead. A number typed here replaces the counted total on the Report's All-sessions statement and in Minutes Maker. Leave it blank whenever you can: the Secretary should enter every attendee's name on the Attendees page, whether or not they led a song.</li>
   </ul>
 
-  <h2>Moving to Compile</h2>
+  <h3 id="c-attendees">3b &middot; Attendees</h3>
+  <h4>What to do</h4>
+  <ol>
+    <li>Enter every person who came, whether or not they led a song: search for a name, and if nobody matches, press <strong>Add attendee</strong>. Do this during a Recess if you can.</li>
+    <li>Check spellings. To fix one, edit the name; to merge two entries, type the exact name of the other. The fix applies to every song, officer field and list in the singing.</li>
+    <li>Mark visitors, out-of-town singers, VIPs, donors and anyone thanked.</li>
+    <li>Optionally add a phone number or email.</li>
+  </ol>
+  <h4>Details and terms</h4>
   <ul>
-    <li>The same singing carries into Compile automatically — visiting the Compile stage for the first time after recording picks up what was just logged, with no file to choose.</li>
-    <li>Compile checks the file's schema version. An unfamiliar-but-not-newer version is flagged clearly so you know to double-check the result, but the import still proceeds. A version genuinely newer than what this build understands is treated differently — that one's a real data-loss risk (re-exporting could silently drop whatever the newer schema added), so it blocks the import outright rather than just noting it, with a message pointing you to a version of Compile that actually supports it.</li>
-    <li>Event Details, Roles, and the Song List all auto-fill from what was recorded. The import message lists exactly what got filled in, so it's easy to spot-check.</li>
-    <li>Working from a file that didn't come through Setup — someone emailed you a CSV, say? go back to Setup and use <strong>Open Singing</strong> to load it; Setup is the one place a Singing Record is opened, and it carries through to Compile automatically.</li>
+    <li>The page lists everyone named anywhere (leaders, officers, and anyone you add) once each. Filter by <strong>All attendees</strong>, people with or without contact info, or people who have not led a song (one filter at a time).</li>
+    <li>Each attendee can have a <strong>location</strong> and these marks: visitor / first-time singer, from out of town (with the location), visitor / VIP who was not a singer, donor / contributor who was not a singer, and thanked. The marks fill the Recognitions lists, which are display-only; edit them here.</li>
+    <li><strong>Counted as attendees:</strong> people named in this singing (a leader, an officer, a name in another entry), marked visitor, VIP or out of town, added by hand, or ticked <strong>Present</strong>. Not counted: people known only as a donor or as thanked, saved contacts with no entry in this singing, and carried-over names.</li>
+    <li><strong>Gray rows</strong> are names carried over from last time's file, donors, thanked-only people, and contact-only records. Tick <strong>Present</strong> for anyone who actually came; ticking it counts them and turns the row normal. Anyone you log counts automatically and their Present box is locked on.</li>
+    <li><strong>Contact details are private.</strong> Phone numbers, emails and notes are stored inside the singing's master CSV. Export offers a version without them, Attendees can download a mailing list, and Capture warns whenever the record carries contacts. Share the "without contact details" file, not the master.</li>
   </ul>
 
-  <h2>Reviewing and Correcting</h2>
-  <p>Once in Compile, work through it before exporting:</p>
+  <h3 id="c-roles">3c &middot; Roles</h3>
+  <h4>What to do</h4>
+  <ol>
+    <li>Fill in who served the class: Chair, Vice-chair, Secretary, Treasurer, Arranger(s), Chaplain(s) and the other roles. Leave blank whatever wasn't observed.</li>
+    <li>Add more than one person to a role by typing a comma or the word "and"; name suggestions restart after each.</li>
+  </ol>
+  <h4>Details and terms</h4>
   <ul>
-    <li>Check Event Details and Roles for anything that auto-filled incorrectly or needs a human's judgment.</li>
-    <li>If the file has more than one session, a Sessions section appears on the Song List tab — one card per session, with its own location and any officer differences. Each officer there has three real choices: use the Event default, set none for that role this session, or name a different person for just that session. Two sessions sharing a date, location, or label are still tracked separately — Compile disambiguates the display automatically rather than merging them.</li>
-    <li>Fill in anything that shouldn't burden someone logging live: the full memorial lesson write-up, business-session details, secretary's report, and similar long-form content belong on the Names &amp; Lists tab, and on the Business &amp; Announcements page once a Business Meeting or an officer's announcement has been entered.</li>
-    <li>Resolve any row flagged for a missing name or page, an unrecognized tunebook code, or a likely duplicate leader spelling (the Song List tab clusters similar spellings and lets you merge them to one canonical form).</li>
-    <li>Where possible, clear flagged items before exporting a final version — a proofing pass now is easier than a correction after publication.</li>
+    <li>Suggestions are drawn from the Attendees page.</li>
+    <li>Only the Chair, Vice-chair and Secretary reappear in the one-line roster at the end of the minutes; everything else is woven into the write-up. Export's <strong>Roles to include in the closing roster</strong> changes that.</li>
+    <li>Officers who differ in a particular session are set on the Song List page's Sessions section.</li>
+    <li>The role someone holds is also how an announcement is credited: "The Treasurer, Jim Glaser, made an announcement."</li>
   </ul>
 
-  <h2>Attendees and Report</h2>
+  <h3 id="c-recognitions">3d &middot; Recognitions</h3>
+  <h4>What to do</h4>
+  <ol>
+    <li>Review the lists of visitors, first-time singers and VIPs; out-of-town singers; people thanked; and donors. These are filled in from the marks on Attendees.</li>
+    <li>Type the <strong>Sick and shut-in</strong> and <strong>Deceased since last singing</strong> lists freely.</li>
+  </ol>
+  <h4>Details and terms</h4>
   <ul>
-    <li><strong>Attendees</strong> (Compile, between Event Details and Roles) lists every name entered anywhere — leaders, officers, and anyone you add — once each. Fix a spelling or merge two spellings of one person and the correction carries through the whole record. Search for a name; if nobody matches, <strong>Add attendee</strong> adds one. Filter the list by <strong>All attendees</strong>, people with or without contact info, or people who have not led a song (one filter at a time).</li>
-    <li>Each attendee can have a <strong>location</strong> and these marks: visitor / first-time singer, from out of town (with the location), visitor / VIP who was not a singer, donor / contributor who was not a singer, and thanked. The marks fill the Recognitions lists, which are display-only; edit them here. Sick and deceased are not attendees and stay freeform on the Memorials page.</li>
-    <li><strong>Roles</strong> can hold several names each (Treasurer(s), Chaplain(s), and so on), with suggestions drawn from the master list after a comma, "and" or "&amp;". "Load last time's file" carries forward only people who attended that singing (led, held an office, or were marked visitor, VIP, out of town, present or added by hand). They appear on Attendees in <strong>gray</strong>, uncounted, and still suggest in name boxes. Tick <strong>Present</strong> for anyone who came this year; anyone you log (a song, a role, a visitor mark) counts automatically. The Present box also lets you count a donor who actually came.</li>
-    <li><strong>Report</strong> (stage 4) is read-only, in large type, for reading aloud. A singing with more than one session shows a statement for each session, then one for all sessions (a four-day convention shows five). Each looks like: "The 9th Annual Maryland All-Day Singing consisted of 62 total attendees, with 38 singers leading a total of 112 songs." Attendees counted are people named in this singing, plus visitors, VIPs and out-of-town guests. People known only as a donor or as thanked, saved contacts with no entry in this singing, and carried-over names are listed on Attendees but not counted. Enter every attendee's name on Attendees whenever you can. Only when you can't name everyone, type a head count in Event Details under <strong>Total attendees (raw number)</strong>; it replaces the counted total on the All-sessions statement and in Minutes Maker.</li>
-    <li><strong>Business &amp; Announcements</strong> appears in Compile once a Business Meeting is entered or an officer (Chair, Treasurer, and so on) makes an announcement. It is a larger place to write each entry's Notes: what you type there is the entry's Note on the Song List and prints in the minutes at that point. If one officer makes more than one announcement, they are numbered ("Treasurer announcement 1 of 2") on the Song List and in the minutes.</li>
-    <li><strong>Contact details are private.</strong> Phone numbers, emails and notes are stored inside the singing's master CSV. Export offers a version without contact details, Attendees can download a mailing list, and Capture warns and offers the redacted export whenever the record carries contacts. Share the "without contact details" file, not the master.</li>
-    <li>Under Export &rarr; Minutes Maker, <strong>Roles to include in the closing roster</strong> chooses whose names close the minutes (All roles, or any individual role), and <strong>Cite the page in parentheses</strong> switches song citations from &ldquo;North Carolina&rdquo; on page 3b to &ldquo;North Carolina&rdquo; (3b).</li>
+    <li>The lists from Attendees are display-only here; to change one, change the mark on Attendees.</li>
+    <li>Sick and deceased people are not attendees, so those two lists stay freeform.</li>
+    <li>These are ambient recognitions, not tied to one moment in the service. For the memorial lesson itself, use Memorials.</li>
   </ul>
 
-  <h2>Terminology and Abbreviation Systems</h2>
-  <p>Non-default tunebooks need a short code assigned once, on the Song List tab's Book Handling section. Secretary currently supports two independent code systems for this:</p>
+  <h3 id="c-memorials">3e &middot; Memorials</h3>
+  <h4>What to do</h4>
+  <ol>
+    <li>Add one row per name for the sick and shut-in and the deceased lists.</li>
+    <li>Add dedications and remarks as free text.</li>
+  </ol>
+  <h4>Details and terms</h4>
   <ul>
-    <li><strong>SingLoud.org Work Codes</strong> — used internally, and in every export except the dedicated SHMHA submission.</li>
-    <li><strong>SHMHA abbreviations</strong> — used only in the SHMHA Minutes Book export, translated automatically from the Work Code you assign.</li>
+    <li>The <strong>Memorial lesson leader</strong> is derived from whichever songs are tagged Memorial and is not editable here. To change it, fix the Leader on the tagged song.</li>
+    <li>A Note on a Memorial-tagged song isn't printed; the names belong on this page.</li>
   </ul>
-  <p>Neither system is more "correct" than the other — they're just the two published vocabularies the suite outputs today. Choosing the Type of output on the Export stage (Minutes Maker, Simple List, or SHMHA Minutes Book) determines which applies, and the preview updates in real time, so you can check any of them before exporting.</p>
-  <p>Minutes Maker has its own per-song and summary-line checkboxes: show the song number, the title, both, or — if you uncheck both — Compile falls back to whichever one it actually has, rather than leaving a call-out with no identification at all. A song's source (tunebook) can also be shown on every call-out rather than only when it differs from the day's default book. "Show time called" adds the time each song was actually logged in Capture, shared with the Simple List below. None of this affects SHMHA Minutes Book, which always applies its own fixed rule regardless of these checkboxes: printed-book songs are identified by page number only, and a title is used only when there's genuinely no page to give (an "Other" source).</p>
 
-  <h2>How Tunebooks Are Recorded</h2>
-  <p>Not every tunebook is known to this suite in the same depth. Books sit at one of four levels, and the levels are <strong>cumulative</strong> — each includes everything below it. A rough mnemonic: the level is how many things we know.</p>
+  <h3 id="c-business">3f &middot; Business &amp; Announcements</h3>
+  <h4>What to do</h4>
+  <ol>
+    <li>When this page appears in the sidebar, write out longer text in the box for each Business Meeting or announcement.</li>
+    <li>Fill in the next singing's date, location and chair, thanks to hosts, and closing remarks.</li>
+  </ol>
+  <h4>Details and terms</h4>
   <ul>
-    <li><strong>Level 0 — Other.</strong> We know nothing: just a name typed in passing while logging a singing. It appears in the CSV as the book value <code>Other</code>, and its songs are identified by title, since there's no page numbering to rely on.</li>
-    <li><strong>Level 1 — Basic record.</strong> We know roughly one thing — the title, plus whatever scant details are on hand (compiler, year, codes). If a singing cites one of these, Capture and Compile will recognize the name and say so, but can't look up song titles by page.</li>
-    <li><strong>Level 2 — Indexed.</strong> We know its pages: a complete page-by-page song index. This is the level that lets the Capture stage suggest a title the moment you type a page number, and lets Compile catch a page that doesn't exist in the book. Most books the suite ships with are here.</li>
-    <li><strong>Level 3 — Enriched.</strong> A dedicated file exists per edition, holding — or building toward — the full scholarly record: attribution, concordances, editorial and publication history, bibliography. Level itself just means the file exists, not that it's finished; Bibliographer tracks completeness separately from level, showing a real core complete / core incomplete state (Common Name, Title Proper, and Compiler at minimum) alongside a short list of what else is still missing, rather than treating "has a file" as "done." A growing number of editions have a Tunebook File so far — see the Tunebook Library tab for the current count.</li>
+    <li>The page appears only once a Business Meeting is entered or an officer (Chair, Treasurer and so on) makes an announcement.</li>
+    <li>Each box <em>is</em> the Notes of that entry on the Song List: what you type here prints in the minutes at that point and shows on the Song List. There is no separate copy.</li>
+    <li>If one officer makes more than one announcement in a session, they are numbered ("Treasurer announcement 1 of 2") on the Song List and in the minutes ("made the first announcement"). A single announcement is not numbered.</li>
+    <li>A Business Meeting entry can carry a report tag (Treasurer's, Secretary's or Chaplain's Report, or Chair's Remarks) on the Song List.</li>
   </ul>
-  <p>One file holds all of this: <strong><code>tunebook-library.js</code></strong> — every Work and Edition the system knows about, at whatever level each has been brought to. A Level 3 Edition also names its own dedicated Tunebook File (a separate JSON file per edition, in <code>tunebook-files/</code>), loadable on demand from Bibliographer's Library tab. Only Bibliographer edits any of this; Secretary reads tunebook data but never changes it. Bibliographer is a <strong>separate application</strong> with its own home, not a section of Secretary — it exists for the small number of people curating tunebook data, and nothing in Secretary depends on having it open.</p>
 
-  <h2>Preview</h2>
-  <p>The Export stage's preview represents the finished document as it stands right now. Any change you make — a correction on the Song List tab, a session's officer override, a different Type of output, a Minutes Maker checkbox, an opening-paragraph or prayer-phrasing choice — updates it immediately, so what you see is always current.</p>
+  <h3 id="c-songs">3g &middot; Song List</h3>
+  <h4>What to do</h4>
+  <ol>
+    <li>Scan the rows. Rows in red are missing a title or page; fix them.</li>
+    <li>Fix mistaken pages and normalize leader names. Similar spellings are clustered so you can merge them to one canonical form.</li>
+    <li>Drag rows to reorder if needed.</li>
+    <li>Add dedications such as "in memory of Buell Cobb" in Notes / Dedication; they print right after the page number.</li>
+    <li>Assign a Work Code to any tunebook that doesn't have one, in Book Handling.</li>
+    <li>If the singing has several sessions, check each session card (see Details).</li>
+  </ol>
+  <h4>Details and terms</h4>
+  <ul>
+    <li><strong>Sessions.</strong> When a file has more than one session, a Sessions section appears: one card per session with its own location and any officer differences. Each officer has three choices: use the event default, set none for that role this session, or name a different person for just that session. Two sessions sharing a date, location or label are still tracked separately.</li>
+    <li><strong>Tags:</strong> blank, Call Back, Memorial (Sick), Memorial (Deceased), Opening, Closing, Special, Singing School. For Business Meeting entries the tag is the report type.</li>
+    <li><strong>Book Handling.</strong> Non-default tunebooks need a short code assigned once, here. See Reference for the two code systems.</li>
+    <li>Entries can be added by hand; a Capture file is the normal path, not a requirement.</li>
+  </ul>
 
-  <h2>Exporting</h2>
-  <p>The <strong>5 Export</strong> stage currently exports these formats:</p>
+  <!-- ================= 4 REPORT ================= -->
+  <h2 id="report">4 &middot; Report</h2>
+  <h3>What to do</h3>
+  <ol>
+    <li>Open the stage and read the statement aloud at the singing's close or business session. Nothing here is typed in.</li>
+    <li>If a number looks wrong, go back to Attendees (to add or fix names) or Event Details (to enter a raw head count).</li>
+  </ol>
+  <h3>Details and terms</h3>
+  <ul>
+    <li>The statement reads, for example: "The 9th Annual Maryland All-Day Singing consisted of 62 total attendees, with 38 singers leading a total of 112 songs."</li>
+    <li>A singing with more than one session shows a statement for each session, then one for all sessions (a four-day convention shows five). Each session's count is the people named in that session's entries or holding an office that session. The All-sessions statement counts the whole singing.</li>
+    <li>A raw number typed in Event Details replaces the counted total on the All-sessions statement only.</li>
+    <li>A short note under the statement says which basis the number uses.</li>
+  </ul>
+
+  <!-- ================= 5 EXPORT ================= -->
+  <h2 id="export">5 &middot; Export</h2>
+  <h3>What to do</h3>
+  <ol>
+    <li>Choose the <strong>Type of output</strong> first: Minutes Maker, Simple List, or SHMHA Minutes Book.</li>
+    <li>Set the wording options that apply to it and read the live preview. It updates immediately with every change you make anywhere.</li>
+    <li>Choose a format and export. Download the Master CSV as well; it is the complete, authoritative record.</li>
+  </ol>
+  <h3>Details and terms</h3>
   <table>
     <tr><th>Format</th><th>Typical use</th></tr>
     <tr><td>Plain text</td><td>Quick copy into an email or document</td></tr>
     <tr><td>Markdown</td><td>Posting to a website or wiki</td></tr>
     <tr><td>HTML</td><td>Ready to publish directly</td></tr>
-    <tr><td>PDF (print view)</td><td>Opens your browser's print dialog — choose "Save as PDF"</td></tr>
-    <tr><td>Master CSV</td><td>The complete, authoritative project file — re-opens in any stage without losing anything already added</td></tr>
+    <tr><td>PDF (print view)</td><td>Opens your browser's print dialog; choose "Save as PDF"</td></tr>
+    <tr><td>Master CSV</td><td>The complete, authoritative project file; re-opens from Setup without losing anything already added</td></tr>
     <tr><td>SHMHA Minutes Book</td><td>Matches the Sacred Harp Musical Heritage Association's printed submission format exactly</td></tr>
     <tr><td>Simple List</td><td>Terse, events-only list (officers, then each song's leader/page/source) for checking names and details, not publication</td></tr>
   </table>
-  <p>Word (.docx) is not an export format: export plain text, Markdown, or HTML and paste into Word.</p>
-  <p><strong>Output profiles</strong> <span class="planned">Partially implemented</span> — the Export stage has a "Type of output" choice (Minutes Maker, Simple List, or SHMHA Minutes Book) that determines which wording options apply and which export formats make sense, separately from which file format delivers it. The fuller original vision — additional named profiles beyond these three, such as Website, Archival Record, or Data Exchange, each with its own structural rules — is still just an idea.</p>
-  <p><strong>MP3 Chapters and Video Markers</strong> <span class="planned">Planned</span> — a future version may use the order and timing already captured to generate chapter lists for a long recording, YouTube-style timestamp markers, or editing cue sheets. Not available yet.</p>
-  <p>There is one master project file for a singing, not a separate file per stage. Recording it creates the initial Master CSV; Compile enriching it — corrections, business notes, session overrides, and everything else on Compile's tabs — produces an updated Master CSV that supersedes the one before it. That newest Master CSV is the current authoritative record. The other formats in the table above (plain text, Markdown, HTML, PDF, the SHMHA submission) are one-way publication outputs generated *from* the Master CSV — they're not meant to be re-opened or resumed, and none of them replace it.</p>
+  <ul>
+    <li><strong>Minutes Maker options.</strong> Show the song number, the title, or both on each call-out (if you uncheck both, the one it has is used); show a song's source on every call-out rather than only when it differs from the day's default book; <strong>Show time called</strong> (shared with the Simple List); ALL CAPS; <strong>Number of attendees present</strong>, leaders and songs in the summary line; <strong>Roles to include in the closing roster</strong> (All roles, or any individual role); <strong>Cite the page in parentheses</strong> (&ldquo;North Carolina&rdquo; (3b) instead of on page 3b). Per-song book identifiers can be a SingLoud work code, an SHMHA code, or the book's title.</li>
+    <li><strong>Wording &amp; presentation</strong> (narrative minutes): recurring date pattern for annual singings; five opening-paragraph styles (A to E); presiding title; opening and closing prayer credit phrasing. To credit a specific title such as "Elder", type it into the Chaplain name on Roles.</li>
+    <li><strong>No names.</strong> A checkbox for singings whose minutes don't name individual leaders; song attribution is dropped throughout and the wording adjusts.</li>
+    <li><strong>SHMHA Minutes Book</strong> always follows its own fixed format regardless of those options: printed-book songs are identified by page number only, and a title only when there is no page to give (an "Other" source).</li>
+    <li><strong>The Master CSV.</strong> There is one master file per singing, not one per stage. The other formats are one-way publication outputs generated from it; they are not meant to be re-opened and don't replace it.</li>
+    <li><strong>Planned, not yet available:</strong> <span class="planned">Planned</span> additional output profiles (for example Website, Archival Record, Data Exchange), and chapter lists or timestamp markers for a long recording, generated from the order and timing already captured.</li>
+  </ul>
 
-  <h2>Troubleshooting</h2>
-    <h3>Capture won't resume my CSV</h3>
+  <!-- ================= REFERENCE ================= -->
+  <h2 id="reference">Reference</h2>
+  <h3>SHMHA Guide</h3>
+  <p>The SHMHA Guide in the sidebar's Reference section holds the Sacred Harp Musical Heritage Association's own instructions for submitting minutes and its abbreviation table. Use it to double-check an SHMHA export and for anything a rules-based export can't judge for you (brevity, verifying spellings).</p>
+  <h3>Two code systems for tunebooks</h3>
+  <ul>
+    <li><strong>SingLoud.org Work Codes</strong> are used internally and in every export except the SHMHA submission.</li>
+    <li><strong>SHMHA abbreviations</strong> are used only in the SHMHA Minutes Book export, translated automatically from the Work Code you assign.</li>
+  </ul>
+  <p>Neither is more "correct"; they are the two published vocabularies the suite outputs today. The Type of output on Export determines which applies.</p>
+  <h3>How tunebooks are recorded</h3>
+  <p>Not every tunebook is known in the same depth. Books sit at one of four cumulative levels; the level is roughly how many things we know.</p>
+  <ul>
+    <li><strong>Level 0 &mdash; Other.</strong> Just a name typed in passing. It appears in the CSV as the book value <code>Other</code>, and its songs are identified by title.</li>
+    <li><strong>Level 1 &mdash; Basic record.</strong> The title plus whatever scant details are on hand. The name is recognized, but song titles can't be looked up by page.</li>
+    <li><strong>Level 2 &mdash; Indexed.</strong> A complete page-by-page song index. This lets Capture suggest a title as soon as you type a page number, and lets Compile catch a page that doesn't exist in the book. Most books the suite ships with are here.</li>
+    <li><strong>Level 3 &mdash; Enriched.</strong> A dedicated file per edition holding, or building toward, the full scholarly record: attribution, concordances, editorial and publication history, bibliography. Level only means the file exists, not that it is finished.</li>
+  </ul>
+  <p>All of this lives in one file, <code>tunebook-library.js</code>, published by the Tunebook Registry. Secretary reads tunebook data but never changes it. Only <strong>Bibliographer</strong>, a separate application, edits it; nothing in Secretary depends on having it open.</p>
+
+  <!-- ================= TROUBLESHOOTING ================= -->
+  <h2 id="troubleshooting">Troubleshooting</h2>
+  <h3>Capture won't resume my CSV</h3>
   <p>Capture is strict when resuming a file: the column headers and schema version have to match exactly, since it's designed to resume an in-progress session precisely. A file edited in a spreadsheet program can sometimes reorder or rename columns; download it again from Capture if possible.</p>
   <h3>A file won't import into Compile, or imports with almost nothing recognized</h3>
   <p>Compile is much more tolerant than Capture — it matches columns by name, recognizes several alternate column names, and will still import a file with only some recognizable columns, flagging what it found. If a file truly imports with nothing usable, check that it has at least a Leader/Caller, Page, or Notes column under some name Compile recognizes.</p>
@@ -268,21 +373,17 @@
   <p>The Capture stage will show a clear warning rather than silently failing to save. Download or copy your minutes right away if you see this, since local autosave isn't working on this device/browser combination.</p>
   <h3>Preview doesn't match what I expected</h3>
   <p>Check which Type of output is selected on the Export stage (Minutes Maker, Simple List, or SHMHA Minutes Book) — they apply different style rules. Also check the Song List tab for a row that's still flagged (missing page, unresolved tag, or similar), since an unresolved row can print differently than a finished one.</p>
-  <h3>DOCX export isn't available</h3>
-  <p>Correct — it's been removed while it's rebuilt against the current data model. Use plain text, Markdown, or HTML and paste into Word in the meantime.</p>
-  <h3>The instructional video won't load</h3>
-  <p>It requires an internet connection once embedded. The written instructions on this page cover the same material and work offline.</p>
   <h3>Opening a singing in Setup doesn't seem to reach Secretary or Compile</h3>
   <p>It should — visiting either stage for the first time after opening or creating a singing hands that singing to the stage automatically, using the same real import logic a manual file load would. If a stage still looks empty after visiting it, that's worth reporting rather than assuming it's expected; it's not.</p>
   <h3>I opened Compile without a Capture CSV</h3>
   <p>That's fine — you can add songs by hand on the Song List tab. Importing a Capture file is the normal path, not a requirement.</p>
 
   <h2>Version and Schema Information</h2>
-  <p id="versionInfoText">SingLoud.org Shape-Note Secretary · Version 1.0.2 · Schema 5</p>
+  <p id="versionInfoText">SingLoud.org Shape-Note Secretary · Version 1.0.3 · Schema 5</p>
   <p style="font-size:13px;color:var(--muted);">Capture and Compile share the same CSV schema, marked with a Schema Version in every export, so either app can flag a mismatch clearly rather than failing silently.</p>
 
   <footer class="suite-footer">
-    <span id="footerVersionText">SingLoud.org Shape-Note Secretary · Version 1.0.2 · Schema 5</span>
+    <span id="footerVersionText">SingLoud.org Shape-Note Secretary · Version 1.0.3 · Schema 5</span>
     <span aria-hidden="true">·</span>
     <a href="index.html">Home</a>
   </footer>

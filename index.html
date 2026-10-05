@@ -7782,9 +7782,29 @@
           // Closing row had no name on file at all - same "the leader" fallback used
           // everywhere else since v151 standardized it.
           var closingLabel = " as the closing song" + (cpages.length > 1 ? "s" : "") + ".";
+          // One statement for the whole closing: each consecutive run of the same leader is
+          // named once with the office they hold, if any ("The Chair, Pat Chair, led ...").
+          var closingSegs = [];
+          crun.forEach(function(r, ci){
+            var ln = effectiveLeader(r) || "";
+            var last = closingSegs[closingSegs.length - 1];
+            if(last && last.leader === ln) last.pages.push(cpages[ci]);
+            else closingSegs.push({ leader: ln, pages: [cpages[ci]] });
+          });
+          function closingWho(ln, first){
+            if(!ln) return first ? "The leader" : "the leader";
+            return splitCoLeaders(ln).map(function(nm, ni){
+              var title = roleTitleOf(nm, roles);
+              if(!title) return nm;
+              return ((first && ni === 0) ? "The " : "the ") + title + ", " + nm;
+            }).map(function(txt, ni, arr){ return /,\s/.test(txt) && ni === arr.length - 1 ? txt + "," : txt; }).join(" and ");
+          }
+          var closingStmt = closingSegs.map(function(sg, si){
+            return closingWho(sg.leader, si === 0) + " led " + sg.pages.join(", ");
+          });
           var cbits = [ meta.mmNoNames
             ? (joinQuotedPages(cpages) + (cpages.length > 1 ? " were sung" : " was sung") + closingLabel)
-            : ((leaderNames.length ? joinAnd(leaderNames) : "The leader") + " led " + cpages.join(", ") + closingLabel) ];
+            : (joinAnd(closingStmt) + closingLabel) ];
           var closingPrayerAlreadyCredited = crun.some(function(r){ return noteCreditsOtherPrayerLeader(r.notes, closingChaplain); });
           if(closingChaplain && !closingPrayerAlreadyCredited) cbits.push(closingPrayerSentence(meta.closingPrayerStyle, closingChaplain));
           if(dayIdx === dayGroups.length - 1) cbits.push("The class was dismissed.");
