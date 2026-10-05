@@ -126,13 +126,14 @@
   <h2>Quick Start</h2>
   <div class="quick-start">
     <ol>
-      <li>Open <a href="index.html">Secretary</a> — one application, four stages, shown as numbered steps down the left.</li>
+      <li>Open <a href="index.html">Secretary</a> — one application, five stages, shown as numbered steps down the left.</li>
       <li><strong>1 Setup:</strong> find an existing singing (grouped by series, if it's a recurring one) or start a new one.</li>
       <li><strong>2 Capture:</strong> record the songs and officers live, during the singing.</li>
       <li><strong>3 Compile:</strong> after the singing, review what was logged and fill in anything that shouldn't burden someone logging live.</li>
-      <li><strong>4 Export:</strong> preview and download the finished result.</li>
+      <li><strong>4 Report:</strong> the attendance statement, in large type, to read aloud.</li>
+      <li><strong>5 Export:</strong> preview and download the finished result.</li>
     </ol>
-    <p style="margin:10px 0 0;font-size:13px;color:var(--muted);">The same singing carries across all four stages automatically — nothing needs to be downloaded and re-imported by hand between them. Each stage still has a working save/download of its own for backups.</p>
+    <p style="margin:10px 0 0;font-size:13px;color:var(--muted);">The same singing carries across all five stages automatically — nothing needs to be downloaded and re-imported by hand between them. Each stage still has a working save/download of its own for backups.</p>
   </div>
 
   <h2>Setup: Finding or Starting a Singing</h2>
@@ -140,7 +141,7 @@
     <li>Setup is the home screen. If your singing is part of a recurring series, previous occurrences appear grouped together — expand a series to see its dated occurrences, or use <strong>New Singing in This Series</strong> to start the next one, which carries the venue and Series Code forward but starts fresh on date, officers, and the song list. The same continuation is also available from inside any currently-open singing itself, as <strong>New Singing Based on This One</strong> — useful when you opened a singing directly (an individual file, say) rather than by browsing a series list.</li>
     <li>A <strong>Series Code</strong> links occurrences of the same recurring singing together. Click <strong>Generate</strong> to get one — a short, readable, human-invented code becomes a real collision risk once many singings are compiled over the years, so the generated code is deliberately not a readable word. The field stays editable too, for the real case of matching a code someone else already started a series with; typing your own is just not the encouraged path for starting a new one.</li>
     <li>Series grouping needs a Chromium-based browser (Chrome, Edge, Opera) to browse a local folder; Firefox and Safari don't support that yet. Click <strong>Open Singing</strong>, then <strong>Choose a Singing File</strong> to open a single file directly instead \u2014 that works everywhere, in every browser, regardless.</li>
-    <li>Once a singing is open, its name, date, and status stay visible at the top of the screen no matter which of the four stages you're in.</li>
+    <li>Once a singing is open, its name, date, and status stay visible at the top of the screen no matter which of the five stages you're in.</li>
   </ul>
 
   <h2>Preparing Before the Event</h2>
@@ -191,7 +192,7 @@
     <li>The same singing carries into Compile automatically — visiting the Compile stage for the first time after recording picks up what was just logged, with no file to choose.</li>
     <li>Compile checks the file's schema version. An unfamiliar-but-not-newer version is flagged clearly so you know to double-check the result, but the import still proceeds. A version genuinely newer than what this build understands is treated differently — that one's a real data-loss risk (re-exporting could silently drop whatever the newer schema added), so it blocks the import outright rather than just noting it, with a message pointing you to a version of Compile that actually supports it.</li>
     <li>Event Details, Roles, and the Song List all auto-fill from what was recorded. The import message lists exactly what got filled in, so it's easy to spot-check.</li>
-    <li>Working from a file that didn't come through Setup — someone emailed you a CSV, say? Compile's own Import tab still takes a file directly, the same as it always has.</li>
+    <li>Working from a file that didn't come through Setup — someone emailed you a CSV, say? go back to Setup and use <strong>Open Singing</strong> to load it; Setup is the one place a Singing Record is opened, and it carries through to Compile automatically.</li>
   </ul>
 
   <h2>Reviewing and Correcting</h2>
@@ -202,6 +203,16 @@
     <li>Fill in anything that shouldn't burden someone logging live: the full memorial lesson write-up, business-session details, secretary's report, and similar long-form content belong on the Names &amp; Lists and Business tabs.</li>
     <li>Resolve any row flagged for a missing name or page, an unrecognized tunebook code, or a likely duplicate leader spelling (the Song List tab clusters similar spellings and lets you merge them to one canonical form).</li>
     <li>Where possible, clear flagged items before exporting a final version — a proofing pass now is easier than a correction after publication.</li>
+  </ul>
+
+  <h2>Attendees and Report</h2>
+  <ul>
+    <li><strong>Attendees</strong> (Compile, between Event Details and Roles) lists every name entered anywhere — leaders, officers, and anyone you add — once each. Fix a spelling or merge two spellings of one person and the correction carries through the whole record. Search for a name; if nobody matches, <strong>Add attendee</strong> adds one. Filter the list by <strong>All attendees</strong>, people with or without contact info, or people who have not led a song (one filter at a time).</li>
+    <li>Each attendee can have a <strong>location</strong> and these marks: visitor / first-time singer, from out of town (with the location), visitor / VIP who was not a singer, donor / contributor who was not a singer, and thanked. The marks fill the Recognitions lists, which are display-only; edit them here. Sick and deceased are not attendees and stay freeform on the Memorials page.</li>
+    <li><strong>Roles</strong> can hold several names each (Treasurer(s), Chaplain(s), and so on), with suggestions drawn from the master list after a comma, "and" or "&amp;". "Load last time's file" carries forward only people who attended that singing (led, held an office, or were marked visitor, VIP, out of town, present or added by hand). They appear on Attendees in <strong>gray</strong>, uncounted, and still suggest in name boxes. Tick <strong>Present</strong> for anyone who came this year; anyone you log (a song, a role, a visitor mark) counts automatically. The Present box also lets you count a donor who actually came.</li>
+    <li><strong>Report</strong> (stage 4) is read-only, in large type, for reading aloud: "The 9th Annual Maryland All-Day Singing consisted of 62 total attendees, with 38 singers leading a total of 112 songs." Attendees counted are people named in this singing, plus visitors, VIPs and out-of-town guests. People known only as a donor or as thanked, saved contacts with no entry in this singing, and carried-over names are listed on Attendees but not counted.</li>
+    <li><strong>Contact details are private.</strong> Phone numbers, emails and notes are stored inside the singing's master CSV. Export offers a version without contact details, Attendees can download a mailing list, and Capture warns and offers the redacted export whenever the record carries contacts. Share the "without contact details" file, not the master.</li>
+    <li>Under Export &rarr; Minutes Maker, <strong>Roles to include in the closing roster</strong> chooses whose names close the minutes (All roles, or any individual role), and <strong>Cite the page in parentheses</strong> switches song citations from &ldquo;North Carolina&rdquo; on page 3b to &ldquo;North Carolina&rdquo; (3b).</li>
   </ul>
 
   <h2>Terminology and Abbreviation Systems</h2>
@@ -227,7 +238,7 @@
   <p>The Export stage's preview represents the finished document as it stands right now. Any change you make — a correction on the Song List tab, a session's officer override, a different Type of output, a Minutes Maker checkbox, an opening-paragraph or prayer-phrasing choice — updates it immediately, so what you see is always current.</p>
 
   <h2>Exporting</h2>
-  <p>The <strong>4 Export</strong> stage currently exports these formats:</p>
+  <p>The <strong>5 Export</strong> stage currently exports these formats:</p>
   <table>
     <tr><th>Format</th><th>Typical use</th></tr>
     <tr><td>Plain text</td><td>Quick copy into an email or document</td></tr>
@@ -238,17 +249,16 @@
     <tr><td>SHMHA Minutes Book</td><td>Matches the Sacred Harp Musical Heritage Association's printed submission format exactly</td></tr>
     <tr><td>Simple List</td><td>Terse, events-only list (officers, then each song's leader/page/source) for checking names and details, not publication</td></tr>
   </table>
-  <p>A Word (.docx) export previously existed but has been removed while its generator is rebuilt against the current data model — use plain text, Markdown, or HTML and paste into Word in the meantime.</p>
+  <p>Word (.docx) is not an export format: export plain text, Markdown, or HTML and paste into Word.</p>
   <p><strong>Output profiles</strong> <span class="planned">Partially implemented</span> — the Export stage has a "Type of output" choice (Minutes Maker, Simple List, or SHMHA Minutes Book) that determines which wording options apply and which export formats make sense, separately from which file format delivers it. The fuller original vision — additional named profiles beyond these three, such as Website, Archival Record, or Data Exchange, each with its own structural rules — is still just an idea.</p>
   <p><strong>MP3 Chapters and Video Markers</strong> <span class="planned">Planned</span> — a future version may use the order and timing already captured to generate chapter lists for a long recording, YouTube-style timestamp markers, or editing cue sheets. Not available yet.</p>
   <p>There is one master project file for a singing, not a separate file per stage. Recording it creates the initial Master CSV; Compile enriching it — corrections, business notes, session overrides, and everything else on Compile's tabs — produces an updated Master CSV that supersedes the one before it. That newest Master CSV is the current authoritative record. The other formats in the table above (plain text, Markdown, HTML, PDF, the SHMHA submission) are one-way publication outputs generated *from* the Master CSV — they're not meant to be re-opened or resumed, and none of them replace it.</p>
 
   <h2>Troubleshooting</h2>
-  <p style="font-size:13px;color:var(--muted);margin:0 0 14px;">These entries mention "Capture" and "Compile" by name since those are the underlying tools that make up Secretary's Capture and Compile stages.</p>
-  <h3>Capture won't re-load my own CSV</h3>
-  <p>Capture's own re-import is strict: the column headers and schema version have to match exactly, since it's designed to resume an in-progress session precisely. A file edited in a spreadsheet program can sometimes reorder or rename columns; re-export from Capture if possible.</p>
+    <h3>Capture won't resume my CSV</h3>
+  <p>Capture is strict when resuming a file: the column headers and schema version have to match exactly, since it's designed to resume an in-progress session precisely. A file edited in a spreadsheet program can sometimes reorder or rename columns; download it again from Capture if possible.</p>
   <h3>A file won't import into Compile, or imports with almost nothing recognized</h3>
-  <p>Compile is much more tolerant than Capture — it matches columns by name, recognizes several older/alternate column names, and will still import a file with only some recognizable columns, flagging what it found. If a file truly imports with nothing usable, check that it has at least a Leader/Caller, Page, or Notes column under some name Compile recognizes.</p>
+  <p>Compile is much more tolerant than Capture — it matches columns by name, recognizes several alternate column names, and will still import a file with only some recognizable columns, flagging what it found. If a file truly imports with nothing usable, check that it has at least a Leader/Caller, Page, or Notes column under some name Compile recognizes.</p>
   <h3>"Old schema" or version-mismatch message</h3>
   <p>This behaves differently in each app, and Compile itself behaves differently depending on the specific mismatch. Capture blocks importing a file from a different schema version outright, since it's designed to resume a session exactly. Compile is more tolerant of an unfamiliar-but-older or otherwise-unrecognized version: it flags the mismatch and asks you to double-check the result more carefully than usual, but the import still proceeds. A file reporting a schema version genuinely <em>newer</em> than what the current build of Compile understands is the one case Compile also blocks outright, rather than just flagging — re-exporting an unfamiliar newer schema through this build's own current-schema header could silently discard whatever that newer schema added, which is a real data-loss risk, not just an unfamiliar label. Open a file like that in a version of Compile that actually supports its schema version instead.</p>
   <h3>Missing or unknown tunebook code</h3>
@@ -267,11 +277,11 @@
   <p>That's fine — you can add songs by hand on the Song List tab. Importing a Capture file is the normal path, not a requirement.</p>
 
   <h2>Version and Schema Information</h2>
-  <p id="versionInfoText">SingLoud.org Shape-Note Secretary · Version 1.0.0-beta.116 · Schema 5</p>
+  <p id="versionInfoText">SingLoud.org Shape-Note Secretary · Version 1.0.0 · Schema 5</p>
   <p style="font-size:13px;color:var(--muted);">Capture and Compile share the same CSV schema, marked with a Schema Version in every export, so either app can flag a mismatch clearly rather than failing silently.</p>
 
   <footer class="suite-footer">
-    <span id="footerVersionText">SingLoud.org Shape-Note Secretary · Version 1.0.0-beta.116 · Schema 5</span>
+    <span id="footerVersionText">SingLoud.org Shape-Note Secretary · Version 1.0.0 · Schema 5</span>
     <span aria-hidden="true">·</span>
     <a href="index.html">Home</a>
   </footer>

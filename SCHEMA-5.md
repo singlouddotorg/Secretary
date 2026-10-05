@@ -136,8 +136,27 @@ Fields currently defined:
 - Publication booleans (`true`/`false`): `meta.mmSongNumber`, `meta.mmSongTitle`,
   `meta.mmAllSources`, `meta.mmSingers`, `meta.mmLeaders`, `meta.mmSongs`,
   `meta.mmSongIndex`, `meta.mmTitleCaps`, `meta.mmStateDefaultBook`, `meta.mmNoNames`
+- More Minutes Maker settings: `meta.mmBookCodeStyle` (`singloud` — the default, written only
+  when different — `shmha`, or `titleProper`), `meta.mmSHEdition` (`true`),
+  `meta.mmShowTimeCalled` (`true`), and `meta.mmCiteParen` (`true` cites a page as
+  `"Title" (3b)` instead of `"Title" on page 3b`).
+- Closing-roster roles: `meta.mmRoleAll` (`true` = every role on the Roles page) and
+  `meta.mmRoles` (a comma-separated list of role keys from `chair`, `vicechair`, `secretary`,
+  `treasurer`, `committee`, `chaplain`, `pitcher`, `localhost`; `-` means none). Absent means
+  the default, `chair,vicechair,secretary`.
+- Simple List settings (`true`/`false`): `meta.slBookTitleProper`, `meta.slSingLoudCode`,
+  `meta.slSHMHACode`, `meta.slTunebookList`, `meta.slShowOfficers`.
 - `roles.pitcher`, `roles.localhost`, `roles.chairTitle`, `roles.vicechairTitle`,
   `roles.secretaryTitle`
+- `singer.{key}.{field}` — one row per stored fact about a person on Compile's **Attendees**
+  page. `{key}` is the person's corrected name lower-cased with everything but letters and
+  digits removed (Latin accents stripped), so it contains no dot. Fields: `name` (the display
+  spelling), `location`, `added` (`true` = entered by hand), `present` (`true` = explicitly
+  ticked as having attended; counts a carried-over name or a donor who came), the marks `visitor`, `outoftown`,
+  `vip`, `donor`, `thanked` (each `true`), and the **private contact fields `phone`, `email`
+  and `notes`.** The mark rows regenerate the Recognitions lists (Visitors, Out of town,
+  Donors, Thanked); those lists are display-only in the application. Sick and deceased are
+  not attendees and stay in `lists.*`.
 - `business.*` and `lists.*` — the compiled narrative's own content
 - `nameMap.{normalized name}` — a leader-name correction, kept independently of whether any
   surviving row still uses that name
@@ -152,6 +171,16 @@ publication preference, never a claim that names weren't collected. Two rules fo
    deliberate choice to publish "the leader" prose anyway. An importer that infers this
    setting from the data must not overrule an explicit value in the file.
 2. It changes wording only. It never removes names from the columns above.
+
+### Contact details are personal data
+
+`singer.{key}.phone`, `singer.{key}.email` and `singer.{key}.notes` are private. Every
+application that writes or re-exports a record must keep them in the record it round-trips
+(so nothing is lost), but must not present such a file as ordinary shareable minutes data:
+Secretary warns where a file may carry them and offers an export without those three fields
+(names, marks and locations stay). A reader that does not understand `singer.*` rows must pass
+them through unchanged like any other unrecognized metadata, which also means it passes the
+contact details through; treat such a file as private.
 
 ### Unrecognized metadata is passed through
 

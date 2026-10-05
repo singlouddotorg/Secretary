@@ -16,7 +16,7 @@
 // whole promise is that you double-click a file and it works.
 (function(global){
   "use strict";
-  var MINUTES_VERSION = "1.0.0-beta.116"; // 2026-10-04: new Singers page and Report page in Compile (every name entered, rename/merge, phone+email, mailing-list download; contacts stored as singer.* metadata rows). Earlier, 2026-10-03: 2026-10-03: Leader(s) autofill now restarts after a comma, "and", or "&" (multi-leader entries). Earlier, 2026-09-17: renamed Minutes to Secretary (display name only,
+  var MINUTES_VERSION = "1.0.0";
   // per the suite-wide rebrand - repo moved to singlouddotorg/Secretary; the working-tree
   // file minutes.html, this variable name, and the EZMinutesVersion global are unchanged,
   // since Simple Minutes/Simple Compile still read this file as a cross-app contract.

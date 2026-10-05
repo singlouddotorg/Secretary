@@ -131,7 +131,7 @@ describe('Schema-5 multi-session integrity', () => {
     const { win, doc } = await buildTwoSessionSinging(dom);
 
     const wrapperVersion = win.eval('window.__ezMinutesWrapperVersion');
-    assert.ok(wrapperVersion && /^1\.0\.0-beta\.\d+$/.test(wrapperVersion), 'Wrapper should expose its own real version as a global');
+    assert.ok(wrapperVersion && /^\d+\.\d+\.\d+(-[A-Za-z0-9.]+)?$/.test(wrapperVersion), 'Wrapper should expose its own real version as a global');
 
     let capturedText = null;
     win.URL.createObjectURL = function () { return 'blob:test'; };

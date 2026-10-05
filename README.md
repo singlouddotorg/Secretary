@@ -7,21 +7,19 @@ Built for the Sacred Harp / shape-note singing community, but usable for any eve
 ## Part of the Sing Loud Suite
 
 Secretary is one of six apps, each in its own repository. Secretary and Bibliographer are the two
-full-featured, editing-capable apps in the suite — functioning and robust in daily use, but
-not yet called "release ready" the way the others are, simply because there's much more
-surface area to a full editor than to a single-purpose tool.
+full-featured, editing-capable apps in the suite; the others are small single-purpose tools.
 
 | App | What it does | Status |
 |---|---|---|
-| **Secretary** (here) | Log a singing as it happens, then turn that log into publishable minutes. | Beta |
+| **Secretary** (here) | Log a singing as it happens, then turn that log into publishable minutes. | 1.0 release |
 | [**Bibliographer**](https://github.com/singlouddotorg/Bibliographer) | Curate the shared tunebook data — editions, page indexes, Level 3 scholarly files. Most people recording a singing never need it. | Beta |
 | [**Capture**](https://github.com/singlouddotorg/Simple-Minutes) | A phone-sized logger: page numbers only, no names. Its files import straight into Secretary. | 1.0 release |
 | [**Compile**](https://github.com/singlouddotorg/Simple-Compile) | A one-page, no-editing version of Secretary: open a CSV, get readable minutes back. | 1.0 release |
-| [**Singing Ledger**](https://github.com/singlouddotorg/Ledger) | Combines many finished singings into one master record and set of totals. | New (0.1) |
+| [**Singing Ledger**](https://github.com/singlouddotorg/Ledger) | Combines many finished singings into one master record and set of totals. | 0.1 |
 | [**Tunebook Registry**](https://github.com/singlouddotorg/Tunebook-Registry) | The published tunebook data the others read. | 1.0 release |
 
-Secretary covers the whole life of a singing in four stages — Setup, Capture (recording live),
-Compile (review and enrichment), and Export — shown as numbered steps down the left, with
+Secretary covers the whole life of a singing in five stages — Setup, Capture (recording live),
+Compile (review and enrichment), Report (the attendance statement to read aloud), and Export — shown as numbered steps down the left, with
 the same singing carrying automatically from one stage to the next.
 
 | File | What it's for |
@@ -31,7 +29,6 @@ the same singing carrying automatically from one stage to the next.
 | `minutes-version.js` | This app's version number, read by both pages above so they can't disagree. |
 | `shared-utils.js` | Utilities shared with Bibliographer (CSV parsing, page sorting, title building). |
 | `tunebook-library.js` | Tunebook data — every Work and Edition, with full page/title indexes. **Required**; the app shows a visible error if it is missing or moved out of the folder. Published by the Tunebook Registry. |
-| `tunebook-files/` | Level 3 scholarly data for the books that have it. |
 | `samples/` | 15 real historical Singing Records, as worked examples and test fixtures. |
 | `SCHEMA-5.md` | The Singing Record file format, which this repository owns. |
 
@@ -57,7 +54,7 @@ See `instructions.html` for the full walkthrough.
 - **Markers** for Recess, Lunch, and Announcements, plus a distinct **Start New Session** action for a new day, changed location, or otherwise distinct segment of the same event — it opens its own dedicated Date and Location fields (and, if this session's officers genuinely differ, an "Officers different for this session?" section you can expand), pre-filled from what's currently in effect so leaving them untouched simply carries everything forward, then writes a real session record rather than a plain marker. This stays inside the same singing; it's not the same as starting a whole new one. Deleting a session boundary that still has songs or markers attached asks explicitly what to do with them — delete the session and everything in it together, or merge it away and fold its entries into the previous session — rather than removing just the boundary and leaving its entries silently orphaned.
 - **Tags** for Call Back, Memorial, and Special songs.
 - **Everything stays in your browser.** No account, no server, no data leaving your device. Entries persist automatically as you go, with an optional periodic backup download (off by default) and a one-click Download CSV / Copy at any time.
-- **The same singing carries across all four stages automatically** — recording live, then moving to Compile to review, needs no manual export/import step; visiting a stage for the first time after a change hands it the current data directly.
+- **The same singing carries across all five stages automatically** — recording live, then moving to Compile to review, needs no manual export/import step; visiting a stage for the first time after a change hands it the current data directly.
 
 ## Using the app at a singing
 
@@ -65,10 +62,10 @@ See `instructions.html` for the full walkthrough.
 2. Fill in **Event**, **Date**, **Location**, and (optionally) **Officers & Roles**.
 3. Move to **Capture** (Stage 2). For each song: type the **Leader**, then the **Page** (e.g. `123`, `45t`, `45b` for top/bottom pages), and hit Enter.
 4. Use **Recess / Lunch / Announcements** to mark breaks, **Start New Session** for a new day or a change of venue, and tag a song as **Call Back / Memorial / Special** if it applies.
-5. Move to **Compile** (Stage 3) after the singing to review and enrich what was logged, then **Export** (Stage 4) to preview and download the finished result.
+5. Move to **Compile** (Stage 3) after the singing to review and enrich what was logged, then **Report** (Stage 4) for the attendance statement and **Export** (Stage 5) to preview and download the finished result. If you type a number in Event Details > "Number present or total registered", the Report and Minutes Maker show it instead of the generated Attendees count; leave it blank to use the generated count. Capture shows a reminder when a Recess is logged to enter any attendees who haven't led.
 6. Download the CSV (or copy it) whenever you like — it's safe to do this mid-singing, and again at the end.
 
-`samples/` contains a growing set of historical Singing Records — 15 as of this release, including these four representative examples: a single-session convention (James River), a two-day convention demonstrating Start New Session, Singing School, and Business Meeting markers (Western Massachusetts, 1999), a full 3-day, 247-entry convention transcription (National Sacred Harp Convention, 2000), and a single-session singing where the non-default tunebook (American Christmas Harp) is used far more than the primary Sacred Harp book, testing default-book detection under a reversed-majority split (Christmas Harp Singing, 2018). The rest are real, multi-year runs of two recurring singing series (the B.F. White Sacred Harp Singing Convention, 2017–2024, and the Christmas Harp Singing, 2013–2019), each year linked to the last via Series Code and Previous Event ID.
+`samples/` contains a growing set of historical Singing Records — including these four representative examples: a single-session convention (James River), a two-day convention demonstrating Start New Session, Singing School, and Business Meeting markers (Western Massachusetts, 1999), a full 3-day, 247-entry convention transcription (National Sacred Harp Convention, 2000), and a single-session singing where the non-default tunebook (American Christmas Harp) is used far more than the primary Sacred Harp book, testing default-book detection under a reversed-majority split (Christmas Harp Singing, 2018). The rest are real, multi-year runs of two recurring singing series (the B.F. White Sacred Harp Singing Convention, 2017–2024, and the Christmas Harp Singing, 2013–2019), each year linked to the last via Series Code and Previous Event ID.
 
 ## The CSV format
 
@@ -107,7 +104,7 @@ A file can be loaded back into the app to resume, correct entries, or merge onto
 
 ## One master file, not several project formats
 
-**One singing, opened once.** Setup is the only place a Singing Record is opened or imported, and what it opens becomes the singing every stage is working on. Capture and Compile each used to carry their own Import control left over from when they were separate applications; a file opened through one of those loaded into that stage alone, so Capture could show a full log of 87 entries while Setup and Compile had no idea the singing existed. Those controls are gone. The stages still hand the record to each other automatically as you move between them — that is internal synchronization of the singing already open, not a second way to open a different one.
+**One singing, opened once.** Setup is the only place a Singing Record is opened or imported, and what it opens is the singing every stage works on. The stages hand the record to each other automatically as you move between them, so there is no import step in Capture or Compile.
 
 There is one authoritative Master CSV per singing — not a separate "Capture file" and "Compile file." Capture creates the initial Master CSV; moving to Compile and enriching it (corrections, business notes, session overrides, and everything else on Compile's tabs) produces an updated Master CSV that supersedes the one before it. The newest Master CSV is always the current authoritative record. Earlier copies are fine to keep as backups, but they aren't the "real" file once a newer one exists.
 
