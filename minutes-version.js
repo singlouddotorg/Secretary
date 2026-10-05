@@ -16,7 +16,7 @@
 // whole promise is that you double-click a file and it works.
 (function(global){
   "use strict";
-  var MINUTES_VERSION = "1.0.0";
+  var MINUTES_VERSION = "1.0.1";
   // per the suite-wide rebrand - repo moved to singlouddotorg/Secretary; the working-tree
   // file minutes.html, this variable name, and the EZMinutesVersion global are unchanged,
   // since Simple Minutes/Simple Compile still read this file as a cross-app contract.

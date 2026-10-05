@@ -316,6 +316,9 @@
   .singers-add{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:0 0 12px; padding:10px 12px; border:1px dashed var(--ink-faint); border-radius:6px; }
   .report-statement{ font-size:26px; line-height:1.55; max-width:760px; margin:18px 0 20px; font-family:Georgia, "Times New Roman", serif; color:var(--ink); }
   .report-statement .report-num{ font-weight:700; }
+  .substage-btn[hidden], #businessLegacyWrap[hidden], .report-label[hidden]{ display:none; }
+  .report-label{ font-family:var(--sans); font-size:13px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); margin:22px 0 -8px; }
+  #reportSessions .report-statement{ margin-top:6px; }
   @media (max-width:600px){ .report-statement{ font-size:22px; } }
   .tab-btn{
     position:relative;
@@ -1469,8 +1472,8 @@
         <div class="field"><label for="m_location">Location / venue</label><input type="text" id="m_location" placeholder="e.g. St. Giles Presbyterian Church, Richmond, Virginia — or St. Multose Church, Cork, Ireland"></div>
         <div class="field"><label for="m_host">Host institution</label><input type="text" id="m_host" placeholder="e.g. Mount Pleasant Baptist Church congregation"></div>
         <div class="field"><label for="m_books">Book(s) used</label><input type="text" id="m_books" placeholder="e.g. The Shenandoah Harmony, 2012, and Other"></div>
-        <div class="field"><label for="m_present">Number present or total registered, if known (the Report and Minutes Maker's "Number of attendees present" show this number when you enter one; when it is blank they use the count from the Attendees page)</label><input type="text" id="m_present" placeholder="e.g. 62">
-          <p id="presentNote" style="margin:8px 0 0;font-size:14px;line-height:1.4;color:var(--oxblood,#7A2E2E);">The Secretary should enter all attendees&rsquo; names on the Attendees page, if possible, whether or not they led a song.</p></div>
+        <div class="field"><label for="m_present">Total attendees (raw number) &mdash; only if you can&rsquo;t enter everyone&rsquo;s name</label><input type="text" id="m_present" placeholder="e.g. 62" aria-describedby="presentNote">
+          <p id="presentNote" style="margin:8px 0 0;font-size:14px;line-height:1.4;color:var(--oxblood,#7A2E2E);">Leave this blank whenever you can. The Secretary should enter every attendee&rsquo;s name on the Attendees page, whether or not they led a song; the Report and Minutes Maker then count them for you. Use this box only when you can&rsquo;t name everyone (for example, you have a head count or registration total but not the names). A number typed here replaces the counted total.</p></div>
       </div>
     </section>
 
@@ -1525,10 +1528,15 @@
     <!-- ================= BUSINESS ================= -->
     <section class="panel" data-panel="business" role="tabpanel" id="panel-business" aria-label="Business">
       <h2 class="panel-title">Business &amp; Announcements</h2>
-      <p class="panel-desc">The parts a chair or secretary would read out, or that need recording for the record.</p>
-      <div class="field"><label for="b_announcements">Announcements</label><textarea id="b_announcements"></textarea></div>
-      <div class="field"><label for="b_motions">Motions or decisions</label><textarea id="b_motions"></textarea></div>
-      <div class="field"><label for="b_reports">Committee &amp; Secretary's Reports</label><textarea id="b_reports" placeholder="Finance, Resolutions, Secretary's attendance report, and similar — printed as-is, in the business section." style="min-height:100px;"></textarea></div>
+      <p class="panel-desc">A focused place to write out longer business and announcement text. Each box below is the Notes of an entry on the Song List (a Business Meeting, or an announcement by an officer), so what you type here prints in the minutes at that point and shows in the Song List. This page appears once a Business Meeting is entered or an officer makes an announcement.</p>
+      <div id="businessEntries"></div>
+      <p class="singers-hint" id="businessEmpty" hidden>No Business Meeting or officer announcement has been entered yet.</p>
+      <fieldset class="group" id="businessLegacyWrap" hidden>
+        <legend>Other business text (printed as written)</legend>
+        <div class="field"><label for="b_announcements">Announcements</label><textarea id="b_announcements"></textarea></div>
+        <div class="field"><label for="b_motions">Motions or decisions</label><textarea id="b_motions"></textarea></div>
+        <div class="field"><label for="b_reports">Committee &amp; Secretary's Reports</label><textarea id="b_reports" style="min-height:100px;"></textarea></div>
+      </fieldset>
       <div class="grid2">
         <div class="field"><label for="b_nextdate">Next singing date &amp; location</label><input type="text" id="b_nextdate" placeholder="e.g. Second Sunday in October, at ..."></div>
         <div class="field"><label for="b_nextchair">Next chair</label><input type="text" id="b_nextchair"></div>
@@ -1592,6 +1600,8 @@
     <section class="panel" data-panel="report" role="tabpanel" id="panel-report" aria-label="Report">
       <h2 class="panel-title">Report</h2>
       <p class="panel-desc">A statement to read aloud. Nothing here is typed in: the numbers are counted from the Attendees page and the songs entered.</p>
+      <div id="reportSessions" aria-live="polite"></div>
+      <h3 class="report-label" id="reportAllLabel" hidden>All sessions</h3>
       <p class="report-statement" id="reportStatement" aria-live="polite"></p>
       <p class="singers-hint" id="reportBasis"></p>
     </section>
@@ -2049,6 +2059,7 @@
     document.getElementById("panel-compile").classList.toggle("wide-songlist", target === "songs");
     if(target === "singers" && typeof window.__ezMinutesRenderSingers === "function") window.__ezMinutesRenderSingers();
     if(target === "report" && typeof window.__ezMinutesRenderReport === "function") window.__ezMinutesRenderReport();
+    if(target === "business" && typeof window.__ezMinutesRenderBusiness === "function") window.__ezMinutesRenderBusiness();
   }
 
   // ---------------- keeping Minutes and Compile in sync with the active singing ----------------
@@ -2093,6 +2104,7 @@
         var which = ap && ap.getAttribute("data-panel");
         if(which === "report" && typeof window.__ezMinutesRenderReport === "function") window.__ezMinutesRenderReport();
         if(which === "singers" && typeof window.__ezMinutesRenderSingers === "function") window.__ezMinutesRenderSingers();
+        if(typeof window.__ezMinutesRenderBusiness === "function") window.__ezMinutesRenderBusiness();
       }
     }
     window.__ezMinutesInternalSync = true;
@@ -4963,6 +4975,72 @@
     }).join("");
   }
 
+  // ---- Business & Announcements: a focused editor over the Song List's own entries ----
+  function businessEntryRows(){
+    return state.songs.filter(function(r){
+      if(!r || r.type !== "marker") return false;
+      var t = String(r.markerType || "").toUpperCase();
+      return t === "BUSINESS MEETING" || t === "ANNOUNCEMENTS";
+    });
+  }
+  function businessLegacyHasText(){
+    var b = state.business || {};
+    return !!((b.announcements || "").trim() || (b.motions || "").trim() || (b.reports || "").trim());
+  }
+  // The page (and its menu item) exists only when there is something to write about: a
+  // Business Meeting, or an announcement made by someone who holds an office.
+  function businessRelevant(){
+    if(businessLegacyHasText()) return true;
+    var nums = announcementNumbers();
+    return businessEntryRows().some(function(r){
+      if(String(r.markerType || "").toUpperCase() === "BUSINESS MEETING") return true;
+      var who = splitCoLeaders(effectiveLeader(r) || "")[0] || "";
+      return !!roleTitleOf(who, state.roles);
+    });
+  }
+  function businessEntryLabel(r, nums){
+    var t = String(r.markerType || "").toUpperCase(), who = effectiveLeader(r) || "";
+    if(t === "BUSINESS MEETING"){
+      return "Business Meeting" + (r.tag ? " \u2014 " + r.tag : "") + (who ? " (" + who + ")" : "");
+    }
+    var info = nums[r.id], title = roleTitleOf(splitCoLeaders(who)[0] || "", state.roles);
+    var num = (info && info.total > 1) ? (" " + info.n + " of " + info.total) : "";
+    return (title ? title + " " : "") + "announcement" + num + (who ? " (" + who + ")" : "");
+  }
+  function renderBusiness(){
+    var host = document.getElementById("businessEntries");
+    if(!host) return;
+    var btn = document.querySelector('.substage-btn[data-panel-target="business"]');
+    var relevant = businessRelevant();
+    if(btn) btn.hidden = !relevant;
+    var rows = businessEntryRows(), nums = announcementNumbers();
+    var legacy = document.getElementById("businessLegacyWrap");
+    if(legacy) legacy.hidden = !businessLegacyHasText();
+    var empty = document.getElementById("businessEmpty");
+    if(empty) empty.hidden = rows.length > 0;
+    // Don't rebuild while one of these boxes has focus (typing rebuilds nothing).
+    if(host.contains(document.activeElement) && host.children.length === rows.length) return;
+    host.innerHTML = "";
+    rows.forEach(function(r){
+      var wrap = document.createElement("div");
+      wrap.className = "field business-entry";
+      var id = "bizEntry_" + r.id;
+      var lab = document.createElement("label");
+      lab.setAttribute("for", id); lab.textContent = businessEntryLabel(r, nums);
+      var ta = document.createElement("textarea");
+      ta.id = id; ta.value = r.notes || ""; ta.style.minHeight = "90px";
+      ta.setAttribute("data-entry-id", r.id);
+      ta.addEventListener("input", function(){ r.notes = ta.value; saveState(); });
+      ta.addEventListener("change", function(){ renderSongs(); renderPreview(); });
+      wrap.appendChild(lab); wrap.appendChild(ta); host.appendChild(wrap);
+    });
+  }
+  window.__ezMinutesRenderBusiness = renderBusiness;
+  function markerNumberSuffix(s){
+    if(!s || s.type !== "marker" || String(s.markerType || "").toUpperCase() !== "ANNOUNCEMENTS") return "";
+    var info = announcementNumbers()[s.id];
+    return (info && info.total > 1) ? (" " + info.n + " of " + info.total) : "";
+  }
   function renderSongs(){
     songBody.innerHTML = "";
     var songs = state.songs.slice().sort(function(a,b){ return a.order - b.order; });
@@ -5129,7 +5207,7 @@
       }).join("");
 
       var bookCell = s.type === "marker"
-        ? '<span style="font-family:var(--mono);font-size:10px;text-transform:uppercase;color:var(--oxblood);">'+esc(s.markerType||"")+'</span>'
+        ? '<span style="font-family:var(--mono);font-size:10px;text-transform:uppercase;color:var(--oxblood);">'+esc(s.markerType||"")+markerNumberSuffix(s)+'</span>'
         : '<select class="mini-input book-in" aria-label="Book for entry '+s.order+'">' + bookOptionsHTML(s.book) + '</select>';
       var pageTitleCell;
       if(s.type === "marker"){
@@ -5232,6 +5310,7 @@
     });
     renderBookSettings();
     renderDayLocations();
+    renderBusiness();
   }
 
   function renumber(){
@@ -5423,21 +5502,46 @@
     }
     return "";
   }
-  function announcementProse(leader, roles){
-    if(!leader) return "Announcements were made.";
+  var ORDINAL_WORDS = ["", "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth"];
+  function ordinalWord(n){
+    if(ORDINAL_WORDS[n]) return ORDINAL_WORDS[n];
+    var v = n % 100, suf = (v >= 11 && v <= 13) ? "th" : ({1:"st",2:"nd",3:"rd"}[n % 10] || "th");
+    return n + suf;
+  }
+  // When the same office-holder (or the same person, when no office is known) makes more than
+  // one announcement in a session, each is numbered: returns { rowId: { n, total, who } }.
+  function announcementNumbers(){
+    var totals = {}, seen = {}, out = {}, rows = [];
+    state.songs.forEach(function(r){
+      if(!r || r.type !== "marker" || String(r.markerType || "").toUpperCase() !== "ANNOUNCEMENTS") return;
+      var who = effectiveLeader(r) || "";
+      var key = (r.sessionId || "") + "|" + (roleTitleOf(splitCoLeaders(who)[0] || "", state.roles) || normKey(who) || "_");
+      totals[key] = (totals[key] || 0) + 1;
+      rows.push({ r:r, key:key, who:who });
+    });
+    rows.forEach(function(x){
+      seen[x.key] = (seen[x.key] || 0) + 1;
+      out[x.r.id] = { n: seen[x.key], total: totals[x.key], who: x.who };
+    });
+    return out;
+  }
+  function announcementProse(leader, roles, num){
+    var ord = (num && num.total > 1) ? ordinalWord(num.n) : "";
+    if(!leader) return ord ? ("The " + ord + " announcement was made.") : "Announcements were made.";
     var people = splitCoLeaders(leader);
     if(people.length === 1){
       var title = roleTitleOf(people[0], roles);
-      return title ? ("The " + title + ", " + leader + ", made an announcement.") : (leader + " made an announcement.");
+      var what = ord ? ("made the " + ord + " announcement.") : "made an announcement.";
+      return title ? ("The " + title + ", " + leader + ", " + what) : (leader + " " + what);
     }
     return leader + " made announcements.";
   }
   // Stored stock sentences are not custom prose: they must not stop a name or role being added.
   function isStockMarkerProse(p){ return /^\s*Announcements were made\.\s*$/i.test(p || ""); }
 
-  function defaultProse(label, leader, roles){
+  function defaultProse(label, leader, roles, num){
     var l = (label||"").toUpperCase();
-    if(l === "ANNOUNCEMENTS") return announcementProse(leader, roles);
+    if(l === "ANNOUNCEMENTS") return announcementProse(leader, roles, num);
     if(l === "SINGING SCHOOL") return leader ? ("A singing school was taught by " + leader + ".") : "A singing school was held.";
     if(l === "PRAYER") return leader ? (leader + " led the class in prayer.") : "The class was led in prayer.";
     return ""; // RECESS / LUNCH print as bare markers unless you add prose here;
@@ -6077,30 +6181,83 @@
     if(!/annual/i.test(ord)) ord += " annual";
     return "The " + titleCaseWords(ord) + " " + name.replace(/^the\s+/i, "");
   }
+  // Distinct sessions in entry order: [{id, label, rows}]. Name suggestions are not entries.
+  function reportSessions(){
+    var order = [], byId = {};
+    state.songs.forEach(function(s){
+      if(!s || s.type === "metadata" || s.type === "unknown" || s.type === "namesuggestion") return;
+      var id = s.sessionId || "";
+      if(!byId[id]){ byId[id] = { id:id, label:(s.day || s.sessionLabel || "").trim(), rows:[] }; order.push(byId[id]); }
+      byId[id].rows.push(s);
+    });
+    order.forEach(function(g, n){ if(!g.label) g.label = "Session " + (n + 1); });
+    return order;
+  }
+  // Counts for one session: people named in its entries or holding an office that session.
+  function sessionTotals(g){
+    var names = {}, leaders = {}, songs = 0;
+    function add(raw, isLeader){
+      raw = String(raw || "").trim(); if(!raw) return;
+      var k = singerKey(singerCanonicalOf(raw)); if(!k) return;
+      names[k] = true; if(isLeader) leaders[k] = true;
+    }
+    g.rows.forEach(function(s){
+      var isSong = s.type === "song"; if(isSong) songs++;
+      var who = s.canonicalLeaderOverride ? s.canonicalLeaderOverride : s.leader;
+      splitCoLeaders(who).forEach(function(n){ add(n, isSong); });
+    });
+    var off = ((state.meta && state.meta.dayLocations && state.meta.dayLocations[g.id]) || {}).officers || {};
+    SINGER_ROLE_FIELDS.forEach(function(r){
+      splitCoLeaders(off[r[0]] || state.roles[r[0]]).forEach(function(n){ add(n, false); });
+    });
+    return { attendees:Object.keys(names).length, leaders:Object.keys(leaders).length, songs:songs };
+  }
+  function reportStatementHTML(subject, attendees, leaders, songs){
+    function num(n){ return '<span class="report-num">' + n + '</span>'; }
+    var html = esc(subject) + " consisted of " + num(attendees) + " total attendee" + (attendees === 1 ? "" : "s");
+    if(leaders && songs){
+      html += ", with " + num(leaders) + " singer" + (leaders === 1 ? "" : "s") + " leading a total of " + num(songs) + " song" + (songs === 1 ? "" : "s") + ".";
+    } else if(songs){
+      html += ", with a total of " + num(songs) + " song" + (songs === 1 ? "" : "s") + " sung.";
+    } else {
+      html += ".";
+    }
+    return html;
+  }
   function renderReport(){
     var host = document.getElementById("reportStatement");
     var basis = document.getElementById("reportBasis");
+    var sessHost = document.getElementById("reportSessions");
+    var allLabel = document.getElementById("reportAllLabel");
     if(!host) return;
     var t = singerTotals();
-    function num(n){ return '<span class="report-num">' + n + '</span>'; }
-    function pl(n, w){ return n + " " + w + (n === 1 ? "" : "s"); }
+    if(sessHost) sessHost.innerHTML = "";
+    if(allLabel) allLabel.hidden = true;
     if(!t.shown && !t.songs){
       host.textContent = "No names or songs have been entered yet.";
       basis.textContent = "";
       return;
     }
-    var html = esc(reportSingingName()) + " consisted of " + num(t.shown) + " total attendee" + (t.shown === 1 ? "" : "s");
-    if(t.leaders && t.songs){
-      html += ", with " + num(t.leaders) + " singer" + (t.leaders === 1 ? "" : "s") + " leading a total of " + num(t.songs) + " song" + (t.songs === 1 ? "" : "s") + ".";
-    } else if(t.songs){
-      html += ", with a total of " + num(t.songs) + " song" + (t.songs === 1 ? "" : "s") + " sung.";
-    } else {
-      html += ".";
+    var name = reportSingingName();
+    var groups = reportSessions();
+    var multi = groups.length > 1;
+    if(multi && sessHost){
+      groups.forEach(function(g){
+        var st = sessionTotals(g);
+        var lab = document.createElement("h3");
+        lab.className = "report-label"; lab.textContent = g.label;
+        var p = document.createElement("p");
+        p.className = "report-statement session-statement";
+        p.innerHTML = reportStatementHTML(name + ", " + g.label + ",", st.attendees, st.leaders, st.songs);
+        sessHost.appendChild(lab); sessHost.appendChild(p);
+      });
+      if(allLabel) allLabel.hidden = false;
     }
-    host.innerHTML = html;
+    host.innerHTML = reportStatementHTML(name, t.shown, t.leaders, t.songs);
+    var sessionNote = multi ? " Each session's statement counts the people named in that session's entries or holding an office that session; the All sessions statement counts the whole singing." : "";
     basis.textContent = t.reported
-      ? "Total attendees is the number you entered under Event Details, \u201cNumber present or total registered\u201d (" + t.reported + "). The Attendees page itself counts " + t.attendees + "; clear that box to use the Attendees count instead."
-      : "Total attendees is counted from the Attendees page: everyone named in this singing (a leader, an officer, a name in another entry), marked visitor, VIP or out of town, added by hand, or ticked Present. Someone known only as a donor or as thanked is listed but not counted, since they may not have been there; neither are saved contacts with no entry in this singing, or names carried over from a previous singing until ticked Present. Fix spellings and merge duplicates there first. To use a different number (for example from registration cards), enter it under Event Details.";
+      ? "Total attendees is the number you entered under Event Details, \u201cTotal attendees (raw number)\u201d (" + t.reported + "). The Attendees page itself counts " + t.attendees + "; clear that box to use the Attendees count instead."
+      : "Total attendees is counted from the Attendees page: everyone named in this singing (a leader, an officer, a name in another entry), marked visitor, VIP or out of town, added by hand, or ticked Present. Someone known only as a donor or as thanked is listed but not counted, since they may not have been there; neither are saved contacts with no entry in this singing, or names carried over from a previous singing until ticked Present. Fix spellings and merge duplicates there first. To use a different number (for example from registration cards), enter it under Event Details." + sessionNote;
   }
   window.__ezMinutesRenderReport = renderReport;
 
@@ -7636,7 +7793,7 @@
             var prayerLeader = effectiveLeader(row);
             if(!prayerLeader || normKey(prayerLeader) === normKey(openingPrayerBy)){ afterMarker = null; i++; continue; }
           }
-          paragraphs.push(row.prose && row.prose.trim() && !isStockMarkerProse(row.prose) ? row.prose.trim() : (markerNote || defaultProse(mtype, effectiveLeader(row), roles) || mtype));
+          paragraphs.push(row.prose && row.prose.trim() && !isStockMarkerProse(row.prose) ? row.prose.trim() : (markerNote || defaultProse(mtype, effectiveLeader(row), roles, announcementNumbers()[row.id]) || mtype));
           afterMarker = null; i++; continue;
         }
 

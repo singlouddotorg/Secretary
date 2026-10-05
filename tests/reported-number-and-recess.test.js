@@ -56,7 +56,7 @@ describe('Report attendee total', () => {
     const { d } = await open(csv({}));
     const n = d.getElementById('presentNote');
     assert.ok(n);
-    assert.match(n.textContent, /enter all attendees/);
+    assert.match(n.textContent, /enter every attendee/);
   });
 });
 
